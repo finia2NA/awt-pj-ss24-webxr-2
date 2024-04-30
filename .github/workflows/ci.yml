@@ -11,9 +11,19 @@ jobs:
         node-version: [22.x] # Could add more node versions like so: [20.x, 22.x], but I think just 1 is enough
 
     steps:
-      - name: "Write secret"
+      - uses: actions/checkout@v4
+      - name: "Use Node.js to execute CI"
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+          
+      - name: "Write config.json for lib"
+        working-directory: "./lib/src"
         run: |
-          config_json_path="./lib/config.json"
+          echo $(pwd)
+          echo $(ls -1)
+          config_json_path="config.json"
           decoded_config=$(echo "${CONFIGJS_SECRET}" | base64 --decode)
           echo "$decoded_config" > "$config_json_path"
           echo "Saved CONFIGJS secret to $config_json_path"
@@ -21,17 +31,22 @@ jobs:
         env:
           CONFIGJS_SECRET: ${{ secrets.CONFIGJS }}
 
-      - uses: actions/checkout@v4
-      - name: "Use Node.js to execute CI"
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
 
       - name: "Install dependencies and run tests for lib"
         working-directory: "./lib"
         run: |
+          echo $(pwd)
+          echo $(ls -1)
           npm ci
           npm run build --if-present
           npm test
+
+      - name: "Clean up config.json"
+        working-directory: "./lib/src"
+        run: |
+          echo $(pwd)
+          echo $(ls -1)
+          rm config.json
+          echo "Removed config.json"
 
       # Here, we could add the CI for the App too, or put it in a seperate file if it differs too much.

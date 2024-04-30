@@ -12,8 +12,9 @@ jobs:
 
     steps:
       - name: "Write secret"
+        working-directory: "./lib"
         run: |
-          config_json_path="./lib/config.json"
+          config_json_path="config.json"
           decoded_config=$(echo "${CONFIGJS_SECRET}" | base64 --decode)
           echo "$decoded_config" > "$config_json_path"
           echo "Saved CONFIGJS secret to $config_json_path"

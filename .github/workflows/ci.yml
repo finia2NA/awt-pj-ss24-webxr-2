@@ -11,6 +11,16 @@ jobs:
         node-version: [22.x] # Could add more node versions like so: [20.x, 22.x], but I think just 1 is enough
 
     steps:
+      - name: "Write secret"
+        run: |
+          config_json_path="./lib/config.json"
+          decoded_config=$(echo "${CONFIGJS_SECRET}" | base64 --decode)
+          echo "$decoded_config" > "$config_json_path"
+          echo "Saved CONFIGJS secret to $config_json_path"
+        shell: bash
+        env:
+          CONFIGJS_SECRET: ${{ secrets.CONFIGJS }}
+
       - uses: actions/checkout@v4
       - name: "Use Node.js to execute CI"
         uses: actions/setup-node@v3

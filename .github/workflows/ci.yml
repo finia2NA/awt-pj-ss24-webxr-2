@@ -21,13 +21,13 @@ jobs:
       - name: "Install dependencies and write config.json for lib"
         working-directory: "./lib"
         run: |
-          npm ci
-          npm run build --if-present
           config_json_path="config.json"
           decoded_config=$(echo "${CONFIGJS_SECRET}" | base64 --decode)
           echo "$decoded_config" > "$config_json_path"
           echo "Saved CONFIGJS secret to $config_json_path"
           echo $(ls -la)
+          npm ci
+          npm run build --if-present
         shell: bash
         env:
           CONFIGJS_SECRET: ${{ secrets.CONFIGJS }}

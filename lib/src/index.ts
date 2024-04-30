@@ -1,7 +1,3 @@
-
-const sayHello: () => string = () => {
-  console.log('Hello, world!');
-  return 'Hello, world!';
-};
+import { sayHello } from "./helloWorld";
 
 export { sayHello };

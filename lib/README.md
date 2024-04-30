@@ -6,6 +6,10 @@
 ## Getting Started
 The project was created following [this](https://www.tsmean.com/articles/how-to-write-a-typescript-library/) tutorial.  
 
-- You can install the dependencies with `npm i`.
-- The functions you want to expose should be exported from the index.ts file
-- 
+- Install the dependencies with `npm i`.
+- The functions you want to expose should be exported from the `index.ts` file
+- Write tests for parts of the application using jest, in any folder named "tests". Run these tests using `npm test`.
+
+
+## Notes
+- Right now, only hello world is implemented. I put this here to test the testing and CI. When we actually have working functionality, we can of course remove this.

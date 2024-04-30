@@ -1,15 +1,16 @@
-import { getWholeDataAsJson } from "../getter";
+import { getWholeDataAsJS } from "../getter";
 
 describe('getter', () => {
   let data: any;
 
   beforeAll(async () => {
     // We're doing this here so we just have to do it once
-    data = await getWholeDataAsJson();
+    data = await getWholeDataAsJS();
   });
 
   test('data should be defined', () => {
     expect(data).toBeDefined();
+    console.log(data);
   });
 
   test('data should have a service list of expected structure', () => {

@@ -21,12 +21,12 @@ jobs:
       - name: "Write config.json for lib"
         working-directory: "./lib/src"
         run: |
+          echo $(pwd)
+          echo $(ls -1)
           config_json_path="config.json"
           decoded_config=$(echo "${CONFIGJS_SECRET}" | base64 --decode)
           echo "$decoded_config" > "$config_json_path"
           echo "Saved CONFIGJS secret to $config_json_path"
-          echo $(pwd)
-          echo $(ls -1)
         shell: bash
         env:
           CONFIGJS_SECRET: ${{ secrets.CONFIGJS }}
@@ -40,5 +40,13 @@ jobs:
           npm ci
           npm run build --if-present
           npm test
+
+      - name: "Clean up config.json"
+        working-directory: "./lib/src"
+        run: |
+          echo $(pwd)
+          echo $(ls -1)
+          rm config.json
+          echo "Removed config.json"
 
       # Here, we could add the CI for the App too, or put it in a seperate file if it differs too much.

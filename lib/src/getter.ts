@@ -9,7 +9,6 @@ async function getWholeDataAsJson() {
   const xml = await response.text();
 
   const jObj = parser.parse(xml);
-  console.log(jObj);
   return jObj;
 }
 

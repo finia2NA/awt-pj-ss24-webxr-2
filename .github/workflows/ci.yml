@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x] # Could add more node versions like so: [20.x, 22.x], but I think just 1 is enough
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: "Use Node.js to execute CI"
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: "Install dependencies and run tests for lib"
+        working-directory: "./lib"
+        run: |
+          npm ci
+          npm run build --if-present
+          npm test
+
+      # Here, we could add the CI for the App too, or put it in a seperate file if it differs too much.

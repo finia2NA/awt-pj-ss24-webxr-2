@@ -1,16 +1,22 @@
 // Export the things you want to expose to the outside world here
 
 import { getWholeDataAsJson } from "./io/getter";
+import { getRegionsFromDVBI } from "./model/regions";
 
 class DVBI {
+  // TODO: rn, it is possible to create 2 DVBI objects and have 2 different data sets. Solution could be to make it static or singleton.
   data: any;
 
   constructor() {
-    this.refreshData();
+    // Note: You need to call init() after creating a new DVBI object to get the data
   }
 
-  public refreshData() {
-    this.data = getWholeDataAsJson();
+  public async init() {
+    await this.refreshData();
+  }
+
+  public async refreshData() {
+    this.data = await getWholeDataAsJson();
   }
 
   /**
@@ -23,7 +29,7 @@ class DVBI {
   }
 
   public getRegions() {
-    throw new Error("Not implemented yet");
+    return getRegionsFromDVBI(this);
   }
 
   public getRegionFromPostcode(postcode: string) {

@@ -1,5 +1,5 @@
-import config from './config.json';
-import { Data } from './types/dataType';
+import config from '../config.json';
+import { Data } from '../types/dataType';
 const { XMLParser } = require("fast-xml-parser");
 
 const options = {
@@ -10,7 +10,7 @@ const options = {
 
 const parser = new XMLParser(options);
 
-async function getWholeDataAsJS() {
+async function getWholeDataAsJson() {
   const url = config.apiBaseUrl;
   const response = await fetch(url);
   const xml = await response.text();
@@ -25,4 +25,4 @@ async function getWholeDataAsJS() {
   return jObj;
 }
 
-export { getWholeDataAsJS };
+export { getWholeDataAsJson as getWholeDataAsJson };

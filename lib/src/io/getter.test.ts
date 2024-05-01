@@ -1,11 +1,11 @@
-import { getWholeDataAsJS } from "../getter";
+import { getWholeDataAsJson } from "./getter";
 
 describe('getter', () => {
   let data: any;
 
   beforeAll(async () => {
     // We're doing this here so we just have to do it once
-    data = await getWholeDataAsJS();
+    data = await getWholeDataAsJson();
   });
 
   test('data should be defined', () => {

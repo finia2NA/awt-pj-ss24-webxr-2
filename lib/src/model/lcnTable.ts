@@ -1,6 +1,10 @@
 import DVBI from "../dvbi";
 import { Region } from './regions';
 
+/**
+ * Represents an LCN (Logical Channel Number).
+ * This class is used to store the channel number and service ID of a channel.
+ */
 class LCN {
   public channelNumber: number;
   public serviceID: string;
@@ -16,14 +20,20 @@ class LCN {
   // TODO: resolve name from serviceID and dvbi
 }
 
+/**
+ * Represents an LCN (Logical Channel Number) table.
+ */
 class LCNTable {
   public targetRegion?: string;
   public LCN: LCN[];
 
   private dvbi: DVBI = DVBI.getInstance();
 
+  /**
+   * Constructs the LCNTable for a region.
+   * @param targetRegion - The region for which to create the LCNTable. If null, the generic LCNTable is used.
+   */
   constructor(targetRegion: Region = null) {
-
     const LCNTablesData = this.dvbi.data.ServiceList.LCNTableList.LCNTable;
     // Get the LCNTable for this region
     let matchingTable = !targetRegion ? null : LCNTablesData.find((table) => table["TargetRegion"] === targetRegion.id);

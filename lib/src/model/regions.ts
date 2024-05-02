@@ -1,5 +1,5 @@
 import DVBI from "../dvbi";
-import { LCNTable } from "./lcnTable";
+import { LCNTable } from "./lcnTables";
 
 /**
  * Retrieves the regions from stored data.

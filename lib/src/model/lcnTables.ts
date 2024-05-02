@@ -1,5 +1,6 @@
 import DVBI from "../dvbi";
 import { Region, RegionContainer } from './regions';
+import { Service } from "./services";
 
 function getLcnTables() {
   const dvbi = DVBI.getInstance();
@@ -20,13 +21,16 @@ function getLcnTables() {
  */
 class LCN {
   public channelNumber: number;
-  public serviceID: string;
+  public serviceRef: string; // The service ID as a string
 
-  private dvbi: DVBI = DVBI.getInstance();
+  public containedInLCNTable: LCNTable;
+  public service?: Service;
 
-  constructor(channelNumber: number, serviceID: string) {
+
+  constructor(channelNumber: number, serviceID: string, containingLcnTable: LCNTable) {
     this.channelNumber = channelNumber;
-    this.serviceID = serviceID;
+    this.serviceRef = serviceID;
+    this.containedInLCNTable = containingLcnTable;
   }
 
   // TODO: resolve name from serviceID and dvbi
@@ -50,7 +54,7 @@ class LCNTable {
     // Create the LCN objects
     this.LCN = [];
     for (let lcndata of rawLCNTable.LCN) {
-      const newLCN = new LCN(lcndata["@_channelNumber"], lcndata["@_serviceRef"]);
+      const newLCN = new LCN(lcndata["@_channelNumber"], lcndata["@_serviceRef"], this);
       this.LCN.push(newLCN);
     }
     this.LCN.sort((a, b) => a.channelNumber - b.channelNumber);
@@ -58,4 +62,4 @@ class LCNTable {
 
 }
 
-export { LCNTable, getLcnTables };
+export { LCNTable, getLcnTables, LCN };

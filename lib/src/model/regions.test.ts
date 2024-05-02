@@ -27,7 +27,7 @@ describe("regions", () => {
     expect(region).toBeDefined();
 
     const lcnTable = region.lcnTable;
-    const zdfNeo = lcnTable.LCN.find((lcn) => lcn.serviceID === 'tag:zdf.de,2020:zdfneo');
+    const zdfNeo = lcnTable.LCN.find((lcn) => lcn.serviceRef === 'tag:zdf.de,2020:zdfneo');
     expect(zdfNeo).toBeDefined();
     expect(zdfNeo.channelNumber).toBe(43);
   });

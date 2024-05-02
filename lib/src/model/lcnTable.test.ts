@@ -1,5 +1,5 @@
 import DVBI from "../dvbi";
-import { LCNTable } from "./lcnTable";
+import { LCNTable } from "./lcnTables";
 
 describe('LCNTable', () => {
   let dvbi: DVBI = DVBI.getInstance();

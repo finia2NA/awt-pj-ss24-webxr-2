@@ -1,5 +1,5 @@
 import DVBI from "../dvbi";
-import { Region, getRegionsFromDVBI } from "./regions";
+import { Region, getRegions } from "./regions";
 
 describe("regions", () => {
   let dvbi: DVBI = DVBI.getInstance();
@@ -9,20 +9,20 @@ describe("regions", () => {
   });
 
   test("getRegionsFromDVBI should return a list of regions including Düsseldorf", () => {
-    const regions = getRegionsFromDVBI(dvbi);
+    const regions = getRegions();
     expect(regions).toBeDefined();
     expect(regions.array).toContainEqual(expect.objectContaining({ name: "Düsseldorf" }));
   });
 
   test("getRegionFromPostcode should return Köln for 50667", () => {
-    const regions = getRegionsFromDVBI(dvbi);
+    const regions = getRegions();
     const region = regions.getRegionFromPostcode(50667);
     expect(region).toBeDefined();
     expect(region.name).toBe("Köln");
   });
 
   test("ZDF Neo should be channel number 43 in Düsseldorf", () => {
-    const regions = getRegionsFromDVBI(dvbi);
+    const regions = getRegions();
     const region = regions.array.find((region) => region.name === "Düsseldorf");
     expect(region).toBeDefined();
 

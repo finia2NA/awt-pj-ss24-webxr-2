@@ -9,7 +9,7 @@ describe('LCNTable', () => {
   });
 
   test('LCN Table Constructor with no region', () => {
-    const lcnTable = new LCNTable(dvbi);
+    const lcnTable = new LCNTable();
     expect(lcnTable).toBeDefined();
   });
 });

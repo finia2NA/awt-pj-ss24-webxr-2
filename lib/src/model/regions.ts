@@ -2,9 +2,8 @@ import DVBI from "../dvbi";
 import { LCNTable } from "./lcnTable";
 
 /**
- * Retrieves the regions from a DVBI object.
+ * Retrieves the regions from stored data.
  * 
- * @param DVBI - The DVBI object containing the region data.
  * @returns A RegionContainer object containing the regions.
  */
 function getRegions(): RegionContainer {
@@ -80,7 +79,6 @@ class Region {
 
   /**
    * Creates a new instance of the Region class.
-   * @param DVBI - The DVBI object.
    * @param name - The name of the region.
    * @param postcodes - The postcode ranges of the region.
    * @param id - The ID of the region.

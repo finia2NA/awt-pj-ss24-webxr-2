@@ -21,7 +21,6 @@ async function getWholeDataAsJson() {
   const jObj: Data = parser.parse(xml);
   // const jObj = parser.parse(xml);
 
-  // Could think about returning the ServiceList instead of the whole object, maybe TODO:
   return jObj;
 }
 

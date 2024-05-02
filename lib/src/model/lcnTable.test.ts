@@ -1,8 +1,8 @@
+import DVBI from "../dvbi";
 import { LCNTable } from "./lcnTable";
-import DVBI from "..";
 
 describe('LCNTable', () => {
-  const dvbi = new DVBI();
+  let dvbi: DVBI = DVBI.getInstance();
 
   beforeAll(async () => {
     await dvbi.init();

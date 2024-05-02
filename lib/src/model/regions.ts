@@ -1,4 +1,4 @@
-import DVBI from "..";
+import DVBI from "../dvbi";
 import { LCNTable } from "./lcnTable";
 
 /**

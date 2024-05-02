@@ -1,8 +1,8 @@
-import DVBI from "..";
+import DVBI from "../dvbi";
 import { Region, getRegionsFromDVBI } from "./regions";
 
 describe("regions", () => {
-  const dvbi = new DVBI();
+  let dvbi: DVBI = DVBI.getInstance();
 
   beforeAll(async () => {
     await dvbi.init();
@@ -31,5 +31,5 @@ describe("regions", () => {
     expect(zdfNeo).toBeDefined();
     expect(zdfNeo.channelNumber).toBe(43);
   });
-  
+
 });

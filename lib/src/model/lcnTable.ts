@@ -1,5 +1,18 @@
 import DVBI from "../dvbi";
-import { Region } from './regions';
+import { Region, RegionContainer } from './regions';
+
+function getLcnTables() {
+  const dvbi = DVBI.getInstance();
+  const LCNTablesData = dvbi.rawData.ServiceList.LCNTableList.LCNTable;
+
+  const lcnTables = [];
+  for (let lcnTable of LCNTablesData) {
+    lcnTables.push(new LCNTable(lcnTable));
+  }
+
+  return lcnTables;
+}
+
 
 /**
  * Represents an LCN (Logical Channel Number).
@@ -16,40 +29,27 @@ class LCN {
     this.serviceID = serviceID;
   }
 
-
   // TODO: resolve name from serviceID and dvbi
 }
 
-/**
- * Represents an LCN (Logical Channel Number) table.
- */
+
 class LCNTable {
   public targetRegion?: string;
+
   public LCN: LCN[];
+  public region: Region;
 
-  private dvbi: DVBI = DVBI.getInstance();
-
-  /**
-   * Constructs the LCNTable for a region.
-   * @param targetRegion - The region for which to create the LCNTable. If null, the generic LCNTable is used.
-   */
-  constructor(targetRegion: Region = null) {
-    const LCNTablesData = this.dvbi.data.ServiceList.LCNTableList.LCNTable;
-    // Get the LCNTable for this region
-    let matchingTable = !targetRegion ? null : LCNTablesData.find((table) => table["TargetRegion"] === targetRegion.id);
-    // If there is no LCNTable for this region, get the generic one
-    if (matchingTable) {
-      // If there is a matching table set the targetRegion appropriately
-      this.targetRegion = matchingTable["TargetRegion"];
+  constructor(rawLCNTable) {
+    // Set the target region
+    if (rawLCNTable["TargetRegion"]) {
+      this.targetRegion = rawLCNTable["TargetRegion"];
     } else {
-      // else use the generic table, which has no targetRegion
-      matchingTable = LCNTablesData.find((table) => !table["TargetRegion"]);
-      this.targetRegion = null; // TODO: think about if null is a good signifier for the generic LCNTable
+      this.targetRegion = null;
     }
 
     // Create the LCN objects
     this.LCN = [];
-    for (let lcndata of matchingTable.LCN) {
+    for (let lcndata of rawLCNTable.LCN) {
       const newLCN = new LCN(lcndata["@_channelNumber"], lcndata["@_serviceRef"]);
       this.LCN.push(newLCN);
     }
@@ -58,4 +58,4 @@ class LCNTable {
 
 }
 
-export { LCNTable };
+export { LCNTable, getLcnTables };

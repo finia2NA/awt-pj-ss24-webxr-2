@@ -1,5 +1,6 @@
 import { getWholeDataAsJson } from "./io/getter";
-import { getRegions } from "./model/regions";
+import { getLcnTables } from "./model/lcnTable";
+import { RegionContainer, getRegions } from "./model/regions";
 
 /**
  * The DVBI class represents a singleton instance of the DVBI (Digital Video Broadcasting Interface) module.
@@ -7,8 +8,17 @@ import { getRegions } from "./model/regions";
  * (More functions coming soon)
  */
 class DVBI {
+  // Internal vars
   private static instance: DVBI;
-  data: any;
+  rawData: any;
+
+  // Vars to be accessed from outside
+  public regions: RegionContainer;
+  public lcnTables: any; // TODO: Define the LCN Table type
+  public services: any; // TODO: Define the service type
+
+
+
 
   private constructor() {
     // Note: You need to call init() after creating a new DVBI object to get the data
@@ -43,34 +53,28 @@ class DVBI {
    */
   public async refreshData() {
     const data = await getWholeDataAsJson();
-    this.data = data;
-  }
+    this.rawData = data;
 
-  /**
-   * Retrieves the services available in the specified region.
-   * If no region is provided, the services for the generic default region are retrieved.
-   * @param region - The region for which to retrieve the services.
-   * @returns An array of services.
-   */
-  public getServices(region: string = null) {
-    throw new Error("Not implemented yet");
-  }
+    // Begin parsing the data
+    // Step 1: Extract the regions
+    this.regions = getRegions();
 
-  /**
-   * Retrieves the regions available in the DVBI data.
-   * @returns An array of regions.
-   */
-  public getRegions() {
-    return getRegions();
-  }
+    // Step 2: Extract the LCN Tables
+    this.lcnTables = getLcnTables();
+    // Step 2a: create links between LCN Tables and regions
+    for (let region of this.regions.array) {
+      for (let lcnTable of this.lcnTables) {
+        if (lcnTable.targetRegion === region.id) {
+          region.lcnTable = lcnTable;
+          lcnTable.region = region;
+        }
+      }
+    }
+    console.log("hey")
+    
 
-  /**
-   * Retrieves the region associated with the specified postcode.
-   * @param postcode - The postcode for which to retrieve the region.
-   * @returns The region associated with the postcode.
-   */
-  public getRegionFromPostcode(postcode: string) {
-    throw new Error("Not implemented yet");
+    // Step 3: Extract the services
+    // Step 3a: create links between services and LCN Tables
   }
 }
 

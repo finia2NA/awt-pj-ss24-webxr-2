@@ -62,6 +62,7 @@ class Service {
       for (let dashRawData of dashRawDataList) {
         this.dashStreams.push(new DASHStream(dashRawData));
       }
+      this.dashStreams.sort((a, b) => a.priority - b.priority);
     }
   }
 }

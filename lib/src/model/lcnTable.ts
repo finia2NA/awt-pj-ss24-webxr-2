@@ -5,12 +5,11 @@ class LCN {
   public channelNumber: number;
   public serviceID: string;
 
-  private dvbi: DVBI;
+  private dvbi: DVBI = DVBI.getInstance();
 
-  constructor(dvbi, channelNumber: number, serviceID: string) {
+  constructor(channelNumber: number, serviceID: string) {
     this.channelNumber = channelNumber;
     this.serviceID = serviceID;
-    this.dvbi = dvbi;
   }
 
 
@@ -21,10 +20,9 @@ class LCNTable {
   public targetRegion?: string;
   public LCN: LCN[];
 
-  private dvbi: DVBI;
+  private dvbi: DVBI = DVBI.getInstance();
 
-  constructor(dvbi: DVBI, targetRegion: Region = null) {
-    this.dvbi = dvbi;
+  constructor(targetRegion: Region = null) {
 
     const LCNTablesData = this.dvbi.data.ServiceList.LCNTableList.LCNTable;
     // Get the LCNTable for this region
@@ -42,7 +40,7 @@ class LCNTable {
     // Create the LCN objects
     this.LCN = [];
     for (let lcndata of matchingTable.LCN) {
-      const newLCN = new LCN(this.dvbi, lcndata["@_channelNumber"], lcndata["@_serviceRef"]);
+      const newLCN = new LCN(lcndata["@_channelNumber"], lcndata["@_serviceRef"]);
       this.LCN.push(newLCN);
     }
     this.LCN.sort((a, b) => a.channelNumber - b.channelNumber);

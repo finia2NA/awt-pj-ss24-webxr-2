@@ -1,5 +1,5 @@
 import { getWholeDataAsJson } from "./io/getter";
-import { getRegionsFromDVBI } from "./model/regions";
+import { getRegions } from "./model/regions";
 
 class DVBI {
   private static instance: DVBI;
@@ -34,7 +34,7 @@ class DVBI {
   }
 
   public getRegions() {
-    return getRegionsFromDVBI(this);
+    return getRegions();
   }
 
 

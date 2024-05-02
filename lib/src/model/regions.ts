@@ -7,8 +7,10 @@ import { LCNTable } from "./lcnTable";
  * @param DVBI - The DVBI object containing the region data.
  * @returns A RegionContainer object containing the regions.
  */
-function getRegionsFromDVBI(DVBI: DVBI): RegionContainer {
-  const rawRegions = DVBI.data.ServiceList.RegionList.Region;
+function getRegions(): RegionContainer {
+  const dvbi = DVBI.getInstance();
+
+  const rawRegions = dvbi.data.ServiceList.RegionList.Region;
 
   const regions = new RegionContainer([]);
   for (let region of rawRegions) {
@@ -22,7 +24,7 @@ function getRegionsFromDVBI(DVBI: DVBI): RegionContainer {
       postcodes.push(range);
     }
 
-    regions.array.push(new Region(DVBI, name, postcodes, id));
+    regions.array.push(new Region(name, postcodes, id));
   }
   return regions;
 }
@@ -74,7 +76,7 @@ class Region {
   public postcodes: postcodeRange[];
   public id: string;
 
-  private DVBI: DVBI; // DVBI is stored to enable further queries starting at this region
+  private dvbi: DVBI = DVBI.getInstance();
 
   /**
    * Creates a new instance of the Region class.
@@ -83,8 +85,7 @@ class Region {
    * @param postcodes - The postcode ranges of the region.
    * @param id - The ID of the region.
    */
-  constructor(DVBI: DVBI, name: string, postcodes: postcodeRange[], id: string) {
-    this.DVBI = DVBI;
+  constructor(name: string, postcodes: postcodeRange[], id: string) {
     this.name = name;
     this.postcodes = postcodes;
     this.id = id;
@@ -96,9 +97,9 @@ class Region {
    */
   getLCNTable() {
     // Create the Table object
-    const lcnTable = new LCNTable(this.DVBI, this);
+    const lcnTable = new LCNTable(this);
     return lcnTable;
   }
 }
 
-export { Region, getRegionsFromDVBI };
+export { Region, getRegions };

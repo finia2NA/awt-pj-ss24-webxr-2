@@ -9,7 +9,7 @@ import { LCNTable } from "./lcnTable";
 function getRegions(): RegionContainer {
   const dvbi = DVBI.getInstance();
 
-  const rawRegions = dvbi.data.ServiceList.RegionList.Region;
+  const rawRegions = dvbi.rawData.ServiceList.RegionList.Region;
 
   const regions = new RegionContainer([]);
   for (let region of rawRegions) {
@@ -74,6 +74,7 @@ class Region {
   public name: string;
   public postcodes: postcodeRange[];
   public id: string;
+  public lcnTable: LCNTable;
 
   private dvbi: DVBI = DVBI.getInstance();
 
@@ -100,4 +101,4 @@ class Region {
   }
 }
 
-export { Region, getRegions };
+export {RegionContainer, Region, getRegions };

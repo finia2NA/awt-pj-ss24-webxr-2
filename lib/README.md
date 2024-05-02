@@ -16,12 +16,19 @@ You can:
 - Write tests for parts of the application using jest, using the file extention ".test.ts". Run these tests using `npm test`.
 
 
-## Notes
-- Right now, only hello world is implemented. I put this here to test the testing and CI. When we actually have working functionality, we can of course remove this.
+## Principle of Operation for the Library
+- The main Interface of the libary is the `DVBI` singleton class.
+  - This class is instantiated using the `getInstance` method.
+  - On instantiation, the class is actually empty. Call the `init` method to fill it with data.
+- On calling init, DVBI will make a request to the DVBI endpoint and parse the data
+  - Data is first paresed into a JSON exactly corresponding to the XML structure
+  - Then, methods take this data and put it into native Objects with methods to easily deal with the data
+
 
 
 ## Structure of the Data
 Refer to [A177r6_Service-Discovery-and-Programme-Metadata-for-DVB-I_Draft_TS-103-770-v121_February-2024](https://dvb.org/wp-content/uploads/2023/07/A177r6_Service-Discovery-and-Programme-Metadata-for-DVB-I_Draft_TS-103-770-v121_February-2024.pdf) for the structure of our data.
+<!-- TODO: change link to 2020 version -->
 
 We do the request to our end-point, get back an xml, which a parser than puts into a json. The data we get back here is not perfect yet. Especially, there seems to be a lot of instances where we have a structure like this:  
 ![](images/ex1.png)  

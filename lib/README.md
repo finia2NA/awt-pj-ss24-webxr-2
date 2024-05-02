@@ -13,8 +13,7 @@ To get started:
 
 You can:
 - Expose functions you want to be exported from the module by exporting them from the `index.ts` file
-- Write tests for parts of the application using jest, in any folder named "tests". Run these tests using `npm test`.
-  - There is an example test written for "hello world", which you can take a look at
+- Write tests for parts of the application using jest, using the file extention ".test.ts". Run these tests using `npm test`.
 
 
 ## Notes

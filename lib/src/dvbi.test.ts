@@ -14,7 +14,7 @@ describe("DVBI", () => {
   it("should have data after init call", async () => {
     const dvbi = DVBI.getInstance();
     await dvbi.init();
-    expect(dvbi.data).toBeDefined();
+    expect(dvbi.rawData).toBeDefined();
   });
 
 });

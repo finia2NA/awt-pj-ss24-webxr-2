@@ -1,7 +1,7 @@
 node_modules
 dist
 # contains secret
-config.json
+tests.env
 
 
 # Editor directories and files

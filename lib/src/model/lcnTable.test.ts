@@ -1,11 +1,14 @@
 import DVBI from "../dvbi";
 import { LCNTable } from "./lcnTables";
 
+const url = process.env.API_URL;
+
+
 describe('LCNTable', () => {
   let dvbi: DVBI = DVBI.getInstance();
 
   beforeAll(async () => {
-    await dvbi.init();
+    await dvbi.init(url);
   });
 
   test('the dvbi should have a list of LCN tables', () => {

@@ -12,6 +12,7 @@ class DVBI {
   // Internal vars
   private static instance: DVBI;
   rawData: any;
+  apiURL: string;
 
   // Vars to be accessed from outside
   public regions: RegionContainer;
@@ -45,7 +46,8 @@ class DVBI {
    * Initializes the DVBI instance by refreshing the data.
    * This method needs to be called at least once before using DVBI functionality.
    */
-  public async init() {
+  public async init(apiURL: string) {
+    this.apiURL = apiURL;
     await this.refreshData();
   }
 
@@ -53,7 +55,7 @@ class DVBI {
    * Refreshes the data of the DVBI instance by fetching the whole data as JSON and then updating state.
    */
   public async refreshData() {
-    const data = await getWholeDataAsJson();
+    const data = await getWholeDataAsJson(this.apiURL);
     this.rawData = data;
 
     // Begin parsing the data

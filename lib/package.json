@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "fast-xml-parser": "^4.3.6",
-    "i": "^0.3.7",
     "npm": "^10.6.0"
   }
 }

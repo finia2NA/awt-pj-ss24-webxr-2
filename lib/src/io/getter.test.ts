@@ -13,7 +13,6 @@ describe('getter', () => {
 
   test('data should be defined', () => {
     expect(data).toBeDefined();
-    console.log(data);
   });
 
   test('data should have a service list of expected structure', () => {

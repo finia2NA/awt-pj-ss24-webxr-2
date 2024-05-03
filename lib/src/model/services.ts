@@ -19,7 +19,7 @@ class DASHStream {
 
   constructor(dashRawData) {
     this.priority = dashRawData["@_priority"];
-    this.manifestUrl = dashRawData.DASHDeliveryParameters.URI;
+    this.manifestUrl = dashRawData.DASHDeliveryParameters.UriBasedLocation.URI;
   }
 }
 
@@ -56,7 +56,8 @@ class Service {
       rawServiceData.ServiceInstance :
       [rawServiceData.ServiceInstance];
 
-    const dashRawDataList = serviceInstancesData.filter(instance => instance.DashDeliveryParameters != null);
+    const dashRawDataList = serviceInstancesData.filter(instance => instance.DASHDeliveryParameters != null);
+
     if (dashRawDataList.length > 0) {
       this.dashStreamAvailable = true;
       for (let dashRawData of dashRawDataList) {

@@ -1,11 +1,13 @@
 import DVBI from "../dvbi";
 import { Region, getRegions } from "./regions";
 
+const url = process.env.API_URL;
+
 describe("regions", () => {
   let dvbi: DVBI = DVBI.getInstance();
 
   beforeAll(async () => {
-    await dvbi.init();
+    await dvbi.init(url);
   });
 
   test("getRegionsFromDVBI should return a list of regions including Düsseldorf", () => {

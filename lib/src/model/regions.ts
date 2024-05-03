@@ -101,4 +101,4 @@ class Region {
   }
 }
 
-export {RegionContainer, Region, getRegions };
+export { RegionContainer, Region, getRegions };

@@ -1,11 +1,14 @@
 import { getWholeDataAsJson } from "./getter";
 
+const url = process.env.API_URL;
+
+
 describe('getter', () => {
   let data: any;
 
   beforeAll(async () => {
     // We're doing this here so we just have to do it once
-    data = await getWholeDataAsJson();
+    data = await getWholeDataAsJson(url);
   });
 
   test('data should be defined', () => {

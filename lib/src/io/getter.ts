@@ -1,4 +1,3 @@
-import config from '../config.json';
 import { Data } from '../types/dataType';
 const { XMLParser } = require("fast-xml-parser");
 
@@ -10,8 +9,7 @@ const options = {
 
 const parser = new XMLParser(options);
 
-async function getWholeDataAsJson() {
-  const url = config.apiBaseUrl;
+async function getWholeDataAsJson(url: string) {
   const response = await fetch(url);
   const xml = await response.text();
 

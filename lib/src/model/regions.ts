@@ -11,7 +11,7 @@ function getRegions(): RegionContainer {
 
   const rawRegions = dvbi.rawData.ServiceList.RegionList.Region;
 
-  const regions = new RegionContainer([]);
+  const regions = new RegionContainer();
   for (let region of rawRegions) {
     const name = region.RegionName;
     const id = region["@_regionID"];
@@ -23,23 +23,22 @@ function getRegions(): RegionContainer {
       postcodes.push(range);
     }
 
-    regions.array.push(new Region(name, postcodes, id));
+    regions.push(new Region(name, postcodes, id));
   }
   return regions;
 }
 
 /**
- * Represents a container for regions.
+ * Represents a container for regions. Extends the Array class and can therefore be used as an array
+ * of Region objects but also provides additional functionality.
  */
-class RegionContainer {
-  public array: Region[];
-
+class RegionContainer extends Array<Region> {
   /**
    * Creates a new instance of the RegionContainer class.
    * @param regions - An array of Region objects.
    */
-  constructor(regions: Region[]) {
-    this.array = regions;
+  constructor(...regions: Region[]) {
+    super(...regions);
   }
 
   /**
@@ -47,8 +46,8 @@ class RegionContainer {
    * @param postcode - The postcode to search for.
    * @returns The Region object associated with the given postcode, or null if no matching region is found.
    */
-  getRegionFromPostcode(postcode: number): Region {
-    for (let region of this.array) {
+  getRegionFromPostcode(postcode: number): Region | null {
+    for (let region of this) {
       for (let pcRange of region.postcodes) {
         if (postcode >= pcRange.start && postcode <= pcRange.end) {
           return region;

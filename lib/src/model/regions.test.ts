@@ -13,7 +13,7 @@ describe("regions", () => {
   test("getRegionsFromDVBI should return a list of regions including Düsseldorf", () => {
     const regions = dvbi.regions;
     expect(regions).toBeDefined();
-    expect(regions.array).toContainEqual(expect.objectContaining({ name: "Düsseldorf" }));
+    expect(regions).toContainEqual(expect.objectContaining({ name: "Düsseldorf" }));
   });
 
   test("getRegionFromPostcode should return Köln for 50667", () => {
@@ -25,7 +25,7 @@ describe("regions", () => {
 
   test("ZDF Neo should be channel number 43 in Düsseldorf", () => {
     const regions = dvbi.regions;
-    const region = regions.array.find((region) => region.name === "Düsseldorf");
+    const region = regions.find((region) => region.name === "Düsseldorf");
     expect(region).toBeDefined();
 
     const lcnTable = region.lcnTable;

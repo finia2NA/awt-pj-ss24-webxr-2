@@ -15,6 +15,9 @@ class DVBI {
   apiURL: string;
 
   // Vars to be accessed from outside
+  /**
+   * The regions available in the DVBI data. Note that RegionContainer is a subclass of Array.
+   */
   public regions: RegionContainer;
   public lcnTables: any; // TODO: Define the LCN Table type
   public services: any; // TODO: Define the service type
@@ -65,7 +68,7 @@ class DVBI {
     // Step 2: Extract the LCN Tables
     this.lcnTables = getLcnTables();
     // Step 2a: create links between LCN Tables and regions
-    for (let region of this.regions.array) {
+    for (let region of this.regions) {
       for (let lcnTable of this.lcnTables) {
         if (lcnTable.targetRegion === region.id) {
           region.lcnTable = lcnTable;

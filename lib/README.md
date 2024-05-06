@@ -8,8 +8,9 @@ The project was created following [this](https://www.tsmean.com/articles/how-to-
 
 To get started:
 - Install the dependencies with `npm i`.
-- Create a `config.json` file in the `src` directory and fill out the values.
-  - Use the `config.example.json` as a guide.
+- Create a `tests.env` file in the `src` directory and fill out the values.
+  - Use the `tests.example.env` as a guide.
+  - This is used for jest tests. Alternatively, execute the tests in an environment where the required values are defined.
 
 You can:
 - Expose functions you want to be exported from the module by exporting them from the `index.ts` file

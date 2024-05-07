@@ -4,10 +4,20 @@ import { LCN } from "./lcnTables";
 function getServices() {
   const dvbi = DVBI.getInstance();
   const servicesData = dvbi.rawData.ServiceList.Service;
+  const contentGuideData = dvbi.rawData.ServiceList.ContentGuideSourceList.ContentGuideSource;
+
+  const contentGuideMap = {};
+  for (let contentGuide of contentGuideData) {
+    contentGuideMap[contentGuide["@_CGSID"]] = {
+      name: contentGuide.ProviderName,
+      programInfoEndpoint: contentGuide.ProgramInfoEndpoint.URI,
+      scheduleInfoEndpoint: contentGuide.ScheduleInfoEndpoint.URI,
+    }
+  }
 
   const services = [];
   for (let serviceData of servicesData) {
-    services.push(new Service(serviceData));
+    services.push(new Service(serviceData, contentGuideMap));
   }
 
   return services;
@@ -36,11 +46,14 @@ class Service {
   public dashStreamAvailable: boolean = false;
   public dashStreams: DASHStream[] = [];
 
+  public scheduleInfoEndpoint?: string;
+  public programInfoEndpoint?: string;
+
   // Store the LCNs this service is available on here
   // (gets filled later in DVBI.refreshData() / init())
   public lcns: LCN[] = [];
 
-  constructor(rawServiceData) {
+  constructor(rawServiceData, contentGuideMap) {
     this.contentGuideServiceRef = rawServiceData.ContentGuideServiceRef;
     this.contentGuideSourceRef = rawServiceData.ContentGuideSourceRef;
     this.providerName = rawServiceData.ProviderName;
@@ -48,6 +61,13 @@ class Service {
     this.serviceID = rawServiceData.UniqueIdentifier;
     this.serviceName = rawServiceData.ServiceName;
     this.serviceType = rawServiceData.ServiceType["@_href"];
+
+    console.log(`Service Name: ${this.serviceName}, Content Source Ref: ${this.contentGuideSourceRef}`);
+
+    if (contentGuideMap[this.contentGuideSourceRef]) {
+      this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;
+      this.programInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].programInfoEndpoint;
+    }
 
 
     // Sometimes, rawServiceData.ServiceInstance is an object, and not an array

@@ -2,7 +2,7 @@ import DVBI from "../dvbi";
 import { Region, RegionContainer } from './regions';
 import { Service } from "./services";
 
-function getLcnTables() {
+function getLcnTables(): LCNTable[] {
   const dvbi = DVBI.getInstance();
   const LCNTablesData = dvbi.rawData.ServiceList.LCNTableList.LCNTable;
 

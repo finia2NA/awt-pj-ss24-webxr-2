@@ -1,7 +1,7 @@
 import { getWholeDataAsJson } from "./io/getter";
-import { getLcnTables } from "./model/lcnTables";
+import { getLcnTables, LCNTable } from "./model/lcnTables";
 import { RegionContainer, getRegions } from "./model/regions";
-import { getServices } from "./model/services";
+import { getServices, Service } from "./model/services";
 
 /**
  * The DVBI class represents a singleton instance of the DVBI (Digital Video Broadcasting Interface) module.
@@ -19,8 +19,8 @@ class DVBI {
    * The regions available in the DVBI data. Note that RegionContainer is a subclass of Array.
    */
   public regions: RegionContainer;
-  public lcnTables: any; // TODO: Define the LCN Table type
-  public services: any; // TODO: Define the service type
+  public lcnTables: LCNTable[];
+  public services: Service[];
 
 
 
@@ -95,6 +95,7 @@ class DVBI {
         }
       }
     }
+    debugger;
   }
 }
 

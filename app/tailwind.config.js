@@ -12,7 +12,7 @@ export default {
         primary: '#000000',
         highlight: '#26B5EA',
         buttonBG: '#EEEEEE',
-        uiElem: 'rgba(115, 115, 115, 0.61)', // TODO: update this to match light mode
+        uiElem: 'rgba(240, 240, 240, 0.61)',
         dark: {
           mainBG: 'rgba(4, 4, 4, 0.7)',
           primary: '#FFFFFF',

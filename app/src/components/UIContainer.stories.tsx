@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import UIElement from './UIContainer';
+import XRWindow from './XRWindow';
 
 const meta = {
   title: 'Components/UIContainer',
@@ -16,8 +17,12 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+/** 
+ * This is the default story that renders the UIElement component wrapped in an XRWindow component.
+*/
 
+export const Default: Story = {
+  render: (args) => <XRWindow><UIElement {...args} /></XRWindow>,
 };
 
 export const RoundTop: Story = {

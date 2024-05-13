@@ -4,6 +4,7 @@ import XRWindow from './XRWindow';
 const meta = {
   title: 'Components/XRWindow',
   component: XRWindow,
+  tags: ["autodocs"],
   parameters: {
     layout: 'centered',
   },

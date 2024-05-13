@@ -12,11 +12,12 @@ export default {
         primary: '#000000',
         highlight: '#26B5EA',
         buttonBG: '#EEEEEE',
-        uiElem: 'rgba(116, 115, 115, 0.61)',
+        uiElem: 'rgba(115, 115, 115, 0.61)', // TODO: update this to match light mode
         dark: {
           mainBG: 'rgba(4, 4, 4, 0.7)',
           primary: '#FFFFFF',
           buttonBG: '#444444',
+          uiElem: 'rgba(115, 115, 115, 0.61)',
         }
       },
     },

@@ -1,12 +1,27 @@
 import { ReactNode } from 'react';
 
+/**
+ * Props for the RoundButton component.
+ */
 export interface RoundButtonProps {
   /**
-   * The text that will be displayed on the button
+   * The text that will be displayed on the button.
    */
   children: ReactNode;
+  
+  /**
+   * Specifies whether the button is active or not.
+   */
   active?: boolean;
+  
+  /**
+   * Specifies whether the button is disabled or not.
+   */
   disabled?: boolean;
+  
+  /**
+   * Callback function that will be called when the button is clicked.
+   */
   onClick?: () => void;
 }
 

@@ -6,6 +6,7 @@ import RoundButton from './RoundButton';
 const meta = {
   title: 'Components/RoundButton',
   component: RoundButton,
+  tags: ["autodocs"],
   parameters: {
     layout: 'centered',
   },

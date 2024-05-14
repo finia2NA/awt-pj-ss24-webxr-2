@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 *storybook.log
+
+# Copyrighted icons
+# src/assets/glyphs

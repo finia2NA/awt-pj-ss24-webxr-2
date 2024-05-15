@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import dashjs from 'dashjs';
+import dashjs, { MediaPlayerClass } from 'dashjs';
 
 export interface DashPlayerProps {
   /**
@@ -7,37 +7,55 @@ export interface DashPlayerProps {
    */
   src: string;
   /**
-   * Whether the video should play automatically
+   * Whether the video should be paused, also functions as autoplay setting
+   * Can be updated after the component is mounted
    */
-  autoplay?: boolean;
+  paused?: boolean;
   /**
    * Whether the video controls should be displayed
    */
   controls?: boolean;
   /**
-   * Whether the video should be muted by default
+   * Whether the video should be muted
+   * Can be updated after the component is mounted
    */
   muted?: boolean;
 }
 
-const DashPlayer = ({ src, autoplay = true, controls = true, muted = false }: DashPlayerProps) => {
-  const videoRef = useRef(null);
+/**
+ * A simple DASH player component that uses the dash.js library.
+ * Note that the `paused` prop is also used for the autoplay feature upon initialization.
+ */
+const DashPlayer = ({ src, paused = true, controls = true, muted = false }: DashPlayerProps) => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const playerRef = useRef<MediaPlayerClass | null>(null);
 
-useEffect(() => {
-  if (videoRef.current) {
-    const player = dashjs.MediaPlayer().create();
-    player.initialize(videoRef.current, src, autoplay);
-    player.setMute(muted);
+  useEffect(() => {
+    if (videoRef.current) {
+      playerRef.current = dashjs.MediaPlayer().create();
+      playerRef.current.initialize(videoRef.current, src, !paused);
+      playerRef.current.setMute(muted);
 
-    player.on(dashjs.MediaPlayer.events.ERROR, (e) => {
-      console.error('Dash.js error:', e);
-    });
+      playerRef.current.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+        console.error('Dash.js error:', e);
+      });
 
-    return () => {
-      player.reset();
-    };
-  }
-}, [src, autoplay]);
+      return () => {
+        playerRef.current?.reset();
+      };
+    }
+  }, [src]);
+
+  useEffect(() => {
+    if (playerRef.current) {
+      playerRef.current.setMute(muted);
+      if (paused) {
+        playerRef.current.pause();
+      } else {
+        playerRef.current.play();
+      }
+    }
+  }, [muted, paused]);
 
   return (
     <video ref={videoRef} controls={controls}>

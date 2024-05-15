@@ -19,7 +19,7 @@ export default meta;
 export const Default: StoryObj<typeof meta> = {
     args: {
         src: 'https://dash.akamaized.net/dash264/TestCases/1c/qualcomm/2/MultiResMPEG2.mpd',
-        autoplay: false,
+        paused: true,
         controls: true,
         muted: false,
     },
@@ -33,7 +33,7 @@ export const Default: StoryObj<typeof meta> = {
 export const Autoplay: StoryObj<typeof meta> = {
     args: {
         src: 'https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd',
-        autoplay: true,
+        paused: false,
         controls: true,
         muted: true,
     },

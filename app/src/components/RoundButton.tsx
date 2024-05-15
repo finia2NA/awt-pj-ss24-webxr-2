@@ -33,7 +33,7 @@ const RoundButton = (props: RoundButtonProps) => {
     // TODO: border should be 1 when inactive but hovered, this does not work for some reason
     <button className={`font-bold px-4 rounded-full  text-primary dark:text-dark-primary bg-buttonBG dark:bg-dark-buttonBG hover:border-primary hover:dark:border-dark-primary hover:scale-105 transition-transform
     focus:outline-none
-    ${active ? 'border-4' : 'border-0 hover:border-1'}
+    ${active ? 'border-4' : 'border-1 border-transparent hover:border-primary hover:dark:border-dark-primary'}
     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
 
     border-primary  dark:border-dark-primary

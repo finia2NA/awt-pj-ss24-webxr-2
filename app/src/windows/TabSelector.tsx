@@ -48,7 +48,7 @@ const TabSelector = (props: TabSelectorProps) => {
     <XRWindow small>
       <div className="flex flex-col space-y-3">
         {collapsed ? (
-          <GlyphButton type={getIcon(selectedTab)} active onClick={() => setCollapsed(false)} />
+          <GlyphButton type={getIcon(selectedTab)} onClick={() => setCollapsed(false)} />
         ) : (
           Tabs.map((tab, index) => (
             <GlyphButton key={index} type={getIcon(tab)} active={selectedTab === index}

@@ -23,10 +23,15 @@ export interface RoundButtonProps {
    * Callback function that will be called when the button is clicked.
    */
   onClick?: () => void;
+
+  /**
+   * Adds a custom class to the button.
+   */
+  className?: string;
 }
 
 const RoundButton = (props: RoundButtonProps) => {
-  const { active, disabled, onClick } = props;
+  const { active, disabled, onClick, className } = props;
   const children = props.children;
 
   return (
@@ -36,7 +41,7 @@ const RoundButton = (props: RoundButtonProps) => {
     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
 
     border-primary  dark:border-dark-primary
-    `}
+    ` + className}
       onClick={disabled ? undefined : onClick}
     >
       {children}

@@ -19,8 +19,8 @@ const ButtonGroup = (props: ButtonGroupProps) => {
 
   return (
     <UIElement roundTop={roundTop} roundBottom={roundBottom}>
-      <div className="flex flex-row justify-between items-center">
-        <h3 className="font-bold text-xl ml-2 mr-8">{title}</h3>
+      <div className="flex flex-row justify-start items-center">
+        <h3 className="font-bold text-xl ml-2 mr-10 w-24">{title}</h3>
 
         <div className="flex space-x-4">
           {options.map((option, index) => {

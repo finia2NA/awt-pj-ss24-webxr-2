@@ -20,9 +20,9 @@ const UIElement = ({ children, roundTop, roundBottom }: UIElementProps) => {
     <div className={`bg-uiElem dark:bg-dark-uiElem
     text-primary dark:text-dark-primary
     p-4 pl-8 pr-8
-    rounded-lg
-    ${roundTop ? 'rounded-t-3xl' : ''}
-    ${roundBottom ? 'rounded-b-3xl' : ''}
+    rounded-md
+    ${roundTop ? 'rounded-t-2xl' : ''}
+    ${roundBottom ? 'rounded-b-2xl' : ''}
     `}>
       {children}
     </div>

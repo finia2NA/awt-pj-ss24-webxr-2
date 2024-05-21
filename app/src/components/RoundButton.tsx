@@ -33,7 +33,6 @@ export interface RoundButtonProps {
 const RoundButton = (props: RoundButtonProps) => {
   const { active, disabled, onClick, className } = props;
   const children = props.children;
-  console.log(className)
 
   return (
     <button className={`font-semibold px-4 rounded-full  text-primary dark:text-dark-primary bg-buttonBG dark:bg-dark-buttonBG hover:border-primary hover:dark:border-dark-primary hover:scale-105 transition-transform

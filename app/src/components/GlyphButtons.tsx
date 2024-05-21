@@ -85,7 +85,7 @@ export interface GlyphButtonProps {
   /**
    * The click event handler for the button.
    */
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 

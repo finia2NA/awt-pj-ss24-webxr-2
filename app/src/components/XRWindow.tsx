@@ -15,7 +15,7 @@ const XRWindow = ({ children }: XRWindowProps) => {
     <div className="bg-mainBG dark:bg-dark-mainBG
     text-primary dark:text-dark-primary
     backdrop-blur-sm
-    p-16 pt-12 pl-14
+    p-14 pt-8 pl-14
     rounded-lg
     ">
       {children}

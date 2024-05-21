@@ -27,39 +27,39 @@ import TvFillIcon from "../assets/glyphs/tv.fill.svg";
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line react-refresh/only-export-components
 export enum ButtonType {
-  House,
-  CaptionsBubble,
+  Home,
+  Captions,
   ChevronDown,
-  Gear,
+  Settings,
   Heart,
   HeartFill,
-  ListBullet,
-  ListBulletRectangleFill,
-  Magnifyingglass,
-  SpeakerFill,
-  SpeakerSlashFill,
-  SpeakerWave1Fill,
-  SpeakerWave2Fill,
-  SpeakerWave3Fill,
-  TvFill
+  ChannelList,
+  Guide,
+  Search,
+  Volume0,
+  VolumeMuted,
+  Volume1,
+  Volume2,
+  Volume3,
+  TV
 }
 
 const buttonIcons = new Map<ButtonType, string>([
-  [ButtonType.House, HouseFillIcon],
-  [ButtonType.CaptionsBubble, CaptionsBubbleFillIcon],
+  [ButtonType.Home, HouseFillIcon],
+  [ButtonType.Captions, CaptionsBubbleFillIcon],
   [ButtonType.ChevronDown, ChevronDownIcon],
-  [ButtonType.Gear, GearIcon],
+  [ButtonType.Settings, GearIcon],
   [ButtonType.Heart, HeartIcon],
   [ButtonType.HeartFill, HeartFillIcon],
-  [ButtonType.ListBullet, ListBulletIcon],
-  [ButtonType.ListBulletRectangleFill, ListBulletRectangleFillIcon],
-  [ButtonType.Magnifyingglass, MagnifyingglassIcon],
-  [ButtonType.SpeakerFill, SpeakerFillIcon],
-  [ButtonType.SpeakerSlashFill, SpeakerSlashFillIcon],
-  [ButtonType.SpeakerWave1Fill, SpeakerWave1FillIcon],
-  [ButtonType.SpeakerWave2Fill, SpeakerWave2FillIcon],
-  [ButtonType.SpeakerWave3Fill, SpeakerWave3FillIcon],
-  [ButtonType.TvFill, TvFillIcon]
+  [ButtonType.ChannelList, ListBulletIcon],
+  [ButtonType.Guide, ListBulletRectangleFillIcon],
+  [ButtonType.Search, MagnifyingglassIcon],
+  [ButtonType.TV, TvFillIcon],
+  [ButtonType.VolumeMuted, SpeakerSlashFillIcon],
+  [ButtonType.Volume0, SpeakerFillIcon],
+  [ButtonType.Volume1, SpeakerWave1FillIcon],
+  [ButtonType.Volume2, SpeakerWave2FillIcon],
+  [ButtonType.Volume3, SpeakerWave3FillIcon]
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components

@@ -23,7 +23,7 @@ import TvFillIcon from "../assets/glyphs/tv.fill.svg";
 // const fullConfig = resolveConfig(tailwindConfig);
 // const colors = fullConfig.theme.colors;
 
-// Disanling eslint things bc it says this is not used but.. it is? in this file? And it's exported? tslint is tripping.
+// Disabling eslint things bc it says this is not used but.. it is? in this file? And it's exported? tslint is tripping.
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line react-refresh/only-export-components
 export enum ButtonType {
@@ -36,12 +36,12 @@ export enum ButtonType {
   ChannelList,
   Guide,
   Search,
-  Volume0,
+  TV,
   VolumeMuted,
+  Volume0,
   Volume1,
   Volume2,
-  Volume3,
-  TV
+  Volume3
 }
 
 const buttonIcons = new Map<ButtonType, string>([
@@ -63,14 +63,35 @@ const buttonIcons = new Map<ButtonType, string>([
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components
+/**
+ * Props for the GlyphButton component.
+ */
 export interface GlyphButtonProps {
-  type: ButtonType
-  onClick: () => void
+  /**
+   * The type of button.
+   */
+  type: ButtonType;
+
+  /**
+   * Indicates if the button is active.
+   */
+  active?: boolean;
+
+  /**
+   * Indicates if the button is disabled.
+   */
+  disabled?: boolean;
+
+  /**
+   * The click event handler for the button.
+   */
+  onClick: () => void;
 }
 
 
 const GlyphButton = (props: GlyphButtonProps) => {
-  
+  const { active, disabled, onClick } = props;
+
   // Handle dark mode
   const [isDarkMode, setIsDarkMode] = useState(false);
   useEffect(() => {
@@ -91,13 +112,16 @@ const GlyphButton = (props: GlyphButtonProps) => {
   const theSVGPath = buttonIcons.get(props.type);
 
   return (
-    <button className="
+    <button className={`
     bg-uiElem dark:bg-dark-uiElem
     rounded-full p-2
     focus:outline-none
-    hover:border-primary hover:dark:border-dark-primary hover:scale-105 transition-transform
-    "
-      onClick={props.onClick}
+    hover:border-primary hover:dark:border-dark-primary
+    hover:scale-105 transition-transform
+    ${active ? 'border-2 border-primary dark:border-dark-primary' : ''}
+    ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+    `}
+      onClick={disabled ? undefined : onClick}
     >
       <div className="w-6 h-6 items-center justify-center flex">
         <img

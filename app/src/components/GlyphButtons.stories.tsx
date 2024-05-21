@@ -11,6 +11,7 @@ const meta = {
   },
   args: {
     type: ButtonType.ChevronDown,
+    onClick: () => { console.log("hi!") },
   },
 } as Meta<typeof GlyphButton>;
 
@@ -22,15 +23,17 @@ export const Default: Story = {
 };
 
 
-export const HomeButton: Story = {
+export const HomeButtonActive: Story = {
   args: {
     type: ButtonType.Home,
+    active: true,
   },
 };
 
-export const CaptionsButton: Story = {
+export const CaptionsButtonDisabled: Story = {
   args: {
     type: ButtonType.Captions,
+    disabled: true,
   },
 };
 

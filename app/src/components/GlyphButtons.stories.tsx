@@ -22,15 +22,15 @@ export const Default: Story = {
 };
 
 
-export const HouseButton: Story = {
+export const HomeButton: Story = {
   args: {
-    type: ButtonType.House,
+    type: ButtonType.Home,
   },
 };
 
-export const CaptionsBubbleButton: Story = {
+export const CaptionsButton: Story = {
   args: {
-    type: ButtonType.CaptionsBubble,
+    type: ButtonType.Captions,
   },
 };
 
@@ -40,9 +40,9 @@ export const ChevronDownButton: Story = {
   },
 };
 
-export const GearButton: Story = {
+export const SettingsBUtton: Story = {
   args: {
-    type: ButtonType.Gear,
+    type: ButtonType.Settings,
   },
 };
 
@@ -58,56 +58,58 @@ export const HeartFillButton: Story = {
   },
 };
 
-export const ListBulletButton: Story = {
+export const ChannelListButton: Story = {
   args: {
-    type: ButtonType.ListBullet,
+    type: ButtonType.ChannelList,
   },
 };
 
-export const ListBulletRectangleFillButton: Story = {
+export const GuideButton: Story = {
   args: {
-    type: ButtonType.ListBulletRectangleFill,
+    type: ButtonType.Guide,
   },
 };
 
-export const MagnifyingglassButton: Story = {
+export const SearchBUtton: Story = {
   args: {
-    type: ButtonType.Magnifyingglass,
+    type: ButtonType.Search,
   },
 };
 
-export const SpeakerFillButton: Story = {
+
+export const TVButton: Story = {
   args: {
-    type: ButtonType.SpeakerFill,
+    type: ButtonType.TV,
   },
 };
 
-export const SpeakerSlashFillButton: Story = {
+export const VolumeMutedButton: Story = {
   args: {
-    type: ButtonType.SpeakerSlashFill,
+    type: ButtonType.VolumeMuted,
   },
 };
 
-export const SpeakerWave1FillButton: Story = {
+export const Volume0Button: Story = {
   args: {
-    type: ButtonType.SpeakerWave1Fill,
+    type: ButtonType.Volume0,
   },
 };
 
-export const SpeakerWave2FillButton: Story = {
+
+export const Volume1Button: Story = {
   args: {
-    type: ButtonType.SpeakerWave2Fill,
+    type: ButtonType.Volume1,
   },
 };
 
-export const SpeakerWave3FillButton: Story = {
+export const Volume2FillButton: Story = {
   args: {
-    type: ButtonType.SpeakerWave3Fill,
+    type: ButtonType.Volume2,
   },
 };
 
-export const TvFillButton: Story = {
+export const Volume3FillButton: Story = {
   args: {
-    type: ButtonType.TvFill,
+    type: ButtonType.Volume3,
   },
 };

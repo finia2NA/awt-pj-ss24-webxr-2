@@ -1,3 +1,5 @@
+// TODO: add interactivity to the story, see Tabselector story for example
+
 import type { Meta, StoryObj } from '@storybook/react';
 import SettingsWindow from './SettingsWindow';
 
@@ -14,13 +16,13 @@ const meta = {
         title: "Theme",
         options: ["System", "Light", "Dark"],
         selected: 0,
-        onSelect: (index: number) => { console.log("Theme: hi!") },
+        onSelect: (index: number) => { console.log("Theme: selected option "+ index) }
       },
       {
         title: "DVBI-API",
         options: ["Default", "Custom"],
         selected: 0,
-        onSelect: (index: number) => { console.log("API: hi!") },
+        onSelect: (index: number) => { console.log("API: selected option "+ index) }
       }
     ],
   },

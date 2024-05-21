@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react';
 import TabSelector, { Tab } from './TabSelector';
 
@@ -12,8 +12,10 @@ const meta: Meta<typeof TabSelector> = {
   args: {
     collapsed: false,
     selectedTab: Tab.HOME,
-    setCollapsed: (collapsed: boolean) => { console.log("Collapsed: hi!") },
-    setSelectedTab: (tab: Tab) => { console.log("Tab: hi!") },
+    // eslint-disable-next-line no-unused-vars
+    setCollapsed: () => { console.log("Clicked Collapse Toggle") },
+    // eslint-disable-next-line no-unused-vars
+    setSelectedTab: (tab) => { console.log("Selected: " + tab) }
   },
 };
 
@@ -21,9 +23,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+
 };
 
 export const Interactive: Story = {
+  args: {
+    collapsed: true,
+    selectedTab: Tab.HOME,
+  },
+
   render: (args) => {
     const [collapsed, setCollapsed] = useState(args.collapsed);
     const [selectedTab, setSelectedTab] = useState(args.selectedTab);
@@ -44,8 +52,5 @@ export const Interactive: Story = {
       </>
     );
   },
-  args: {
-    collapsed: true,
-    selectedTab: Tab.HOME,
-  },
+
 };

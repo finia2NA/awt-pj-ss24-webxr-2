@@ -34,6 +34,7 @@ const SettingsWindow = (props: SettingsWindowProps) => {
               options={setting.options}
               selected={setting.selected}
               onSelect={setting.onSelect}
+              uniformWidth
             />
           ))}
           <UIElement roundBottom>

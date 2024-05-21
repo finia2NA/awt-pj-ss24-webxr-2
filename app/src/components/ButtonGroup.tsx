@@ -10,10 +10,11 @@ interface ButtonGroupProps {
   onSelect: (index: number) => void;
   roundTop?: boolean;
   roundBottom?: boolean;
+  uniformWidth?: boolean;
 }
 
 const ButtonGroup = (props: ButtonGroupProps) => {
-  const { title, options, selected, onSelect: onClick, roundTop, roundBottom } = props;
+  const { title, options, selected, onSelect: onClick, roundTop, roundBottom, uniformWidth } = props;
 
 
 
@@ -27,7 +28,7 @@ const ButtonGroup = (props: ButtonGroupProps) => {
             const active = selected === index;
 
             return (
-              <RoundButton key={index} active={active} onClick={() => onClick(index)}>
+              <RoundButton className={uniformWidth ? "w-28" : ""} key={index} active={active} onClick={() => onClick(index)}>
                 {option}
               </RoundButton>
             );

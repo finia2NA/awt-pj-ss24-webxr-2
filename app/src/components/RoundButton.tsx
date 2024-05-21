@@ -38,7 +38,7 @@ const RoundButton = (props: RoundButtonProps) => {
 
     border-primary  dark:border-dark-primary
     `}
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
     >
       {children}
     </button>

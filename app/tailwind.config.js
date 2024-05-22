@@ -8,11 +8,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        mainBG: "rgba(204, 204, 204, 0.7)",
+        mainBG: "rgba(240, 240, 240, 0.7)",
         primary: '#000000',
         highlight: '#26B5EA',
         buttonBG: '#EEEEEE',
-        uiElem: 'rgba(240, 240, 240, 0.61)',
+        uiElem: 'rgba(210, 210, 210, 0.61)',
         dark: {
           mainBG: 'rgba(4, 4, 4, 0.7)',
           primary: '#FFFFFF',

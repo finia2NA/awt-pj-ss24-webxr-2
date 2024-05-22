@@ -11,6 +11,7 @@ const meta = {
     layout: 'centered',
   },
   args: {
+    onClick: () => { console.log("hi!") },
   },
 } satisfies Meta<typeof RoundButton>;
 
@@ -37,9 +38,3 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
-
-// export const Empty: Story = {
-//   args: {
-//     children: '',
-//   },
-// };

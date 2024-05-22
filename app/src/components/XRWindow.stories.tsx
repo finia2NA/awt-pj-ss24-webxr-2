@@ -19,3 +19,10 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 
 };
+
+export const Small: Story = {
+  args: {
+    small: true,
+    children: <>Am small</>,
+  },
+};

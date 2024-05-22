@@ -6,6 +6,7 @@ import './App.css'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Html } from '@react-three/drei';
 import PropTypes from 'prop-types';
+import { Interactive, XR, ARButton, Controllers } from '@react-three/xr'
 
 
 
@@ -33,7 +34,7 @@ ExampleReactComponent.propTypes = {
 function App() {
   const [count, setCount] = useState(0)
 
-  return (
+  /*return (
     <>
       <div>
         <h1>Components in a vacuum</h1>
@@ -53,7 +54,22 @@ function App() {
         </Canvas>
       </div>
     </>
-  );
+  );*/
+  return (
+    <>
+      <ARButton />
+      <Canvas>
+        <XR referenceSpace="local">
+          <ambientLight />
+          <pointLight position={[0, 10, 10]} />
+          <Controllers />
+          <Html position={[0, 2, -5]} transform>
+            <ExampleReactComponent count={count} setCount={setCount} />
+          </Html>
+        </XR>
+      </Canvas>
+    </>
+  )
 }
 
 export default App

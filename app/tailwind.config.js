@@ -18,7 +18,17 @@ export default {
           primary: '#FFFFFF',
           buttonBG: '#444444',
           uiElem: 'rgba(115, 115, 115, 0.61)',
-        }
+        },
+      },
+      keyframes: {
+        appear: {
+           "0%": {
+              opacity: "0",
+           },
+           "100%": {
+              opacity: "1",
+           },
+        },
       },
     },
     plugins: [],

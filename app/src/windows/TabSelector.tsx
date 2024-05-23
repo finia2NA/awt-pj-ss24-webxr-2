@@ -46,15 +46,21 @@ const TabSelector = (props: TabSelectorProps) => {
 
   return (
     <XRWindow small>
-      <div className="flex flex-col space-y-3">
-        {collapsed ? (
-          <GlyphButton type={getIcon(selectedTab)} onClick={() => setCollapsed(false)} />
-        ) : (
-          Tabs.map((tab, index) => (
-            <GlyphButton key={index} type={getIcon(tab)} active={selectedTab === index}
-              onClick={() => setSelectedTab(tab)}
-            />
-          )))}
+      <div className={`flex flex-col space-y-3 transition-all duration-300 ease-in-out delay-75 ${collapsed ? "h-11" : "h-52"}`}>
+        <GlyphButton
+          type={getIcon(Tabs[0])}
+          active={!collapsed && selectedTab === Tabs[0]} // Check if the first tab is the selected one and it's not collapsed
+          onClick={() => setCollapsed(!collapsed)}
+          ignoreAnimation={true}
+        />
+        {!collapsed && Tabs.slice(1).map((tab, index) => (
+          <GlyphButton
+            key={index + 1} // Adjust index as we start from the second element
+            type={getIcon(tab)}
+            active={selectedTab === tab} // Check if the current tab is selected
+            onClick={() => setSelectedTab(tab)}
+          />
+        ))}
       </div>
     </XRWindow>
 

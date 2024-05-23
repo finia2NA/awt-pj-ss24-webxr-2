@@ -86,6 +86,15 @@ export interface GlyphButtonProps {
    * The click event handler for the button.
    */
   onClick?: () => void;
+  /**
+   * Custom styles for the button.
+   */
+  customStyle?: string;
+  /**
+   * Whether to ignore the animation when the button is rendered.
+   * This means that the button is always there and doesn't fade in.
+   */
+  ignoreAnimation?: boolean;
 }
 
 
@@ -115,9 +124,14 @@ const GlyphButton = (props: GlyphButtonProps) => {
     <button className={`
     bg-uiElem dark:bg-dark-uiElem
     rounded-full p-2
+    text-center
     focus:outline-none
+    animate-[appear_150ms_cubic-bezier(0.4,_0,_0.2,_1)_300ms_forwards]
+    ${props.ignoreAnimation ? 'opacity-100' : 'opacity-0'}
     hover:border-primary hover:dark:border-dark-primary
-    hover:scale-105 transition-transform
+    hover:scale-105 transition-all
+    ${props.customStyle}
+    duration-300 ease-in-out
     ${active ? 'border-2 border-primary dark:border-dark-primary' : ''}
     ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
     `}
@@ -130,7 +144,7 @@ const GlyphButton = (props: GlyphButtonProps) => {
             WebkitFilter: isDarkMode ? 'invert(1)' : 'invert(0)',
             filter: isDarkMode ? 'invert(1)' : 'invert(0)'
           }}
-          src={theSVGPath} alt="icon" />
+          src={theSVGPath} alt="icon"/>
       </div>
     </button>
   );

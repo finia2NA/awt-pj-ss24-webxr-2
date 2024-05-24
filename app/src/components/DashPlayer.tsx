@@ -25,13 +25,17 @@ export interface DashPlayerProps {
    * Callback function that will be called when the playback state changes (e.g. pause/unpause or mute)
    */
   handlePlaybackUpdate?: (eventType: DashPlayerEvents, data?: DashPlayerEventData) => void
+  /**
+   * Custom class names for the video element (for Tailwind)
+   */
+  className?: string;
 }
 
 /**
  * A simple DASH player component that uses the dash.js library.
  * Note that the `paused` prop is also used for the autoplay feature upon initialization.
  */
-const DashPlayer = ({ src, paused = true, controls = true, muted = false, handlePlaybackUpdate = () => { } }: DashPlayerProps) => {
+const DashPlayer = ({ src, paused = true, controls = true, muted = false, handlePlaybackUpdate = () => { }, className = '' }: DashPlayerProps) => {
   /**
    * Ref to the actual video element that will be used by the dash.js player
    */
@@ -107,7 +111,7 @@ const DashPlayer = ({ src, paused = true, controls = true, muted = false, handle
 
   // The video element itself
   return (
-    <video ref={videoRef} controls={controls}>
+    <video ref={videoRef} controls={controls} className={className}>
       Your browser does not support the video tag.
     </video>
   );

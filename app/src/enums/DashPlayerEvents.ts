@@ -4,10 +4,12 @@ export enum DashPlayerEvents {
     MUTED,
     UNMUTED,
     VOLUME_CHANGED,
-    ERROR
+    ERROR,
+    PLAYBACK_RATE_CHANGED,
+    PLAYBACK_SEEKING,
 }
 
 export interface DashPlayerEventData {
-    type: "volume",
+    type: "volume" | "time" | "rate",
     data: string | number
 }

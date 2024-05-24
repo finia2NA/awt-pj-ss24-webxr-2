@@ -14,8 +14,8 @@ describe("contentGuide", () => {
 
   test("Tagesschau should be on ARD at 9am", async () => {
     const contentGuide = await service.getContentGuide(
-      new Date('2022-09-08T09:00:00'),
-      new Date('2022-09-08T09:05:00')
+      new Date('2022-09-08T07:00:00Z'),
+      new Date('2022-09-08T07:05:00Z')
     );
     expect(contentGuide.programDescriptions[0].title).toBe("Tagesschau");
   });

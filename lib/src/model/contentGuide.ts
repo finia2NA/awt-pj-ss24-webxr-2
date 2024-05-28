@@ -1,4 +1,4 @@
-import {Service} from "./services";
+import { Service } from "./services";
 import { getWholeDataAsJson } from "../io/getter";
 import { castToArray, parseDuration, convertDateToUnix } from "../utils/utils";
 
@@ -49,6 +49,7 @@ class ContentGuide {
   
     /**
      * Retrieves the program descriptions for the service in the specified range.
+     * If no range is specified, the current and next program will be returned.
      */
     public async getData() {
       let range = "now_next=true";  
@@ -63,10 +64,44 @@ class ContentGuide {
       const description = data.TVAMain.ProgramDescription;
       const information = castToArray(description.ProgramInformationTable.ProgramInformation);
       const schedule = castToArray(description.ProgramLocationTable.Schedule.ScheduleEvent);
-  
+
+      if (!information[0] || !schedule[0]) {
+        return;
+      }
+
       for (let info of information) {
         this.programDescriptions.push(new ProgramDescription(info, schedule));
       }
+    };
+
+    /**
+     * Verifies the dates specified for time range according to ETSI TS 103 770 V1.1.1.
+     *
+     * NOTE: Not used atm, validation is left to the backend.
+     */
+    verifyRange() {
+      // {end_unixtime} "shall be greater than {start_unixtime} by a value of either 21 600 seconds (6 hours) or 43 200 seconds (12 hours)"
+      const diffHours = (this._end.getTime() - this._start.getTime()) / (60 * 60 * 1000);
+      if (diffHours !== 6 && diffHours !== 12) {
+        return false;
+      }
+
+      // {start_unixtime,end_unixtime} "shall identify one of the following times of day (0:00, 3:00, 6:00, 9:00, 12:00, 15:00, 18:00, 21:00)"
+      const allowedTimes = [0, 3, 6, 9, 12, 15, 18, 21].map(hour => {
+        const date = new Date();
+        date.setHours(hour, 0, 0, 0);
+        return date;
+      });
+
+      if (!allowedTimes.some(allowedTime => +allowedTime === +this._start) || !allowedTimes.some(allowedTime => +allowedTime === +this._end)) {
+        return false;
+      }
+
+      // TODO:
+      // {start_unixtime} "shall not be less than the Unix time of midnight at the start of the current day minus 28 full days"
+      // {end_unixtime} "shall not be greater than the Unix time of midnight at the end of the present day plus 28 full days"
+
+      return true;
     };
   }
 

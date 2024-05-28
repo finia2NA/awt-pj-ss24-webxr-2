@@ -20,6 +20,14 @@ describe("contentGuide", () => {
     expect(contentGuide.programDescriptions[0].title).toBe("Tagesschau");
   });
 
+  test("There should be no program guide in pre-DVBI era", async () => {
+    const contentGuide = await service.getContentGuide(
+      new Date('1970-01-01T12:00:00Z'),
+      new Date('1970-01-01T12:15:00Z')
+    );
+    expect(contentGuide.programDescriptions.length).toBe(0);
+  });
+
   test("getContent should return current and next program", async () => {
     const contentGuide = await service.getContentGuide();
     expect(contentGuide.programDescriptions.length).toBe(2);

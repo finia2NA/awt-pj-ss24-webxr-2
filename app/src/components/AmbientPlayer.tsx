@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 import { DashPlayerEventData, DashPlayerEvents } from "../enums/DashPlayerEvents";
 import DashPlayer from "./DashPlayer";
 
+export enum AmbientPlayerBlur {
+    xs = "blur-[10px]",
+    sm = "blur-[20px]",
+    md = "blur-[40px]",
+    lg = "blur-[60px]",
+    xl = "blur-[80px]",
+    "2xl" = "blur-[100px]",
+    "3xl" = "blur-[120px]",
+    "4xl" = "blur-[140px]",
+    "5xl" = "blur-[160px]",
+}
+
 export interface AmbientPlayerProps {
     /**
    * The URL of the DASH manifest (MPD file)
@@ -39,9 +51,9 @@ export interface AmbientPlayerProps {
     playbackRate?: number;
     /**
      * The amount of blur to apply to the background video in pixels
-     * Default is 100px
+     * Default is Medium
      */
-    blurAmount?: number;
+    blurAmount?: AmbientPlayerBlur;
     /**
      * Whether the blur effect should be toggled on or off
      * Default is true
@@ -51,7 +63,7 @@ export interface AmbientPlayerProps {
 }
 
 // TODO: Add blur parameter so it can be changed from the parent component
-const AmbientPlayer = ({ src, paused = true, controls = true, muted = false, handlePlaybackUpdate = () => { }, playbackTime = 0, playbackRate = 1, blurAmount = 100, blurToggle = true }: AmbientPlayerProps) => {
+const AmbientPlayer = ({ src, paused = true, controls = true, muted = false, handlePlaybackUpdate = () => { }, playbackTime = 0, playbackRate = 1, blurAmount = AmbientPlayerBlur.md, blurToggle = true }: AmbientPlayerProps) => {
     const [isPaused, setPaused] = useState<boolean>(paused);
     const [internalPlaybackTime, setPlaybackTime] = useState<number>(playbackTime);
     const [internalPlaybackRate, setPlaybackRate] = useState<number>(playbackRate);
@@ -91,7 +103,7 @@ const AmbientPlayer = ({ src, paused = true, controls = true, muted = false, han
         handlePlaybackUpdate(eventType, data);
     }
 
-    const blurClassName = `absolute z-10 w-full h-auto top-0 bottom-0 left-0 right-0 m-auto blur-[${blurAmount}px]`
+    const blurClassName = `absolute z-10 w-full h-auto top-0 bottom-0 left-0 right-0 m-auto ${blurAmount}`
     const blurPlayer = (blurToggle ?
         <DashPlayer className={blurClassName} src={src} paused={isPaused} muted={true} handlePlaybackUpdate={internalPlaybackUpdate} onlyControlled={true} playbackTime={internalPlaybackTime} playbackRate={internalPlaybackRate} controls={false} />
         : null)

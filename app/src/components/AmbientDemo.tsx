@@ -1,11 +1,11 @@
-import AmbientPlayer from "./AmbientPlayer"
+import AmbientPlayer, { AmbientPlayerBlur } from "./AmbientPlayer"
 
 export interface AmbientDemoProps {
     /**
      * The amount of blur to apply to the background video in pixels
-     * Default is 100px
+     * Default is Medium
      */
-    blurAmount?: number;
+    blurAmount?: AmbientPlayerBlur;
     /**
      * Whether the blur effect should be toggled on or off
      * Default is true
@@ -14,7 +14,7 @@ export interface AmbientDemoProps {
     blurToggle?: boolean;
 }
 
-const AmbientDemo = ({ blurAmount = 100, blurToggle = true }: AmbientDemoProps) => {
+const AmbientDemo = ({ blurAmount = AmbientPlayerBlur.md, blurToggle = true }: AmbientDemoProps) => {
     return (
         <AmbientPlayer src="https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd" blurAmount={blurAmount} blurToggle={blurToggle} />
     )

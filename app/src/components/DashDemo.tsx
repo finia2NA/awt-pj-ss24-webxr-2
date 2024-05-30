@@ -2,6 +2,13 @@ import { useState } from 'react';
 import DashPlayer from './DashPlayer';
 import { DashPlayerEventData, DashPlayerEvents } from '../enums/DashPlayerEvents';
 
+/**
+ * A simple demo for the DashPlayer component that demonstrates how to control
+ * the playback state (pause/unpause, volume, ...) externally and make sure that
+ * the component reacts to these changes.
+ * 
+ * Also shows how to handle when the user pauses, seeks etc. 
+ */
 const DashDemo = () => {
     const [isPaused, setPaused] = useState<boolean>(false);
     const [isMuted, setMuted] = useState<boolean>(true);
@@ -50,7 +57,6 @@ const DashDemo = () => {
             <button onClick={() => setPaused(!isPaused)}>Pause / unpause</button>
             <button onClick={() => setMuted(!isMuted)}>Mute / unmute</button>
             <div className="w-[800px] h-[500px] relative">
-                <DashPlayer className="absolute z-10 w-full h-auto top-0 bottom-0 left-0 right-0 m-auto blur-[100px]" src="https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd" paused={isPaused} muted={true} handlePlaybackUpdate={handlePlaybackUpdate} onlyControlled={true} playbackTime={playbackTime} playbackRate={playbackRate} controls={false} />
                 <DashPlayer className="absolute z-20 w-11/12 h-auto top-0 bottom-0 left-0 right-0 m-auto" src="https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd" paused={isPaused} muted={isMuted} handlePlaybackUpdate={handlePlaybackUpdate} />
             </div>
         </>

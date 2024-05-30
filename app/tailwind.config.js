@@ -13,11 +13,13 @@ export default {
         highlight: '#26B5EA',
         buttonBG: '#EEEEEE',
         uiElem: 'rgba(210, 210, 210, 0.61)',
+        darkerUIElem: 'rgba(80, 80, 80, 0.8)',
         dark: {
           mainBG: 'rgba(4, 4, 4, 0.7)',
           primary: '#FFFFFF',
           buttonBG: '#444444',
           uiElem: 'rgba(115, 115, 115, 0.61)',
+          darkerUIElem: 'rgba(80, 80, 80, 0.8)', // TODO: This needs to be changed for the dark mode but that needs testing
         },
       },
       keyframes: {

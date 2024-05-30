@@ -62,7 +62,18 @@ export interface AmbientPlayerProps {
     blurToggle?: boolean;
 }
 
-// TODO: Add blur parameter so it can be changed from the parent component
+// FIXME: Blur effect not really working well when toggling on and off
+// If it is toggled on, the player starts playing from the beginning
+// Which is bad, but also weird to fix. Two options: use imperative functions and refs
+// or two: use React Context, but that one is somewhat difficult and overall not that
+// important right now
+/**
+ * A wrapper for the DashPlayer component that adds a blur effect to the video.
+ * The blur effect can be toggled on or off, but it has a large performance impact
+ * since the video is rendered twice.
+ * Please note that all props are passed down to the DashPlayer component and therefore
+ * all props that are applicable to the DashPlayer component can be used here as well.
+ */
 const AmbientPlayer = ({ src, paused = true, controls = true, muted = false, handlePlaybackUpdate = () => { }, playbackTime = 0, playbackRate = 1, blurAmount = AmbientPlayerBlur.md, blurToggle = true }: AmbientPlayerProps) => {
     const [isPaused, setPaused] = useState<boolean>(paused);
     const [internalPlaybackTime, setPlaybackTime] = useState<number>(playbackTime);

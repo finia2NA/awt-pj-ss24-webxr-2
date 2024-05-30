@@ -14,6 +14,9 @@ export interface AmbientDemoProps {
     blurToggle?: boolean;
 }
 
+/**
+ * A simple demo component that renders the AmbientPlayer component with a test video.
+ */
 const AmbientDemo = ({ blurAmount = AmbientPlayerBlur.md, blurToggle = true }: AmbientDemoProps) => {
     return (
         <AmbientPlayer src="https://dash.akamaized.net/dash264/TestCasesIOP33/adapatationSetSwitching/5/manifest.mpd" blurAmount={blurAmount} blurToggle={blurToggle} />

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import DropDown from './Dropdown';
+import DropDown from './Dropdown2';
 import XRWindow from './XRWindow';
 
 const meta = {
-  title: 'Components/DropDown',
+  title: 'Components/DropDown2',
   component: DropDown,
   tags: ["autodocs"],
   parameters: {

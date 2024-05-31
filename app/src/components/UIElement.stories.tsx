@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import UIElement from './UIContainer';
+import UIElement from './UIElement';
 import XRWindow from './XRWindow';
 
 const meta = {

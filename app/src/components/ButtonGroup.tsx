@@ -1,5 +1,5 @@
 import RoundButton from "./RoundButton";
-import UIElement from "./UIContainer";
+import UIElement from "./UIElement";
 
 
 interface ButtonGroupProps {

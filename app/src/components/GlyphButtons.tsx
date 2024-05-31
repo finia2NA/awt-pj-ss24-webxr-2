@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 
-import CaptionsBubbleFillIcon from "../assets/glyphs/captions.bubble.fill.svg";
-import ChevronDownIcon from "../assets/glyphs/chevron.down.svg";
-import GearIcon from "../assets/glyphs/gear.svg";
-import HeartFillIcon from "../assets/glyphs/heart.fill.svg";
-import HeartIcon from "../assets/glyphs/heart.svg";
-import HouseFillIcon from "../assets/glyphs/house.fill.svg";
-import ListBulletRectangleFillIcon from "../assets/glyphs/list.bullet.rectangle.fill.svg";
-import ListBulletIcon from "../assets/glyphs/list.bullet.svg";
-import MagnifyingglassIcon from "../assets/glyphs/magnifyingglass.svg";
-import SpeakerFillIcon from "../assets/glyphs/speaker.fill.svg";
-import SpeakerSlashFillIcon from "../assets/glyphs/speaker.slash.fill.svg";
-import SpeakerWave1FillIcon from "../assets/glyphs/speaker.wave.1.fill.svg";
-import SpeakerWave2FillIcon from "../assets/glyphs/speaker.wave.2.fill.svg";
-import SpeakerWave3FillIcon from "../assets/glyphs/speaker.wave.3.fill.svg";
-import TvFillIcon from "../assets/glyphs/tv.fill.svg";
+import captionsBubbleFillIcon from "../assets/glyphs/captions.bubble.fill.svg";
+import chevronDownIcon from "../assets/glyphs/chevron.down.svg";
+import gearIcon from "../assets/glyphs/gear.svg";
+import heartFillIcon from "../assets/glyphs/heart.fill.svg";
+import heartIcon from "../assets/glyphs/heart.svg";
+import houseFillIcon from "../assets/glyphs/house.fill.svg";
+import listBulletRectangleFillIcon from "../assets/glyphs/list.bullet.rectangle.fill.svg";
+import listBulletIcon from "../assets/glyphs/list.bullet.svg";
+import magnifyingglassIcon from "../assets/glyphs/magnifyingglass.svg";
+import speakerFillIcon from "../assets/glyphs/speaker.fill.svg";
+import speakerSlashFillIcon from "../assets/glyphs/speaker.slash.fill.svg";
+import speakerWave1FillIcon from "../assets/glyphs/speaker.wave.1.fill.svg";
+import speakerWave2FillIcon from "../assets/glyphs/speaker.wave.2.fill.svg";
+import speakerWave3FillIcon from "../assets/glyphs/speaker.wave.3.fill.svg";
+import tvFillIcon from "../assets/glyphs/tv.fill.svg";
+import useDarkMode from "../hooks/useDarkmode";
 
 
 // This is how you would get the colors from the tailwind config
@@ -45,21 +46,21 @@ export enum ButtonType {
 }
 
 const buttonIcons = new Map<ButtonType, string>([
-  [ButtonType.Home, HouseFillIcon],
-  [ButtonType.Captions, CaptionsBubbleFillIcon],
-  [ButtonType.ChevronDown, ChevronDownIcon],
-  [ButtonType.Settings, GearIcon],
-  [ButtonType.Heart, HeartIcon],
-  [ButtonType.HeartFill, HeartFillIcon],
-  [ButtonType.ChannelList, ListBulletIcon],
-  [ButtonType.Guide, ListBulletRectangleFillIcon],
-  [ButtonType.Search, MagnifyingglassIcon],
-  [ButtonType.TV, TvFillIcon],
-  [ButtonType.VolumeMuted, SpeakerSlashFillIcon],
-  [ButtonType.Volume0, SpeakerFillIcon],
-  [ButtonType.Volume1, SpeakerWave1FillIcon],
-  [ButtonType.Volume2, SpeakerWave2FillIcon],
-  [ButtonType.Volume3, SpeakerWave3FillIcon]
+  [ButtonType.Home, houseFillIcon],
+  [ButtonType.Captions, captionsBubbleFillIcon],
+  [ButtonType.ChevronDown, chevronDownIcon],
+  [ButtonType.Settings, gearIcon],
+  [ButtonType.Heart, heartIcon],
+  [ButtonType.HeartFill, heartFillIcon],
+  [ButtonType.ChannelList, listBulletIcon],
+  [ButtonType.Guide, listBulletRectangleFillIcon],
+  [ButtonType.Search, magnifyingglassIcon],
+  [ButtonType.TV, tvFillIcon],
+  [ButtonType.VolumeMuted, speakerSlashFillIcon],
+  [ButtonType.Volume0, speakerFillIcon],
+  [ButtonType.Volume1, speakerWave1FillIcon],
+  [ButtonType.Volume2, speakerWave2FillIcon],
+  [ButtonType.Volume3, speakerWave3FillIcon]
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -101,22 +102,7 @@ export interface GlyphButtonProps {
 const GlyphButton = (props: GlyphButtonProps) => {
   const { active, disabled, onClick } = props;
 
-  // Handle dark mode
-  const [isDarkMode, setIsDarkMode] = useState(false);
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    // Immediately set dark mode based on the media query
-    setIsDarkMode(mediaQuery.matches);
-
-    // Define a function to handle changes in the media query
-    const handleChange = (event: MediaQueryListEvent) => {
-      setIsDarkMode(event.matches);
-    };
-    mediaQuery.addListener(handleChange);
-
-    // Clean up the event listener when the component unmounts
-    return () => mediaQuery.removeListener(handleChange);
-  }, []);
+  const isDarkMode = useDarkMode();
 
   const theSVGPath = buttonIcons.get(props.type);
 
@@ -144,7 +130,7 @@ const GlyphButton = (props: GlyphButtonProps) => {
             WebkitFilter: isDarkMode ? 'invert(1)' : 'invert(0)',
             filter: isDarkMode ? 'invert(1)' : 'invert(0)'
           }}
-          src={theSVGPath} alt="icon"/>
+          src={theSVGPath} alt="icon" />
       </div>
     </button>
   );

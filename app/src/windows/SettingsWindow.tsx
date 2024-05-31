@@ -1,6 +1,6 @@
 import ButtonGroup from "../components/ButtonGroup";
 import RoundButton from "../components/RoundButton";
-import UIElement from "../components/UIContainer";
+import UIElement from "../components/UIElement";
 import XRWindow from "../components/XRWindow";
 
 

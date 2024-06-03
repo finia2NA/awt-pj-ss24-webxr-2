@@ -51,7 +51,7 @@ const Dropdown = ({ items }: DropdownProps) => {
                             {items.map((item: string, index: number) => (
                                 <a
                                     key={index}
-                                    className="text-primary dark:text-dark-primary block px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer"
+                                    className="text-primary dark:text-dark-primary block px-4 py-2 text-sm hover:bg-dark-mainBG dark:hover:bg-mainBG hover:text-dark-primary dark:hover:text-primary cursor-pointer rounded"
                                     role="menuitem"
                                     onClick={() => handleSelect(item)}
                                 >

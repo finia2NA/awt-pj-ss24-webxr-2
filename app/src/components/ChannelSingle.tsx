@@ -34,6 +34,7 @@ const ChannelSingle = ({ src, title, description, time }: ChannelSingleProps) =>
     }
 
     // TODO: Actually change the color of the heart icon when it's favorited
+    // TODO: change bg color depending on dark mode using tailwind media query
     return (
         <div className="w-72 h-full bg-darkerUIElem flex rounded-lg mb-3">
             <div className="w-1/5 border-r-2 border-white flex flex-col justify-center gap-5 items-center p-1">

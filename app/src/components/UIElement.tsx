@@ -22,6 +22,10 @@ export interface UIElementProps {
    */
   fullRound?: boolean;
 
+  // Conflicts with fullRound
+  // TODO: unify all the round props
+  noRound?: boolean;
+
   /**
    * Additional CSS class name for the UIElement.
    */
@@ -32,15 +36,19 @@ export interface UIElementProps {
   onClick?: () => void;
 }
 
-const UIElement = ({ children, roundTop, roundBottom, fullRound, className, onClick, customColors }: UIElementProps) => {
+const UIElement = ({ children, roundTop, roundBottom, fullRound, noRound, className, onClick, customColors }: UIElementProps) => {
+  const roundingClasses = noRound
+    ? ''
+    : `${roundTop ? (fullRound ? 'rounded-t-full' : 'rounded-t-2xl') : ''}
+       ${roundBottom ? (fullRound ? 'rounded-b-full' : 'rounded-b-2xl') : ''}
+       ${!roundTop && !roundBottom && !fullRound ? 'rounded-md' : ''}`;
+
   return (
     <div className={`${customColors ? customColors : 'bg-uiElem dark:bg-dark-uiElem'}
     text-primary dark:text-dark-primary
     p-4 pl-8 pr-8
-    rounded-md
-    ${roundTop ? (fullRound ? 'rounded-t-full' : 'rounded-t-2xl') : ''}
-    ${roundBottom ? (fullRound ? 'rounded-b-full' : 'rounded-b-2xl') : ''}
-    ` + className}
+    ${roundingClasses}
+    ` + (className ? className : '')}
       onClick={onClick}>
       {children}
     </div>

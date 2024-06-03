@@ -27,12 +27,14 @@ export interface UIElementProps {
    */
   className?: string;
 
+  customColors?: string;
+
   onClick?: () => void;
 }
 
-const UIElement = ({ children, roundTop, roundBottom, fullRound, className, onClick }: UIElementProps) => {
+const UIElement = ({ children, roundTop, roundBottom, fullRound, className, onClick, customColors }: UIElementProps) => {
   return (
-    <div className={`bg-uiElem dark:bg-dark-uiElem
+    <div className={`${customColors ? customColors : 'bg-uiElem dark:bg-dark-uiElem'}
     text-primary dark:text-dark-primary
     p-4 pl-8 pr-8
     rounded-md

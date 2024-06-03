@@ -6,7 +6,7 @@ import './App.css'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Html } from '@react-three/drei';
 import PropTypes from 'prop-types';
-import { Interactive, XR, ARButton, Controllers } from '@react-three/xr'
+import { Interactive, XR, ARButton, Controllers, VRButton } from '@react-three/xr'
 
 
 
@@ -57,13 +57,13 @@ function App() {
   );*/
   return (
     <>
-      <ARButton />
+      <VRButton />
       <Canvas>
         <XR referenceSpace="local">
           <ambientLight />
           <pointLight position={[0, 10, 10]} />
           <Controllers />
-          <Html position={[0, 2, -5]} transform>
+          <Html position={[0, 1, -1]} transform>
             <ExampleReactComponent count={count} setCount={setCount} />
           </Html>
         </XR>

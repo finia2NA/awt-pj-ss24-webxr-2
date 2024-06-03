@@ -29,10 +29,10 @@ const Dropdown = ({ items }: DropdownProps) => {
                 <UIElement roundTop roundBottom fullRound className={`py-2
                     border-[1px] border-transparent hover:border-primary
                     hover:dark:border-dark-primary hover:scale-105 transition-transform
-                    focus:outline-none w-fit flex cursor-pointer`}
+                    focus:outline-none w-fit flex cursor-pointer items-center`}
                     onClick={toggleDropdown}>
                     {selected}
-                    <img src={chevronDownIcon} alt="chevron down" className="ml-2" style={{
+                    <img src={chevronDownIcon} alt="chevron down" className="ml-2 h-full" style={{
                         WebkitFilter: isDarkMode ? 'invert(1)' : 'invert(0)',
                         filter: isDarkMode ? 'invert(1)' : 'invert(0)',
                         transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)'

@@ -11,7 +11,7 @@ const meta = {
   args: {
     channel: 1,
     setChannel: (channel: number) => { },
-    src: "https://itv-api.ard.de/ardstart/img/services/28106.png",
+    channelImageSrc: "https://itv-api.ard.de/ardstart/img/services/28106.png",
     channelTitle: 'Das Erste',
     channelDescription: 'Surfreportage',
   },

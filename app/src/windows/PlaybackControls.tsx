@@ -14,12 +14,15 @@ export interface PlaybackControllsProps {
 }
 
 function PlaybackControlls({ channel, setChannel, channelImageSrc, channelTitle, channelDescription }: PlaybackControllsProps) {
+
+  console.log(channelImageSrc);
+
   return (
-    <XRWindow small>
-      <div className="flex flex-row m-4 space-x-5">
+    <XRWindow small className="pt-2 pb-2">
+      <div className="flex flex-row mx-14 space-x-4 items-center">
         <ChannelNumber channel={channel} setChannel={setChannel} />
         <PlaybackInfo imageSrc={channelImageSrc} title={channelTitle} description={channelDescription} />
-        <div className="flex flex-row h-fit">
+        <div className="flex flex-row h-fit space-x-1">
           <GlyphButton type={ButtonType.ChannelList} />
           <GlyphButton type={ButtonType.Captions} />
           <GlyphButton type={ButtonType.Volume3} />

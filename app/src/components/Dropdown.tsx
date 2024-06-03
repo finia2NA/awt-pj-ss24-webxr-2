@@ -26,6 +26,7 @@ const Dropdown = ({ items }: DropdownProps) => {
     return (
         <div className="relative inline-block text-left">
             <div className="flex flex-row items-center justify-center align-middle">
+                {/* TODO: the transparency of the UIElement looks weird when not drawing over XR window, the UIElement should probably be an XR window, since it is in a way a new window rendering in space. But for that, our XR Window class is currently not flexible enough. */}
                 <UIElement roundTop roundBottom fullRound className={`py-2
                     border-[1px] border-transparent hover:border-primary
                     hover:dark:border-dark-primary hover:scale-105 transition-transform

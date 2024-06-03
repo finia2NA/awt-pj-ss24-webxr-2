@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import HeartIcon from "../assets/glyphs/heart.svg";
+import useDarkMode from "../hooks/useDarkmode";
 
 interface ChannelSingleProps {
     /**
@@ -24,24 +25,9 @@ interface ChannelSingleProps {
 /**
  * A single channel in the channel list.
  */
-const ChannelSingle = ({src, title, description, time}: ChannelSingleProps) => {
-    const [isDarkMode, setIsDarkMode] = useState(true);
+const ChannelSingle = ({ src, title, description, time }: ChannelSingleProps) => {
+    const isDarkMode = useDarkMode();
     const [favorite, setFavorite] = useState(false);
-
-    useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        // Immediately set dark mode based on the media query
-        setIsDarkMode(mediaQuery.matches);
-
-        // Define a function to handle changes in the media query
-        const handleChange = (event: MediaQueryListEvent) => {
-            setIsDarkMode(event.matches);
-        };
-        mediaQuery.addListener(handleChange);
-
-        // Clean up the event listener when the component unmounts
-        return () => mediaQuery.removeListener(handleChange);
-    }, []);
 
     function toggleFavorite() {
         setFavorite((favorite) => !favorite);
@@ -59,7 +45,7 @@ const ChannelSingle = ({src, title, description, time}: ChannelSingleProps) => {
                 <h2 className="text-base">{description}</h2>
                 <h2 className="text-base">{time}</h2>
                 <button className="absolute top-0 right-0 p-2 bg-transparent" onClick={toggleFavorite}>
-                    <img src={HeartIcon} style={{ 
+                    <img src={HeartIcon} style={{
                         WebkitFilter: isDarkMode ? 'invert(1)' : 'invert(0)',
                         filter: isDarkMode ? 'invert(1)' : 'invert(0)',
                     }} />

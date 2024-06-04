@@ -17,6 +17,8 @@
     "@types/three": "^0.164.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-xr-ui": "^0.0.67",
+    "selfsigned": "^2.4.1",
     "three": "^0.164.1",
     "vite-plugin-string": "^1.2.3"
   },

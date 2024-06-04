@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import BottomBar from './BottomBar'
-import StoryHelper from './StoryHelper';
+import StoryHelper from '../components/StoryHelper';
 
 const meta = {
-  title: 'Components/BottomBar',
+  title: 'Windows/BottomBar',
   component: BottomBar,
   tags: ["autodocs"],
   parameters: {

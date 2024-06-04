@@ -19,6 +19,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderWrapped = (args: any) => {
   return (
     <StoryHelper>
@@ -52,7 +53,7 @@ export const ChevronDownButton: Story = {
   },render: (args) => renderWrapped(args)
 };
 
-export const SettingsBUtton: Story = {
+export const SettingsButton: Story = {
   args: {
     type: ButtonType.Settings,
   },render: (args) => renderWrapped(args)
@@ -82,7 +83,7 @@ export const GuideButton: Story = {
   },render: (args) => renderWrapped(args)
 };
 
-export const SearchBUtton: Story = {
+export const SearchButton: Story = {
   args: {
     type: ButtonType.Search,
   },render: (args) => renderWrapped(args)

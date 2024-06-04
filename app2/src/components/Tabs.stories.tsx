@@ -10,10 +10,9 @@ const meta: Meta<typeof Tabs> = {
     layout: 'centered',
   },
   args: {
-    collapsed: false,
     selectedTab: Tab.HOME,
     // eslint-disable-next-line no-unused-vars
-    setSelectedTab: (tab: string) => { console.log("Selected: " + tab) }
+    setSelectedTab: (tab: Tab) => { console.log("Selected: " + tab) }
   },
 };
 

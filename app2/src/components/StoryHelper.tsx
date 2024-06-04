@@ -1,10 +1,15 @@
 import { Canvas } from '@react-three/fiber';
 import { Fullscreen, Root } from '@react-three/uikit';
 
+interface StoryHelperProps {
+  children: React.ReactNode;
+  wide?: boolean;
+}
+
 // p much every story will need this so let's just write it once ok?
-const StoryHelper = ({ children }: { children: React.ReactNode }) => {
+const StoryHelper = ({ children, wide }: StoryHelperProps) => {
   return (
-    <Canvas style={{ height: '500px' }}>
+    <Canvas style={{ height: '500px', width: wide ? '800px' : 'auto' }}>
       <Fullscreen flexDirection="row" padding={10} gap={10}>
         <Root />
         {children}

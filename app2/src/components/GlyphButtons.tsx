@@ -77,7 +77,7 @@ export interface GlyphButtonProps {
 }
 
 const GlyphButton = (props: GlyphButtonProps) => {
-  const { type, active, disabled, onClick} = props;
+  const { type, active, disabled, onClick } = props;
   const icon = buttonIcons.get(type);
 
   return (

@@ -1,7 +1,7 @@
 import './App.css'
 
 import { Fullscreen, Root } from '@react-three/uikit'
-import BottomBar from './components/BottomBar'
+import BottomBar from './windows/BottomBar'
 import GlyphButton, { ButtonType } from './components/GlyphButtons'
 
 

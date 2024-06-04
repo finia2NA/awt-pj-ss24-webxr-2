@@ -3,7 +3,7 @@ import { Text } from '@react-three/uikit'
 import { BoxSelect } from '@react-three/uikit-lucide'
 
 import { HomeIcon, SettingsIcon, Tv2Icon, LayoutListIcon } from '@react-three/uikit-lucide';
-import { ButtonType } from "./GlyphButton";
+import { ButtonType } from "./GlyphButtons";
 
 import React from 'react';
 

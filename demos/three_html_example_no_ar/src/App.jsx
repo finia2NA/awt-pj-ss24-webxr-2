@@ -4,11 +4,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Html } from '@react-three/drei';
+import { OrbitControls, Html, Box } from '@react-three/drei';
 import PropTypes from 'prop-types';
-
-
-
 
 const ExampleReactComponent = ({ count, setCount }) => {
   const [stateCount, setStateCount] = useState(0)
@@ -50,6 +47,9 @@ function App() {
           <Html position={[0, 0.5, 2]} transform>
             <ExampleReactComponent count={count} setCount={setCount} />
           </Html>
+          <Box position={[0, 0, 0]} args={[1, 1, 1]}>
+            <meshStandardMaterial attach="material" color="orange" />
+          </Box>
         </Canvas>
       </div>
     </>

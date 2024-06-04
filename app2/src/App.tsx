@@ -1,34 +1,29 @@
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+import { useState } from 'react'
 import './App.css'
-
 import { Canvas } from '@react-three/fiber'
-import { Fullscreen } from '@react-three/uikit'
-import { TabBar, TabBarItem } from './components/apfel/tab-bar'
-import { Text } from '@react-three/uikit'
-import { BoxSelect } from '@react-three/uikit-lucide'
-import BottomBar from './components/BottomBar'
+import { XR, Controllers, VRButton } from '@react-three/xr'
+import ComponentAssembly from './ComponentAssembly'
 
 function App() {
+  const [count, setCount] = useState(0)
   return (
-    <Canvas>
-      <Fullscreen flexDirection="row" padding={10} gap={10}>
-        <TabBar defaultValue='Home'>
-          <TabBarItem value='Home' icon={<BoxSelect />}>
-            <Text>Home</Text>
-          </TabBarItem>
-          <TabBarItem value='TV' icon={<BoxSelect />}>
-            <Text>TV</Text>
-          </TabBarItem>
-          <TabBarItem value='Guide' icon={<BoxSelect />}>
-            <Text>Guide</Text>
-          </TabBarItem>
-          <TabBarItem value='Settings' icon={<BoxSelect />}>
-            <Text>Settings</Text>
-          </TabBarItem>
-        </TabBar>
-        <BottomBar />
-      </Fullscreen>
-      <color attach="background" args={['blue']} />
-    </Canvas>
+    <>
+      <VRButton />
+      <Canvas>
+        <XR referenceSpace="local">
+          <ambientLight />
+          <pointLight position={[0, 10, 10]} />
+          <Controllers />
+          <mesh position={[0, 1, -5]} onClick={() => setCount(count + 1)}>
+            <boxGeometry />
+            <ComponentAssembly />
+          </mesh>
+          <color attach="background" args={['#272730']} />
+        </XR>
+      </Canvas>
+    </>
   )
 }
 

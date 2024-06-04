@@ -8,7 +8,6 @@ const StoryHelper = ({ children }: { children: React.ReactNode }) => {
       <Fullscreen flexDirection="row" padding={10} gap={10}>
         <Root />
         {children}
-        <color attach="background" args={['#272730']} />
       </Fullscreen>
       <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={5} />
     </Canvas>

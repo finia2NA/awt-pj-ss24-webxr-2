@@ -1,7 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Tabs, { Tab } from './Tabs';
-import { Canvas } from '@react-three/fiber';
-import { Fullscreen, Root } from '@react-three/uikit';
 import StoryHelper from './StoryHelper';
 
 const meta: Meta<typeof Tabs> = {

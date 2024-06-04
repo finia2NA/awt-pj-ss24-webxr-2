@@ -11,25 +11,6 @@ import { XR, Controllers, VRButton } from '@react-three/xr'
 import { Interaction } from 'react-xr-ui'
 
 
-const Clickable = ({ children, onClick, isXR }) => {
-  return (
-    isXR ?
-      <Interaction onDown={onClick}>
-        {children}
-      </Interaction>
-      :
-      <div onClick={onClick}>
-        {children}
-      </div>
-  )
-}
-
-Clickable.propTypes = {
-  children: PropTypes.node.isRequired,
-  onClick: PropTypes.func.isRequired,
-  isXR: PropTypes.bool.isRequired
-}
-
 
 const ExampleReactComponent = ({ count, setCount, isXR }) => {
   const [stateCount, setStateCount] = useState(0)
@@ -39,12 +20,8 @@ const ExampleReactComponent = ({ count, setCount, isXR }) => {
       <h3>React Example Component</h3>
       <img src={reactLogo} alt="React Logo" />
       <img src={viteLogo} alt="Vite Logo" />
-      <Clickable onClick={() => setCount((c) => c + 1)} isXR={isXR}>
-        <button> Shared Count: {count}</button>
-      </Clickable>
-      <Clickable onClick={() => setStateCount((c) => c + 1)} isXR={isXR}>
-        <button> State Count: {stateCount}</button>
-      </Clickable>
+      <button> Shared Count: {count}</button>
+      <button> State Count: {stateCount}</button>
     </>
   )
 }

@@ -35,7 +35,7 @@ export default function Index() {
     <OrbitControls />
     <group position={[0, 1, 1]}>
     <Root backgroundColor="red" sizeX={3} sizeY={2} flexDirection="row">
-      <Text>Test Text that does something</Text>
+      <Text>Test Text that does nothing</Text>
       <DashVideo src={"https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd"} width={400}/>
     </Root>
     </group>

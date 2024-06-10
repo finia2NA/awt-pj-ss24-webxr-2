@@ -66,6 +66,8 @@ const DashPlayer = ({ src, paused = true, controls = true, muted = false, handle
       playerRef.current = dashjs.MediaPlayer().create();
       playerRef.current.initialize(videoRef.current, src, !paused);
       playerRef.current.setMute(muted);
+      console.log("Player Ref: " + playerRef);
+      console.log(playerRef);
 
       if (!onlyControlled) {
         /*

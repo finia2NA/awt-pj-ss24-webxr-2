@@ -7,7 +7,7 @@ import './App.css'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Html } from '@react-three/drei';
 import PropTypes from 'prop-types';
-import { XR, Controllers, VRButton } from '@react-three/xr'
+import { XR, Controllers, VRButton, Hands } from '@react-three/xr'
 import { Interaction } from 'react-xr-ui'
 
 
@@ -43,7 +43,12 @@ function App() {
           <ambientLight />
           <pointLight position={[0, 10, 10]} />
           <Controllers />
-          <Html position={[0, 1, -1]} transform>
+          <Hands />
+          <mesh position={[0, 1, -6]} scale={1.5}>
+            <boxGeometry />
+            <meshBasicMaterial color="blue" />
+          </mesh>
+          <Html position={[0, 1, -6]} transform>
             <ExampleReactComponent count={count} setCount={setCount} isXR={true} />
           </Html>
         </XR>

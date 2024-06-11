@@ -17,6 +17,7 @@
     "@react-three/uikit": "^0.3.4",
     "@react-three/uikit-lucide": "^0.3.4",
     "@react-three/xr": "^5.7.1",
+    "dashjs": "^4.7.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.165.0"

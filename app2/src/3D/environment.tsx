@@ -17,6 +17,10 @@ interface dayNightProps {
   nightMode?: boolean;
 }
 
+interface texturedProps {
+  texture: THREE.Texture;
+}
+
 function applyMaterialToMeshes(scene: Object3D, material: Material) {
   scene.traverse((child: any) => {
     if (child.isMesh) {
@@ -27,75 +31,81 @@ function applyMaterialToMeshes(scene: Object3D, material: Material) {
   });
 }
 
-const Grass = () => {
+const Grass = (props: texturedProps) => {
   const grass = useLoader(GLTFLoader, "grass.glb");
   useEffect(() => {
     const grassMaterial = new MeshStandardMaterial({
       color: new Color(0x91E78B),
       roughness: 0.7,
       metalness: 0.2,
+      envMap: props.texture,
     });
 
     applyMaterialToMeshes(grass.scene, grassMaterial);
-  }, [grass]);
+  }, [grass, props.texture]);
 
   return (
     <primitive object={grass.scene} />
   );
 }
 
-const Trees = () => {
+const Trees = (props: texturedProps) => {
   const trees = useLoader(GLTFLoader, "trees.glb");
   useEffect(() => {
     const treeMaterial = new MeshStandardMaterial({
       color: new Color(0x2FD033),
       roughness: 0.7,
       metalness: 0.1,
+      envMap: props.texture,
     });
 
     applyMaterialToMeshes(trees.scene, treeMaterial);
-  }, [trees]);
+  }, [props.texture, trees]);
 
   return (
     <primitive object={trees.scene} />
   );
 }
 
-const Wood = () => {
+const Wood = (props: texturedProps) => {
   const wood = useLoader(GLTFLoader, "wood.glb");
   useEffect(() => {
     const woodMaterial = new MeshStandardMaterial({
       color: new Color(0x938A47),
       roughness: 0.7,
       metalness: 0.1,
+      envMap: props.texture,
     });
 
     applyMaterialToMeshes(wood.scene, woodMaterial);
-  }, [wood]);
+  }, [props.texture, wood]);
 
   return (
     <primitive object={wood.scene} />
   );
 }
 
-const Water = () => {
+const Water = (props: texturedProps) => {
   const water = useLoader(GLTFLoader, "water.glb");
   useEffect(() => {
     const waterMaterial = new MeshStandardMaterial({
       color: new Color(0x5FD2E7),
       roughness: 0.0,
       metalness: 0.1,
+      opacity: 0.95,
+      transparent: true,
+      envMap: props.texture,
     });
 
     applyMaterialToMeshes(water.scene, waterMaterial);
-  }, [water]);
+  }, [props.texture, water]);
 
   return (
     <primitive object={water.scene} />
   );
 }
 
-const Sail = () => {
+const Sail = (props: texturedProps) => {
   const sail = useLoader(GLTFLoader, "sail.glb");
   useEffect(() => {
     const sailMaterial = new MeshStandardMaterial({
@@ -103,10 +113,11 @@ const Sail = () => {
       roughness: 0.7,
       metalness: 0.1,
       side: DoubleSide,
+      envMap: props.texture,
     });
 
     applyMaterialToMeshes(sail.scene, sailMaterial);
-  }, [sail]);
+  }, [props.texture, sail]);
 
   return (
     <primitive object={sail.scene} />
@@ -115,15 +126,12 @@ const Sail = () => {
 
 
 
-const SkySphere = (props: dayNightProps) => {
-  const texturePath = props.nightMode ? "nightenv.png" : "dayenv.png";
-  const texture = useLoader(THREE.TextureLoader, texturePath);
-
+const SkySphere = (props: texturedProps) => {
 
   return (
     <mesh position={[0, 10, 0]} rotation={[0, 2.4, 0]}>
       <sphereGeometry args={[100, 32, 32]} />
-      <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={props.texture} side={THREE.DoubleSide} />
     </mesh>
   );
 }
@@ -168,14 +176,19 @@ const Lighting = (props: dayNightProps) => {
 
 
 const Environment = (props: EnvironmentProps) => {
+
+  // TODO: memoize
+  const envPath = props.nightMode ? "nightenv.png" : "dayenv.png";
+  const envTexture = useLoader(THREE.TextureLoader, envPath);
+
   return (
     <>
-      <Grass />
-      <Trees />
-      <Wood />
-      <Water />
-      <Sail />
-      <SkySphere nightMode={props.nightMode} />
+      <Grass texture={envTexture} />
+      <Trees texture={envTexture} />
+      <Wood texture={envTexture} />
+      <Water texture={envTexture} />
+      <Sail texture={envTexture} />
+      <SkySphere texture={envTexture} />
       <Lighting nightMode={props.nightMode} />
     </>
   );

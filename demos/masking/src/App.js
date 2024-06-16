@@ -1,3 +1,7 @@
+
+// TODO: the center of the atom is right now behind everything else. this was not the case in the original copy pasted code.
+// Something must have gotten lost in the simplification. Need to investigate this z-index issue.
+
 import React, { Suspense, useRef, useState, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Mask, useGLTF, Bounds, OrbitControls } from '@react-three/drei'

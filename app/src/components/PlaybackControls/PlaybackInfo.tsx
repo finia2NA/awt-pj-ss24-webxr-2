@@ -1,5 +1,5 @@
 import { Container, Image, Text } from "@react-three/uikit";
-import { colors } from "../apfel/theme";
+import useColors from "../../hooks/useColors";
 
 interface PlaybackInfoProps {
   imageSrc: string;
@@ -8,6 +8,8 @@ interface PlaybackInfoProps {
 }
 
 const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
+  const colors = useColors();
+
   return (
     <Container backgroundColor={colors.foreground} backgroundOpacity={0.15} width={400} height={62} borderRadius={12} paddingLeft={12} justifyContent={"center"} alignItems={"center"}>
       {/* FIXME: fix CORS */}

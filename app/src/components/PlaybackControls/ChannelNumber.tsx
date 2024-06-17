@@ -1,5 +1,5 @@
 import { Container, Text } from "@react-three/uikit";
-import { colors } from "../apfel/theme";
+import useColors from "../../hooks/useColors";
 
 export interface ChannelNumberProps {
   channel: number;
@@ -8,6 +8,8 @@ export interface ChannelNumberProps {
 }
 
 const ChannelNumber = ({ channel, setChannel }: ChannelNumberProps) => {
+  const colors = useColors();
+
   return (
     <Container backgroundColor={colors.foreground} backgroundOpacity={0.15} width={52} height={62} borderRadius={12} paddingLeft={12} justifyContent={"space-between"}>
       <Text color={colors.foreground}>{channel.toString()}</Text>

@@ -1,6 +1,6 @@
 import { DefaultProperties, DefaultPropertiesProperties } from '@react-three/uikit'
-import React from 'react'
-import { Color, MeshPhongMaterial } from 'three'
+import { MeshPhongMaterial } from 'three'
+import hsl from '../../utils/hsl'
 
 export class GlassMaterial extends MeshPhongMaterial {
   constructor() {
@@ -9,10 +9,6 @@ export class GlassMaterial extends MeshPhongMaterial {
       shininess: 100,
     })
   }
-}
-
-function hsl(h: number, s: number, l: number) {
-  return new Color().setHSL(h / 360, s / 100, l / 100, 'srgb')
 }
 
 export const colors = {

@@ -1,13 +1,5 @@
 import { Button } from "./apfel/button";
-import { Text, Image, Container, DefaultProperties } from '@react-three/uikit'
 
-
-
-// This is how you would get the colors from the tailwind config
-// import resolveConfig from "tailwindcss/resolveConfig";
-// import tailwindConfig from "../../tailwind.config";
-// const fullConfig = resolveConfig(tailwindConfig);
-// const colors = fullConfig.theme.colors;
 
 // Disabling eslint things bc it says this is not used but.. it is? in this file? And it's exported? tslint is tripping.
 /* eslint-disable no-unused-vars */

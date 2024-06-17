@@ -1,5 +1,10 @@
+import { Color } from "three"
 import useDisplayModeStore from "./useDisplayModeStore"
-import hsl from "../utils/hsl";
+
+
+function hsl(h: number, s: number, l: number) {
+  return new Color().setHSL(h / 360, s / 100, l / 100, 'srgb')
+}
 
 // TODO:
 // Copied from apfel - need adjustments

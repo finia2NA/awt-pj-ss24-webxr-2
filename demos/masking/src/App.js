@@ -17,7 +17,7 @@ export function App() {
 }
 
 function Map() {
-  const [handleCameraMove, setHandleCameraMove] = useState(() => () => {});
+  const [handleCameraMove, setHandleCameraMove] = useState(() => () => { });
 
   return (
     <group>

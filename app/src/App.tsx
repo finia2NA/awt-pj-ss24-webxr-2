@@ -1,18 +1,25 @@
-import { VRButton, ARButton, XR, Controllers, Hands } from '@react-three/xr'
+/* eslint-disable no-unused-vars */
+import { useState } from 'react'
+import './App.css'
 import { Canvas } from '@react-three/fiber'
+import { XR, Controllers, VRButton } from '@react-three/xr'
+import ComponentAssembly from './ComponentAssembly'
 
 function App() {
+  const [count, setCount] = useState(0)
   return (
     <>
       <VRButton />
       <Canvas>
-        <XR>
+        <XR referenceSpace="local">
+          <ambientLight />
+          <pointLight position={[0, 10, 10]} />
           <Controllers />
-          <Hands />
-          <mesh>
+          <mesh position={[0, 1, -5]} onClick={() => setCount(count + 1)}>
             <boxGeometry />
-            <meshBasicMaterial color="blue" />
+            <ComponentAssembly />
           </mesh>
+          <color attach="background" args={['#272730']} />
         </XR>
       </Canvas>
     </>

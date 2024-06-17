@@ -1,19 +1,30 @@
-# XR-DVBI
-*An XR Live TV Experience*
+# React + TypeScript + Vite
 
-## Getting Started
-You need to install the dependencies first. Use `npm i --dev` to install the dependencies.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-From here, you can run the following commands:
+Currently, two official plugins are available:
 
-- `npm run dev` - Start the development server.
-- `npm run build` - Build the project
-- `npm run lint` - Lint the project
-- `npm run preview` - Preview the project (like dev, but with a production build and no hot reload)
-- `npm run storybook` - Start the storybook server
-- `npm run build-storybook` - Build the storybook project
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+## Expanding the ESLint configuration
 
-Technically, the app is served on `https://localhost:3000`. However, the XR simulator will say "VR unsupported" if you try to access using localhost. Instead, you need to find out your local IP (eg 192.168.0.42). You can do this using `ifconfig | grep 192` on MacOS/Linux.
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-The app is served using a self-signed certificate. You might see a warning in the browser. This is normal. The reason for this is that the XR API requires HTTPS.
+- Configure the top-level `parserOptions` property like this:
+
+```js
+export default {
+  // other rules...
+  parserOptions: {
+    ecmaVersion: 'latest',
+    sourceType: 'module',
+    project: ['./tsconfig.json', './tsconfig.node.json'],
+    tsconfigRootDir: __dirname,
+  },
+}
+```
+
+- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
+- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list

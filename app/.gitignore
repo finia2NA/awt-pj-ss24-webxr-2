@@ -25,5 +25,4 @@ dist-ssr
 
 *storybook.log
 
-# Copyrighted icons
-# src/assets/glyphs
+.vite

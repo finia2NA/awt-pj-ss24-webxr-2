@@ -10,8 +10,6 @@ interface RegionList {
   Region: Region[];
 }
 
-
-
 interface LCNTable {
   TargetRegion: string;
   LCN: string[];

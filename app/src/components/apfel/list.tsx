@@ -1,6 +1,6 @@
 import { ComponentInternals, Container, ContainerProperties, DefaultProperties } from '@react-three/uikit'
 import React, { ReactNode, RefAttributes, createContext, forwardRef, useContext } from 'react'
-import { colors } from './theme.js'
+import useColors from '../../hooks/useColors'
 
 type Type = 'plain' | 'inset'
 
@@ -31,7 +31,8 @@ export type ListItemProperties = ContainerProperties & {
 
 export const ListItem: (props: ListItemProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ children, subtitle, selected, leadingAccessory, trailingAccessory, isFirst, isLast, ...props }, ref) => {
-    const type = useContext(ListContext)
+    const colors = useColors();
+    const type = useContext(ListContext);
 
     return (
       <Container
@@ -51,8 +52,8 @@ export const ListItem: (props: ListItemProperties & RefAttributes<ComponentInter
         active={
           type === 'plain'
             ? {
-                backgroundOpacity: 0.3,
-              }
+              backgroundOpacity: 0.3,
+            }
             : undefined
         }
         cursor="pointer"

@@ -1,7 +1,7 @@
 import { ComponentInternals, Container, ContainerProperties } from '@react-three/uikit'
 import { Check } from '@react-three/uikit-lucide'
 import React, { ReactNode, RefAttributes, forwardRef, useState } from 'react'
-import { colors } from './theme.js'
+import useColors from '../../hooks/useColors'
 
 type CheckboxProperties = ContainerProperties & {
   selected?: boolean
@@ -12,6 +12,9 @@ type CheckboxProperties = ContainerProperties & {
 
 export const Checkbox: (props: CheckboxProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ selected, disabled = false, defaultSelected, onSelectedChange, ...props }, ref) => {
+
+    const colors = useColors();
+
     const [internalValue, setInternalValue] = useState(defaultSelected ?? false)
     const value = selected != null ? selected : internalValue
 
@@ -28,10 +31,10 @@ export const Checkbox: (props: CheckboxProperties & RefAttributes<ComponentInter
           disabled
             ? undefined
             : {
-                backgroundOpacity: value ? 1 : 0.3,
-                backgroundColor: value ? colors.accent : colors.foreground,
-                borderColor: value ? colors.accent : colors.foreground,
-              }
+              backgroundOpacity: value ? 1 : 0.3,
+              backgroundColor: value ? colors.accent : colors.foreground,
+              borderColor: value ? colors.accent : colors.foreground,
+            }
         }
         borderOpacity={disabled ? 0.2 : value ? 1 : 0.5}
         justifyContent="center"

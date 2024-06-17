@@ -1,6 +1,6 @@
 import { DefaultProperties, DefaultPropertiesProperties } from '@react-three/uikit'
 import { MeshPhongMaterial } from 'three'
-import hsl from '../../utils/hsl'
+import useColors from '../../hooks/useColors'
 
 export class GlassMaterial extends MeshPhongMaterial {
   constructor() {
@@ -11,16 +11,10 @@ export class GlassMaterial extends MeshPhongMaterial {
   }
 }
 
-export const colors = {
-  foreground: hsl(0, 0, 100),
-  background: hsl(0, 0, 0),
-  card: hsl(0, 0, 53),
-  cardForeground: hsl(0, 0, 100),
-  accent: hsl(210, 100, 52),
-  accentForeground: hsl(0, 0, 100),
-}
-
 export function Defaults(props: DefaultPropertiesProperties) {
+
+  const colors = useColors();
+
   return (
     <DefaultProperties
       scrollbarColor={colors.background}

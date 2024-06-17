@@ -1,5 +1,6 @@
-import { Container, Text } from "@react-three/uikit";
+import { Container, Svg, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
+import triangleicon from "../../assets/triangle.svg"
 
 export interface ChannelNumberProps {
   channel: number;
@@ -14,10 +15,9 @@ const ChannelNumber = ({ channel, setChannel }: ChannelNumberProps) => {
     <Container backgroundColor={colors.foreground} backgroundOpacity={0.15} width={52} height={62} borderRadius={12} paddingLeft={12} justifyContent={"space-between"}>
       <Text color={colors.foreground}>{channel.toString()}</Text>
       <Container flexDirection={"column"} backgroundColor={colors.foreground} backgroundOpacity={0.15} borderRightRadius={12} width={22} justifyContent={"space-evenly"} alignItems={"center"}>
-        {/* TODO: substitute ▲▼ characters (these are not being rendered rn so need to set the font to one where they do) */}
-        <Text color={colors.foreground} onClick={() => setChannel(channel + 1)}>^</Text>
+        <Svg src={triangleicon} width={12} color={colors.foreground} onClick={() => setChannel(channel + 1)} />
         <Container backgroundColor={colors.foreground} height={2} width={22} />
-        <Text color={colors.foreground} onClick={() => setChannel(channel - 1)}>v</Text>
+        <Svg src={triangleicon} width={12} color={colors.foreground} onClick={() => setChannel(channel - 1)} transformRotateZ={180} />
       </Container>
     </Container>
   )

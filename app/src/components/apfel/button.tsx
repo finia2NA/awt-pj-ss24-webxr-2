@@ -1,6 +1,6 @@
 import { ComponentInternals, Container, ContainerProperties, DefaultProperties } from '@react-three/uikit'
 import React, { ReactNode, RefAttributes, forwardRef } from 'react'
-import { colors } from './theme.js'
+import useColors from '../../hooks/useColors'
 
 function getAribtrarySize(size: number) {
   const multiplier = size / 44
@@ -63,6 +63,8 @@ export type ButtonProperties = ContainerProperties & {
 
 export const Button: (props: ButtonProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ children, size = 'md', variant = 'rect', platter, selected, disabled, ...props }, ref) => {
+    const colors = useColors();
+
     const { borderRadius, fontSize, height, padding, iconSize } =
       typeof size === 'number' ? getAribtrarySize(size) : sizes[size]
     return (

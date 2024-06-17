@@ -11,7 +11,7 @@ import React, {
   useState,
 } from 'react'
 import { Card } from './card'
-import { colors } from './theme.js'
+import useColors from '../../hooks/useColors'
 
 type TabBarContext = {
   value: unknown
@@ -30,6 +30,9 @@ export type TabBarProperties = ContainerProperties & {
 
 export const TabBar: (props: TabBarProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ value: valueProp, defaultValue, onValueChange, ...props }, ref) => {
+
+    const colors = useColors();
+
     const [internalValue, setInternalValue] = useState<string | undefined>(defaultValue)
     const value = valueProp !== undefined ? valueProp : internalValue
     const onValueChangeRef = useRef(onValueChange)
@@ -85,6 +88,9 @@ export type TabBarItemProperties = ContainerProperties & {
 
 export const TabBarItem: (props: TabBarItemProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ value: tabValue, children, icon, ...props }, ref) => {
+
+    const colors = useColors();
+
     const { isExpanded, value, setValue } = useContext(TabBarContext)!
     const isSelected = value === tabValue
 

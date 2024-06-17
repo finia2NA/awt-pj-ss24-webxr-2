@@ -13,7 +13,7 @@ interface DisplayModeState {
 
 // My proposed convention: zustand hooks have "Store" in their name
 const useDisplayModeStore = create<DisplayModeState>((set) => ({
-  mode: DisplayMode.LIGHT,
+  mode: DisplayMode.DARK,
   setMode: (mode) => set({ mode }),
 }));
 

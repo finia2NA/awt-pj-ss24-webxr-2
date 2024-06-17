@@ -1,9 +1,10 @@
 import { Button } from "./apfel/button";
 
 import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon } from "@react-three/uikit-lucide";
-import HeartFilledIcon from "../assets/HeartFilledIcon";
+import heartSVG from "../assets/heart.svg";
 
 import { ReactElement } from "react";
+import { Svg } from "@react-three/uikit";
 
 
 // Disabling eslint things bc it says this is not used but.. it is? in this file? And it's exported? tslint is tripping.
@@ -32,7 +33,7 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.ChevronDown, <ChevronDownIcon />],
   [ButtonType.Settings, <SettingsIcon />],
   [ButtonType.Heart, <HeartIcon />],
-  [ButtonType.HeartFill, <HeartFilledIcon />], // TODO: check the correctness of the SVG
+  [ButtonType.HeartFill, <Svg src={heartSVG} />],
   [ButtonType.ChannelList, <ListIcon />],
   [ButtonType.Guide, <LayoutListIcon />],
   [ButtonType.Search, <SearchIcon />],

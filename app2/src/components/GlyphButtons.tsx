@@ -27,9 +27,11 @@ export enum ButtonType {
   Volume0,
   Volume1,
   Volume2,
+  Play,
+  Pause
 }
 
-import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon } from "@react-three/uikit-lucide";
+import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon, Pause, Play } from "@react-three/uikit-lucide";
 
 import { ReactElement } from "react";
 
@@ -48,6 +50,8 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Volume0, <VolumeIcon />],
   [ButtonType.Volume1, <Volume1Icon />],
   [ButtonType.Volume2, <Volume2Icon />],
+  [ButtonType.Play, <Play />],
+  [ButtonType.Pause, <Pause />]
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -81,7 +85,7 @@ const GlyphButton = (props: GlyphButtonProps) => {
   const icon = buttonIcons.get(type);
 
   return (
-    <Button variant="icon" size="md" platter disabled={disabled} onClick={onClick} selected={active}>
+    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={onClick} selected={active}>
       {icon}
     </Button >
   )

@@ -1,9 +1,7 @@
 import { useEffect } from 'react';
 import { useLoader } from "@react-three/fiber";
-import { DoubleSide, Material, Object3D, Vector3 } from "three";
+import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { MeshStandardMaterial, Color } from 'three';
-import * as THREE from 'three';
 
 interface EnvironmentProps {
   position: Vector3;
@@ -18,7 +16,7 @@ interface dayNightProps {
 }
 
 interface texturedProps {
-  texture: THREE.Texture;
+  texture: Texture;
 }
 
 function applyMaterialToMeshes(scene: Object3D, material: Material) {
@@ -131,7 +129,7 @@ const SkySphere = (props: texturedProps) => {
   return (
     <mesh position={[0, 10, 0]} rotation={[0, 2.4, 0]}>
       <sphereGeometry args={[100, 32, 32]} />
-      <meshBasicMaterial map={props.texture} side={THREE.DoubleSide} />
+      <meshBasicMaterial map={props.texture} side={DoubleSide} />
     </mesh>
   );
 }
@@ -179,7 +177,7 @@ const Environment = (props: EnvironmentProps) => {
 
   // TODO: memoize
   const envPath = props.nightMode ? "nightenv.png" : "dayenv.png";
-  const envTexture = useLoader(THREE.TextureLoader, envPath);
+  const envTexture = useLoader(TextureLoader, envPath);
 
   return (
     <>

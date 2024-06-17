@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Environment from './environment';
+import Environment from './Environment';
 import { Vector3 } from 'three';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
@@ -42,6 +42,7 @@ export const Default: Story = {
         <PerspectiveCamera makeDefault position={[25, 5, 25]} ref={(camera) => camera && camera.lookAt(new Vector3(15, 5, 0))} />
         <gridHelper args={[200, 200]} />
         <axesHelper args={[100]} />
+        {/* This error is expected since useOrbitControls does not exist in env. args. I'm sure there's a way to fix this, not bothering since this is just a story*/}
         {args.useOrbitControls && <OrbitControls />}
         <EffectComposer>
           {/* <DepthOfField focusDistance={30} focalLength={0.02} bokehScale={2} height={480} /> */}

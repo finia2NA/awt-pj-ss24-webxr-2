@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLoader } from "@react-three/fiber";
 import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide } from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface EnvironmentProps {
   position: Vector3;

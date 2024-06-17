@@ -1,7 +1,9 @@
 import useHeartedChannelsStore from "../../hooks/useHeartedChannelsStore";
-import HeartFilledIcon from "../../assets/HeartFilledIcon";
+import heartSVG from "../../assets/heart.svg";
 import { HeartIcon } from "@react-three/uikit-lucide";
 import { Button } from "../apfel/button";
+import { Svg } from "@react-three/uikit";
+
 
 
 interface HeartButtonProps {
@@ -22,7 +24,7 @@ const HeartButton = ({ channelID }: HeartButtonProps) => {
 
   return (
     <Button variant="icon" size="md" onClick={onClick}>
-      {isHearted ? <HeartFilledIcon /> : <HeartIcon />}
+      {isHearted ? <Svg src={heartSVG} /> : <HeartIcon />}
     </Button>);
 }
 

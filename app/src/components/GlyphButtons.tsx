@@ -34,6 +34,7 @@ export enum ButtonType {
 import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon, Pause, Play } from "@react-three/uikit-lucide";
 
 import { ReactElement } from "react";
+import useColors from "../hooks/useColors";
 
 const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Home, <HomeIcon />],
@@ -84,8 +85,10 @@ const GlyphButton = (props: GlyphButtonProps) => {
   const { type, active, disabled, onClick } = props;
   const icon = buttonIcons.get(type);
 
+  const colors = useColors();
+
   return (
-    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={onClick} selected={active}>
+    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={onClick} selected={active} backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity}>
       {icon}
     </Button >
   )

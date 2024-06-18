@@ -1,12 +1,12 @@
 import {
     Container,
-    VideoContainer as VideoImpl,
-    Text,
-    useVideoContainerElement as useVideoElement,
+    Video as VideoImpl,
+    useVideoElement as useVideoElement,
 } from '@react-three/uikit';
 import dashjs from 'dashjs';
 import { MediaPlayerClass } from 'dashjs';
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import PlaybackControls from '../windows/PlaybackControls';
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
@@ -33,10 +33,19 @@ const DashPlayer = forwardRef(({ src, width, playing = true }: { src: string, wi
     }, [playing]);
 
     return (
-        <Container width={width}>
-            <VideoImpl>
-                <InsideVideo src={src} ref={playerRef} /> {/* Pass the player reference to InsideVideo */}
-            </VideoImpl>
+        <Container flexDirection={"column"} alignContent={"center"}>
+            <Container width={width} height={"auto"} alignSelf={"center"}>
+                <Container width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
+                    <VideoImpl borderRadius={6}>
+                        <Container>
+                            <InsideVideo src={src} ref={playerRef} />
+                        </Container>
+                    </VideoImpl>
+                </Container>
+            </Container>
+            <Container alignSelf={"center"} height={"auto"} marginTop={-20}>
+                <PlaybackControls channel={0} setChannel={() => {}} channelImageSrc={""} channelTitle={"Big Buck Bunny"} channelDescription={"Description"} togglePlayPause={togglePlayPause} isPlaying={isPlaying}/>
+            </Container>
         </Container>
     );
 });

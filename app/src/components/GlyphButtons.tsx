@@ -1,11 +1,13 @@
 import { Button } from "./apfel/button";
+import { Text, Image, Container, DefaultProperties } from '@react-three/uikit'
 
-import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon } from "@react-three/uikit-lucide";
-import heartSVG from "../assets/heart.svg";
 
-import { ReactElement } from "react";
-import { Svg } from "@react-three/uikit";
 
+// This is how you would get the colors from the tailwind config
+// import resolveConfig from "tailwindcss/resolveConfig";
+// import tailwindConfig from "../../tailwind.config";
+// const fullConfig = resolveConfig(tailwindConfig);
+// const colors = fullConfig.theme.colors;
 
 // Disabling eslint things bc it says this is not used but.. it is? in this file? And it's exported? tslint is tripping.
 /* eslint-disable no-unused-vars */
@@ -25,7 +27,13 @@ export enum ButtonType {
   Volume0,
   Volume1,
   Volume2,
+  Play,
+  Pause
 }
+
+import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon, Pause, Play } from "@react-three/uikit-lucide";
+
+import { ReactElement } from "react";
 
 const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Home, <HomeIcon />],
@@ -33,7 +41,7 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.ChevronDown, <ChevronDownIcon />],
   [ButtonType.Settings, <SettingsIcon />],
   [ButtonType.Heart, <HeartIcon />],
-  [ButtonType.HeartFill, <Svg src={heartSVG} />],
+  [ButtonType.HeartFill, <HeartIcon />], // TODO
   [ButtonType.ChannelList, <ListIcon />],
   [ButtonType.Guide, <LayoutListIcon />],
   [ButtonType.Search, <SearchIcon />],
@@ -42,6 +50,8 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Volume0, <VolumeIcon />],
   [ButtonType.Volume1, <Volume1Icon />],
   [ButtonType.Volume2, <Volume2Icon />],
+  [ButtonType.Play, <Play />],
+  [ButtonType.Pause, <Pause />]
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -72,10 +82,10 @@ export interface GlyphButtonProps {
 
 const GlyphButton = (props: GlyphButtonProps) => {
   const { type, active, disabled, onClick } = props;
-
   const icon = buttonIcons.get(type);
+
   return (
-    <Button variant="icon" size="md" platter disabled={disabled} onClick={onClick} selected={active}>
+    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={onClick} selected={active}>
       {icon}
     </Button >
   )

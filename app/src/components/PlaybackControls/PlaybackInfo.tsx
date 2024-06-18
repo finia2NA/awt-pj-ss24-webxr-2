@@ -11,7 +11,7 @@ const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
   const colors = useColors();
 
   return (
-    <Container backgroundColor={colors.foreground} backgroundOpacity={0.15} width={400} height={62} borderRadius={12} paddingLeft={12} justifyContent={"center"} alignItems={"center"}>
+    <Container backgroundColor={colors.foreground} backgroundOpacity={colors.backgroundOpacity} width={400} height={62} borderRadius={12} paddingLeft={12} justifyContent={"center"} alignItems={"center"}>
       {/* FIXME: fix CORS */}
       <Image src={imageSrc} />
       <Container flexDirection={"column"}>

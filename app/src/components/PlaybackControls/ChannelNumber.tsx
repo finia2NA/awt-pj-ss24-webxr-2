@@ -12,9 +12,9 @@ const ChannelNumber = ({ channel, setChannel }: ChannelNumberProps) => {
   const colors = useColors();
 
   return (
-    <Container backgroundColor={colors.foreground} backgroundOpacity={0.15} width={52} height={62} borderRadius={12} paddingLeft={12} justifyContent={"space-between"}>
+    <Container backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity} width={56} height={62} borderRadius={12} paddingLeft={12} justifyContent={"space-between"}>
       <Text color={colors.foreground}>{channel.toString()}</Text>
-      <Container flexDirection={"column"} backgroundColor={colors.foreground} backgroundOpacity={0.15} borderRightRadius={12} width={22} justifyContent={"space-evenly"} alignItems={"center"}>
+      <Container flexDirection={"column"} backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity} borderRightRadius={12} width={24} justifyContent={"space-evenly"} alignItems={"center"}>
         <Svg src={triangleicon} width={12} color={colors.foreground} onClick={() => setChannel(channel + 1)} />
         <Container backgroundColor={colors.foreground} height={2} width={22} />
         <Svg src={triangleicon} width={12} color={colors.foreground} onClick={() => setChannel(channel - 1)} transformRotateZ={180} />

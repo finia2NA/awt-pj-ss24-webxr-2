@@ -22,6 +22,7 @@ const StoryHelper = ({ children, wide }: StoryHelperProps) => {
           {children}
         </Fullscreen>
         <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={5} />
+        {/* <color attach="background" args={mode === 'dark' ? ['#333333'] : ['#e6e6e6']} /> */}
       </Canvas>
     </>
   )

@@ -3,10 +3,20 @@ import { MeshPhongMaterial } from 'three'
 import useColors from '../../hooks/useColors'
 
 export class GlassMaterial extends MeshPhongMaterial {
+
   constructor() {
     super({
       specular: '#555',
       shininess: 100,
+    })
+  }
+}
+
+export class LightGlassMaterial extends MeshPhongMaterial {
+  constructor() {
+    super({
+      specular: '#555',
+      shininess: 20,
     })
   }
 }
@@ -17,10 +27,10 @@ export function Defaults(props: DefaultPropertiesProperties) {
 
   return (
     <DefaultProperties
-      scrollbarColor={colors.background}
+      scrollbarColor={colors.foreground}
       scrollbarBorderRadius={4}
       scrollbarOpacity={0.3}
-      color={colors.background}
+      color={colors.cardBackground}
       fontWeight="medium"
       {...props}
     />

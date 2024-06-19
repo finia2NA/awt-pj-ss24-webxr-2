@@ -77,7 +77,7 @@ export const Button: (props: ButtonProperties & RefAttributes<ComponentInternals
         justifyContent="center"
         alignItems="center"
         backgroundColor={colors.foreground}
-        backgroundOpacity={disabled ? 0.1 : selected ? 1 : platter ? 0.15 : 0}
+        backgroundOpacity={disabled ? 0.1 : selected ? 1 : platter ? colors.backgroundOpacity : 0}
         hover={{
           backgroundOpacity: disabled ? 0.1 : selected ? 1 : 0.2,
         }}

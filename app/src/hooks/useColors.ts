@@ -13,6 +13,8 @@ interface Colors {
   backgroundOpacity: number;
   accent: Color;
   accentForeground: Color;
+  
+  scrollbar: Color;
 
   // card colors
   cardForeground: Color;
@@ -28,6 +30,8 @@ const darkColors: Colors = {
   accent: hsl(210, 100, 52),
   accentForeground: hsl(0, 0, 100),
 
+  scrollbar: hsl(0, 0, 35),
+
   cardForeground: hsl(0, 0, 100),
   cardBackground: hsl(0, 0, 20),
   cardBackgroundOpacity: 0.4,
@@ -40,6 +44,8 @@ const lightColors: Colors = {
   backgroundOpacity: 0.4,
   accent: hsl(210, 100, 48),
   accentForeground: hsl(0, 0, 0),
+
+  scrollbar: hsl(0, 0, 65),
 
   cardForeground: hsl(0, 0, 0), // rn just used for card border
   cardBackground: hsl(0, 0, 100),

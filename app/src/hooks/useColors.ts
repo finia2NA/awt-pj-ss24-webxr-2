@@ -40,6 +40,7 @@ const lightColors: Colors = {
   backgroundOpacity: 0.4,
   accent: hsl(210, 100, 48),
   accentForeground: hsl(0, 0, 0),
+
   cardForeground: hsl(0, 0, 0), // rn just used for card border
   cardBackground: hsl(0, 0, 100),
   cardBackgroundOpacity: 0.4,

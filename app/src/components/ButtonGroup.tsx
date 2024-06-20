@@ -1,6 +1,7 @@
 import { Container, Text } from "@react-three/uikit";
 import { Button } from "./apfel/button";
 import useColors from "../hooks/useColors";
+import { Card } from "./apfel/card";
 
 // Title, options, roundTop, roundBottom, selected: int, onClick
 interface ButtonGroupProps {
@@ -20,14 +21,21 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
   return (
     <Container
       borderRadius={10}
-      borderTopRadius={roundTop ? 40 : undefined}
-      borderBottomRadius={roundBottom ? 40 : undefined}
+      borderTopRadius={roundTop ? 20 : undefined}
+      borderBottomRadius={roundBottom ? 20 : undefined}
       backgroundColor={colors.background}
       backgroundOpacity={colors.backgroundOpacity}
-      padding={10}
+      paddingY={10}
+      paddingRight={20}
+      paddingLeft={24}
+      alignItems={'center'}
+      gap={24}
+      alignSelf={"flex-start"}
     >
       <Text
         color={colors.foreground}
+        fontSize={26}
+        fontWeight={'medium'}
       >{title}</Text>
       <Container
         gap={10}

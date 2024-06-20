@@ -20,15 +20,24 @@ export interface PlaybackControlsProps {
 
 const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying }: PlaybackControlsProps) => {
   return (
-    <Card width={700} height={80} justifyContent={"space-around"} alignItems={"center"} paddingX={10}>
+    <Card
+      height={80}
+      justifyContent={"space-around"}
+      alignItems={"center"}
+      paddingX={22}
+      gap={10}
+      alignSelf={"flex-start"}>
+
       <ChannelNumber channel={channel} setChannel={setChannel} />
       <PlaybackInfo imageSrc={channelImageSrc} title={channelTitle} description={channelDescription} />
-      <Container gapColumn={10}>
+
+      <Container gapColumn={8}>
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
         <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />
         <GlyphButton type={ButtonType.Volume2} />
       </Container>
+
     </Card>
   )
 }

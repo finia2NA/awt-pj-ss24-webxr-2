@@ -28,6 +28,14 @@ const DashPlayer = forwardRef(({ src, width, playing = true }: { src: string, wi
         }
     };
 
+    const toggleChannelList = () => {
+        throw new Error('Not implemented');
+    }
+
+    const toggleCaptions = () => {
+        throw new Error('Not implemented');
+    }
+
     useEffect(() => {
         playing ? playerRef.current?.play() : playerRef.current?.pause();
     }, [playing]);
@@ -44,7 +52,7 @@ const DashPlayer = forwardRef(({ src, width, playing = true }: { src: string, wi
                 </Container>
             </Container>
             <Container alignSelf={"center"} height={"auto"} marginTop={-20}>
-                <PlaybackControls channel={0} setChannel={() => {}} channelImageSrc={""} channelTitle={"Big Buck Bunny"} channelDescription={"Description"} togglePlayPause={togglePlayPause} isPlaying={isPlaying}/>
+                <PlaybackControls channel={0} setChannel={() => { }} channelImageSrc={""} channelTitle={"Big Buck Bunny"} channelDescription={"Description"} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} />
             </Container>
         </Container>
     );

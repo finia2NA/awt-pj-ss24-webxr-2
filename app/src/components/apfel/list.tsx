@@ -1,5 +1,5 @@
 import { ComponentInternals, Container, ContainerProperties, DefaultProperties } from '@react-three/uikit'
-import React, { ReactNode, RefAttributes, createContext, forwardRef, useContext } from 'react'
+import { ReactNode, RefAttributes, createContext, forwardRef, useContext } from 'react'
 import useColors from '../../hooks/useColors'
 
 type Type = 'plain' | 'inset'

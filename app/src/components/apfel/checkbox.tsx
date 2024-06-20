@@ -1,6 +1,6 @@
 import { ComponentInternals, Container, ContainerProperties } from '@react-three/uikit'
 import { Check } from '@react-three/uikit-lucide'
-import React, { ReactNode, RefAttributes, forwardRef, useState } from 'react'
+import { ReactNode, RefAttributes, forwardRef, useState } from 'react'
 import useColors from '../../hooks/useColors'
 
 type CheckboxProperties = ContainerProperties & {

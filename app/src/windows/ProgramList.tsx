@@ -16,6 +16,7 @@ export interface ProgramItem {
 
 interface ProgramListProps {
     items: ProgramItem[];
+    // eslint-disable-next-line no-unused-vars
     onItemClick: (item: ProgramItem) => void;
 }
 

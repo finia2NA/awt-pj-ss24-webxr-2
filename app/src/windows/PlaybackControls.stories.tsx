@@ -11,7 +11,8 @@ const meta: Meta<typeof PlaybackControls> = {
   },
   args: {
     channel: 1,
-    setChannel: (channel: number) => { },
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    setChannel: (_channel: number) => { },
     channelImageSrc: "https://itv-api.ard.de/ardstart/img/services/28106.png",
     channelTitle: 'Das Erste',
     channelDescription: 'Surfreportage',

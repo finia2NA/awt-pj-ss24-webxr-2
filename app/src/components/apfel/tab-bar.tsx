@@ -1,5 +1,5 @@
 import { ComponentInternals, Container, ContainerProperties, DefaultProperties } from '@react-three/uikit'
-import React, {
+import {
   ReactNode,
   RefAttributes,
   SetStateAction,
@@ -15,8 +15,10 @@ import useColors from '../../hooks/useColors'
 
 type TabBarContext = {
   value: unknown
+  // eslint-disable-next-line no-unused-vars
   setValue(value: unknown): void
   isExpanded: boolean
+  // eslint-disable-next-line no-unused-vars
   setIsExpanded(value: SetStateAction<boolean>): void
 }
 
@@ -25,13 +27,13 @@ const TabBarContext = createContext<TabBarContext | undefined>(undefined)
 export type TabBarProperties = ContainerProperties & {
   value?: string
   defaultValue?: string
+  // eslint-disable-next-line no-unused-vars
   onValueChange?(value: string): void
 }
 
+// eslint-disable-next-line no-unused-vars
 export const TabBar: (props: TabBarProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ value: valueProp, defaultValue, onValueChange, ...props }, ref) => {
-
-    const colors = useColors();
 
     const [internalValue, setInternalValue] = useState<string | undefined>(defaultValue)
     const value = valueProp !== undefined ? valueProp : internalValue
@@ -86,6 +88,7 @@ export type TabBarItemProperties = ContainerProperties & {
   icon: ReactNode
 }
 
+// eslint-disable-next-line no-unused-vars
 export const TabBarItem: (props: TabBarItemProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ value: tabValue, children, icon, ...props }, ref) => {
 

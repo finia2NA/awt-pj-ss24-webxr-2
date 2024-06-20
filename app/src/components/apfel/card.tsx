@@ -1,5 +1,5 @@
 import { ComponentInternals, Container, ContainerProperties, DefaultProperties } from '@react-three/uikit'
-import React, { ReactNode, RefAttributes, forwardRef } from 'react'
+import { ReactNode, RefAttributes, forwardRef } from 'react'
 import { GlassMaterial, LightGlassMaterial } from './theme.js'
 import useColors from '../../hooks/useColors.js'
 import useDisplayModeStore from '../../hooks/useDisplayModeStore.js'

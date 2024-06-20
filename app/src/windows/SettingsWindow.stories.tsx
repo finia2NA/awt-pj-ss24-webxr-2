@@ -1,13 +1,34 @@
-import { Story, Meta } from '@storybook/react';
-
+import type { Meta, StoryObj } from '@storybook/react';
 import SettingsWindow from './SettingsWindow';
+import StoryHelper from '../components/StoryHelper';
 
-export default {
-  title: 'Windows/SettingsWindow',
+const meta: Meta<typeof SettingsWindow> = {
+  title: 'windows/SettingsWindow',
   component: SettingsWindow,
-} as Meta;
+  tags: ["autodocs"],
+  parameters: {
+    layout: 'centered',
+  },
+  args: {
+    title: "Title",
+    options: ["Option 1", "Option 2", "Option 3"],
+    roundTop: false,
+    roundBottom: false,
+    selected: 0,
+    onClick: (index: number) => console.log(index),
+  },
+};
 
-const Template: Story = () => <SettingsWindow />;
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-export const Default = Template.bind({});
-Default.args = {};
+export const Default: Story = {
+  render: (args) => {
+    return (
+      <StoryHelper wide>
+        <SettingsWindow {...args} />
+      </StoryHelper>
+    )
+  }
+
+};

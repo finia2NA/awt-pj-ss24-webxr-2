@@ -3,8 +3,6 @@ import { Text } from '@react-three/uikit'
 
 import { HomeIcon, SettingsIcon, Tv2Icon, LayoutListIcon } from '@react-three/uikit-lucide';
 
-import React from 'react';
-
 /* eslint-disable no-unused-vars */
 // eslint-disable-next-line react-refresh/only-export-components
 export enum Tab {

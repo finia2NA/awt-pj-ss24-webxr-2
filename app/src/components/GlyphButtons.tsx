@@ -1,7 +1,4 @@
 import { Button } from "./apfel/button";
-import { Text, Image, Container, DefaultProperties } from '@react-three/uikit'
-
-
 
 // This is how you would get the colors from the tailwind config
 // import resolveConfig from "tailwindcss/resolveConfig";

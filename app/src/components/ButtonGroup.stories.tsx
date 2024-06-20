@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ButtonGroup from './ButtonGroup';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from './StoryHelper';
 
 const meta: Meta<typeof ButtonGroup> = {
-  title: 'components/Settings/ButtonGroup',
+  title: 'components/ButtonGroup',
   component: ButtonGroup,
   tags: ["autodocs"],
   parameters: {

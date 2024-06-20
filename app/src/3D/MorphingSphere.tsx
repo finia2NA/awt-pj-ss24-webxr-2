@@ -6,7 +6,7 @@ interface MorphingSphereProps {
   sliderValue: number;
 }
 
-const MorphingSphere = ({ position, scale, sliderValue }) => {
+const MorphingSphere = ({ position, scale, sliderValue }: MorphingSphereProps) => {
 
   if (!(sliderValue >= 0 && sliderValue <= 1)) {
     throw new Error('Slider value must be between 0 and 1');

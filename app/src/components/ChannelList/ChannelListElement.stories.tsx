@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ChannelListElement from './ChannelListElement';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from '../../StoryHelper'
 
 const meta: Meta<typeof ChannelListElement> = {
     title: 'Components/ChannelList/ChannelListElement',

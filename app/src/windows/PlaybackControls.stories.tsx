@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import PlaybackControls from './PlaybackControls';
-import StoryHelper from '../components/StoryHelper';
+import StoryHelper from '../StoryHelper'
+
+
 
 const meta: Meta<typeof PlaybackControls> = {
   title: 'Windows/PlaybackControls',

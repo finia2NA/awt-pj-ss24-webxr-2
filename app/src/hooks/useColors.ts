@@ -1,5 +1,5 @@
 import { Color } from "three"
-import useDisplayModeStore from "./useDisplayModeStore"
+import useDisplayModeStore, { BiTheme } from "./useDisplayModeStore"
 
 
 function hsl(h: number, s: number, l: number) {
@@ -13,7 +13,7 @@ interface Colors {
   backgroundOpacity: number;
   accent: Color;
   accentForeground: Color;
-  
+
   scrollbar: Color;
 
   // card colors
@@ -55,8 +55,8 @@ const lightColors: Colors = {
 
 
 const useColors = () => {
-  const mode = useDisplayModeStore((state) => state.mode);
-  return mode === 'dark' ? darkColors : lightColors;
+  const biTheme = useDisplayModeStore((state) => state.biTheme);
+  return biTheme === BiTheme.DARK ? darkColors : lightColors;
 }
 
 export default useColors

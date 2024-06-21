@@ -23,7 +23,8 @@ const sessionOptions = {
   requiredFeatures: ["local-floor", "hand-tracking"]
 };
 
-export default function Index() {
+export default function App() {
+
   const [selectedTab, setSelectedTab] = useState(Tab.TV);
 
   const enterAR = useEnterXR("immersive-ar", sessionOptions);

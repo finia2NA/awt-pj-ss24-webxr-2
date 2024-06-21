@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-import create from 'zustand';
+import { create } from 'zustand';
 
 interface HeartedChannelsState {
   heartedChannels: Set<string>;

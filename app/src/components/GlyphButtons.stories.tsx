@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import GlyphButton from './GlyphButtons'
 import { ButtonType } from './GlyphButtons';
-import StoryHelper from './StoryHelper';
+import StoryHelper from '../StoryHelper';
 
 const meta = {
   title: 'Components/GlyphButtons',

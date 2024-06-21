@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import HeartButton from './HeartButton';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from '../../StoryHelper'
 import useHeartedChannelsStore from '../../hooks/useHeartedChannelsStore';
 
 const meta: Meta<typeof HeartButton> = {

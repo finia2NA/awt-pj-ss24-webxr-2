@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import SettingsWindow from './SettingsWindow';
-import StoryHelper from '../components/StoryHelper';
+import StoryHelper from '../StoryHelper'
 
 const meta: Meta<typeof SettingsWindow> = {
   title: 'windows/SettingsWindow',

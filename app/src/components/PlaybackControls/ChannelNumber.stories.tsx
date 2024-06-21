@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ChannelNumber from './ChannelNumber';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from '../../StoryHelper'
+
 
 const meta: Meta<typeof ChannelNumber> = {
   title: 'Components/PlaybackControls/ChannelNumber',

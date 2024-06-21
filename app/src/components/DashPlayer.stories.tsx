@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import DashPlayer from './DashPlayer';
-import StoryHelper from './StoryHelper';
+import StoryHelper from '../StoryHelper';
 
 const meta: Meta<typeof DashPlayer> = {
   title: 'Components/DashPlayer',

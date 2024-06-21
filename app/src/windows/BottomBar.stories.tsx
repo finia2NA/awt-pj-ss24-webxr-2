@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import BottomBar from './BottomBar'
-import StoryHelper from '../components/StoryHelper';
+import StoryHelper from '../StoryHelper'
+
 
 const meta = {
   title: 'Windows/BottomBar',

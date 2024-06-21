@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import ChannelList from './ChannelList';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from '../../StoryHelper';
 
 const meta: Meta<typeof ChannelList> = {
     title: 'Windows/ChannelList',

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ButtonGroup from './ButtonGroup';
-import StoryHelper from './StoryHelper';
+import ButtonGroup, { OnBGClickProps } from './ButtonGroup';
+import StoryHelper from '../StoryHelper';
 
 const meta: Meta<typeof ButtonGroup> = {
   title: 'components/ButtonGroup',
@@ -15,7 +15,7 @@ const meta: Meta<typeof ButtonGroup> = {
     roundTop: false,
     roundBottom: false,
     selected: 0,
-    onClick: (index: number) => console.log(index),
+    onClick: ({ index, option }: OnBGClickProps) => console.log(index, option),
   },
 };
 

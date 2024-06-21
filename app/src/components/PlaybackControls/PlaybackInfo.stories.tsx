@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import StoryHelper from '../StoryHelper';
+import StoryHelper from '../../StoryHelper'
 import PlaybackInfo from './PlaybackInfo';
 
 const meta: Meta<typeof PlaybackInfo> = {

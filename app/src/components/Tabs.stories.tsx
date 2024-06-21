@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import Tabs, { Tab } from './Tabs';
-import StoryHelper from './StoryHelper';
+import StoryHelper from '../StoryHelper';
 
 const meta: Meta<typeof Tabs> = {
   title: 'Windows/Tabs',

@@ -3,15 +3,20 @@ import { Button } from "./apfel/button";
 import useColors from "../hooks/useColors";
 import Backdrop from "./Backdrop";
 
+export interface OnBGClickProps {
+  index: number;
+  option: string;
+}
+
 // Title, options, roundTop, roundBottom, selected: int, onClick
 interface ButtonGroupProps {
   title: string;
   options: string[];
   roundTop?: boolean;
   roundBottom?: boolean;
-  selected: number;
+  selected: number | string;
   // eslint-disable-next-line no-unused-vars
-  onClick: (index: number) => void;
+  onClick: ({ index, option }: OnBGClickProps) => void;
 }
 
 
@@ -36,8 +41,10 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
             variant="pill"
             platter
             backgroundColor={colors.background}
-            selected={options.indexOf(option) === selected}
-            onClick={() => onClick(options.indexOf(option))}
+            selected={
+              typeof selected === 'number' ? options.indexOf(option) === selected : option.toLowerCase() === selected.toLowerCase()
+            }
+            onClick={() => onClick({ index: options.indexOf(option), option: option })}
           >
             <Text color={colors.foreground} >{option}</Text>
           </Button>

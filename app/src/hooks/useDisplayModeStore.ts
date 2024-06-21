@@ -24,7 +24,7 @@ export const useDisplayModeStore = create(
     (set) => ({
       biTheme: BiTheme.DARK,
       setBiTheme: (biTheme: BiTheme) => set({ biTheme }),
-      toggleMode: () =>
+      toggleTheme: () =>
         set((state: DisplayModeState) => ({
           biTheme: state.biTheme === BiTheme.DARK ? BiTheme.LIGHT : BiTheme.DARK,
         })),

@@ -13,10 +13,10 @@ export enum TriTheme {
   SYSTEM = 'System',
 }
 
-interface DisplayModeState {
+export interface DisplayModeState {
   biTheme: BiTheme;
   setBiTheme: (biTheme: BiTheme) => void;
-  toggleMode: () => void;
+  toggleTheme: () => void;
 }
 
 export const useDisplayModeStore = create(

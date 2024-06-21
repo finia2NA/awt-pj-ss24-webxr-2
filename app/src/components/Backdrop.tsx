@@ -27,7 +27,7 @@ const Backdrop = (props: ContainerProperties) => {
   const colors = useColors();
 
   const mergedProps = mergeObjects(props, {
-    width: 420,
+    width: 360,
     borderRadius: 10,
     backgroundColor: colors.background,
     backgroundOpacity: colors.backgroundOpacity,

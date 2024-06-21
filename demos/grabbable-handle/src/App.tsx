@@ -3,18 +3,16 @@ import {
   Hands,
   Controllers
 } from "@coconut-xr/natuerlich/defaults";
-import { getInputSourceId } from "@coconut-xr/natuerlich";
 import { useRef } from "react";
 import {
   useEnterXR,
   NonImmersiveCamera,
-  ImmersiveSessionOrigin,
-  useInputSources
+  ImmersiveSessionOrigin
 } from "@coconut-xr/natuerlich/react";
 import { isXIntersection } from "@coconut-xr/xinteraction";
-import { Mesh, Vector3 } from "three";
+import { Vector3 } from "three";
 import { ThreeEvent } from "@react-three/fiber";
-import { Content, Root } from "@react-three/uikit";
+import { Container, Root } from "@react-three/uikit";
 
 
 const sessionOptions: XRSessionInit = {
@@ -26,25 +24,33 @@ const sessionOptions: XRSessionInit = {
 
 export default function Index() {
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
-  const inputSources = useInputSources();
-  const boxRef = useRef<Mesh>(null);
-  const handleRef = useRef<Mesh>(null);
+  const view = useRef(null);
+  const handle = useRef(null);
   const downState = useRef<{
     pointerId: number;
     pointToObjectOffset: Vector3;
+    curPosition: Vector3;
   }>();
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     if (
-      handleRef.current != null &&
+      view.current != null &&
       downState.current == null &&
       isXIntersection(e)
     ) {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
+      let x = view.current.getComputedProperty("transformTranslateX");
+      let y = view.current.getComputedProperty("transformTranslateY");
+      let z = view.current.getComputedProperty("transformTranslateZ");
+
+      let pos = new Vector3(x, y, z);
+
       downState.current = {
         pointerId: e.pointerId,
-        pointToObjectOffset: boxRef.current.position.clone().sub(e.point)
+        pointToObjectOffset: e.point,  //pos.clone().sub(e.point)
+        curPosition: pos
       };
     }
   };
@@ -56,45 +62,58 @@ export default function Index() {
     downState.current = undefined;
   };
 
-const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
-  if (
-    boxRef.current == null ||
-    handleRef.current == null ||
-    downState.current == null ||
-    e.pointerId != downState.current.pointerId ||
-    !isXIntersection(e)
-  ) {
-    return;
-  }
-  const newPosition = downState.current.pointToObjectOffset.clone().add(e.point);
-  boxRef.current.position.copy(newPosition);
-  handleRef.current.position.copy(newPosition).y -= 0.2; // adjust the y position of the handle
-};
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    if (
+      handle.current == null ||
+      view.current == null ||
+      downState.current == null ||
+      e.pointerId != downState.current.pointerId ||
+      !isXIntersection(e)
+    ) {
+      return;
+    }
+
+    const scale = 90; // Adjust this value as needed
+
+    let delta = downState.current.pointToObjectOffset.clone().sub(e.point)
+    let scaledDelta = new Vector3(-delta.x * scale, -delta.y * scale, -delta.z * scale);
+    let newPosition = downState.current.curPosition.clone().add(scaledDelta);
+    // ^-TODO: Not quite correct, elements "jump" sometimes
+
+    view.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
+    handle.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
+  };
 
   return (
     <div
-      style={{backgroundColor: "lightblue", width: "100vw", height: "100vh"}}
+      style={{ backgroundColor: "lightblue", width: "100vw", height: "100vh" }}
     >
       <button onClick={enterVR}>Enter AR</button>
       <XRCanvas>
-        <Root>
-        <Content width={50}>
-          <mesh ref={boxRef} position={[0, 1.5, 1]} scale={0.4}>
-            <boxGeometry />
-            <meshBasicMaterial color="red" />
-          </mesh>
-          <mesh
-            ref={handleRef}
-            scale={0.2}
-            position={[0, 1.3, 1]}
+        <Root flexDirection={"column"}>
+          <Container
+            height={100} width={200}
+            backgroundColor={"green"}
+            ref={view}
+            transformTranslateX={0}
+            transformTranslateY={0}
+            transformTranslateZ={0}
+          >
+          </Container>
+          <Container
+            height={10} width={40}
+            alignSelf={"center"}
+            backgroundColor={"red"}
+            borderRadius={8}
+            ref={handle}
+            transformTranslateX={0}
+            transformTranslateY={0}
+            transformTranslateZ={0}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
             onPointerMove={handlePointerMove}
           >
-            <boxGeometry />
-            <meshBasicMaterial color="blue" />
-          </mesh>
-        </Content>
+          </Container>
         </Root>
         <NonImmersiveCamera position={[0, 0, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>

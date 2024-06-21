@@ -35,19 +35,23 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
       <Container
         gap={10}
       >
-        {options.map((option) => (
-          <Button
-            key={option}
-            variant="pill"
-            platter
-            backgroundColor={colors.background}
-            selected={
-              typeof selected === 'number' ? options.indexOf(option) === selected : option.toLowerCase() === selected.toLowerCase()
-            }
-            onClick={() => onClick({ index: options.indexOf(option), option: option })}
-          >
-            <Text color={colors.foreground} >{option}</Text>
-          </Button>
+        {options.map((option, key) => (
+          <Container
+            width={84}
+            key={key}>
+            <Button
+              key={option}
+              variant="pill"
+              platter
+              backgroundColor={colors.background}
+              selected={
+                typeof selected === 'number' ? options.indexOf(option) === selected : option.toLowerCase() === selected.toLowerCase()
+              }
+              onClick={() => onClick({ index: options.indexOf(option), option: option })}
+            >
+              <Text color={colors.foreground} >{option}</Text>
+            </Button>
+          </Container>
         ))}
       </Container>
     </Backdrop>

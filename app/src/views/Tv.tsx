@@ -1,9 +1,17 @@
-import { useState } from 'react';
-import { Container } from "@react-three/uikit";
+import { useState, useRef } from 'react';
+import { Container, ComponentInternals } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { ProgramList, ProgramItem } from "../windows/ProgramList"
 
-export default function Tv() {
+interface TvProps {
+    viewRef: React.RefObject<ComponentInternals>;
+    handleRef: React.RefObject<ComponentInternals>;
+    tabsRef: React.RefObject<ComponentInternals>;
+}
+
+export default function Tv( {viewRef, handleRef, tabsRef}: TvProps) {
+    const list = useRef<ComponentInternals>(null);
+    
     const [isPlaying, setIsPlaying] = useState(true);
 
     const programs = [
@@ -36,10 +44,10 @@ export default function Tv() {
         <Container flexDirection={"row"}>
             <Container flexDirection="column" alignContent={"center"}>
                 <Container height={"auto"}>
-                    <DashPlayer src={dashPlayerSrc} width={900} playing={isPlaying} />
+                    <DashPlayer src={dashPlayerSrc} width={900} playing={isPlaying} viewRef={viewRef} handleRef={handleRef} tabsRef={tabsRef} listRef={list} />
                 </Container>
             </Container>
-            <Container alignSelf={"center"} marginLeft={50}>
+            <Container alignSelf={"center"} marginLeft={50} ref={list}>
                 <ProgramList items={programs} onItemClick={handleItemClick} />
             </Container>
         </Container>

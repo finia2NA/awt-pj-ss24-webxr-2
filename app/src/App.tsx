@@ -13,7 +13,7 @@ import { isXIntersection } from "@coconut-xr/xinteraction";
 import { useState, useRef } from 'react';
 import { ThreeEvent } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { Root, Container } from "@react-three/uikit";
+import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
 import { Vector3 } from "three";
 
@@ -34,12 +34,13 @@ export default function App() {
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
 
-  const view = useRef(null);
-  const handle = useRef(null);
+  const view = useRef<ComponentInternals>(null);
+  const handle = useRef<ComponentInternals>(null);
+  const tabs = useRef<ComponentInternals>(null);
   const downState = useRef<{
     pointerId: number;
-    pointToObjectOffset: Vector3;
-    curPosition: Vector3;
+    point: Vector3;
+    position: Vector3;
   }>();
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -51,16 +52,16 @@ export default function App() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX");
-      let y = view.current.getComputedProperty("transformTranslateY");
-      let z = view.current.getComputedProperty("transformTranslateZ");
+      let x = view.current.getComputedProperty("transformTranslateX") || 0;
+      let y = view.current.getComputedProperty("transformTranslateY") || 0;
+      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
 
       let pos = new Vector3(x, y, z);
 
       downState.current = {
         pointerId: e.pointerId,
-        pointToObjectOffset: e.point,  //pos.clone().sub(e.point)
-        curPosition: pos
+        point: e.point,
+        position: pos
       };
     }
   };
@@ -83,17 +84,16 @@ export default function App() {
       return;
     }
 
-    const scale = 190; // Adjust this value as needed
+    const scale = 90; // Adjust this value as needed
 
-    let delta = downState.current.pointToObjectOffset.clone().sub(e.point);
-    let scaledDelta = new Vector3(-delta.x * scale, -delta.y * scale, -delta.z * scale);
-    let newPosition = downState.current.curPosition.clone().add(scaledDelta);
-    // ^-TODO: Not quite correct, elements "jump" sometimes
+    let delta = e.point.sub(downState.current.point.clone())
+    let scaledDelta = new Vector3(delta.x * scale, -delta.y * scale, delta.z * scale);
+    let newPosition = downState.current.position.clone().add(scaledDelta);
 
-    console.log(newPosition);
-
-    view.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
-    handle.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
+    view.current.setStyle({
+      ...view.current.getStyle(),  // Preserve other styles
+      ...{ transformTranslateX: newPosition.x, transformTranslateY: newPosition.y, transformTranslateZ: newPosition.z }
+    });
   };
 
   return (
@@ -138,9 +138,6 @@ export default function App() {
               marginLeft={selectedTab == Tab.TV ? -100 : 0}
               
               ref={handle}
-              transformTranslateX={0}
-              transformTranslateY={0}
-              transformTranslateZ={0}
               onPointerDown={handlePointerDown}
               onPointerUp={handlePointerUp}
               onPointerMove={handlePointerMove}

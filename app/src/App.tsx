@@ -110,24 +110,19 @@ export default function App() {
       <XRCanvas>
         {/* <OrbitControls /> */}
         <group position={[0, 2, -3]}>
-          <Root sizeX={20} sizeY={3} flexDirection="column" borderRadius={6} pixelSize={0.008}>
+          <Root ref={view} sizeX={20} sizeY={3} flexDirection="column" borderRadius={6} pixelSize={0.008}>
             <Container
               flexDirection="row"
               height={"auto"}
               alignSelf={"center"}
-              
-              ref={view} 
-              transformTranslateX={0}
-              transformTranslateY={0}
-              transformTranslateZ={0}
             >
-              <Container paddingRight={50} alignSelf={"center"}>
+              <Container paddingRight={50} alignSelf={"center"} ref={tabs}>
                 <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
               </Container>
               <Container flexDirection={"column"} height={"auto"}>
                 <Container height={"auto"}>
                   {selectedTab === Tab.HOME && <Home />}
-                  {selectedTab === Tab.TV && <Tv />}
+                  {selectedTab === Tab.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
                 </Container>
               </Container>
             </Container>

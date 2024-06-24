@@ -28,7 +28,7 @@ const darkColors: Colors = {
   background: hsl(0, 0, 0),
   backgroundOpacity: 0.3,
   accent: hsl(210, 100, 52),
-  accentForeground: hsl(0, 0, 100),
+  accentForeground: hsl(223, 87, 81),
 
   scrollbar: hsl(0, 0, 35),
 

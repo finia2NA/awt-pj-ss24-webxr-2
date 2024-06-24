@@ -21,20 +21,21 @@ const Dropdown = ({ activeIndex, items, onSelectItem }: DropdownProps) => {
     const handleSelect = (index: number) => {
         setIsOpen(false);
         onSelectItem(index);
-        console.log("Selected item: ", index)
     }
 
     const openDropdownMenu = () => {
         return (
-            <Backdrop display={"flex"} positionType={"absolute"} positionTop={53} borderRadius={20} flexDirection={"column"} maxWidth={280} minWidth={185} width={"auto"} alignItems={"flex-start"} gap={14}>
-                {items.map((item, index) => (
-                    <>
-                        <Container maxWidth={280} minWidth={180} width={"auto"}>
-                            <Text key={index} color={activeIndex == index ? colors.accentForeground : colors.foreground} hover={{color: colors.accentForeground}} cursor={"pointer"} onClick={() => handleSelect(index)}>{item.length > 20 ? `${item.slice(0, 30)}...` : item}</Text>
+            <Backdrop paddingLeft={15} paddingRight={5} display={"flex"} positionType={"absolute"} positionTop={44} borderRadius={20} flexDirection={"column"} maxWidth={280} minWidth={185} width={"auto"} alignItems={"flex-start"} gap={14} maxHeight={200} overflow={"hidden"} backgroundOpacity={.9} zIndexOffset={1} gapRow={20}>
+                <Container display={"flex"} borderRadius={20} flexDirection={"column"} maxWidth={280} minWidth={185} width={"auto"} alignItems={"flex-start"} gap={14} overflow={"scroll"} gapRow={20} scrollbarWidth={8} scrollbarBorderRadius={4} scrollbarColor={colors.scrollbar}>
+                    {items.map((item, index) => (
+                        <Container key={index} display={"flex"} flexDirection={"column"} justifyContent={"center"} gapRow={20} paddingTop={20} onClick={() => handleSelect(index)} cursor={"pointer"}>
+                            <Container maxWidth={280} minWidth={180} width={"auto"}>
+                                <Text color={activeIndex == index ? colors.accentForeground : colors.foreground} hover={{ color: colors.accentForeground }}>{item.length > 20 ? `${item.slice(0, 30)}...` : item}</Text>
+                            </Container>
+                            <Container borderColor={colors.foreground} borderWidth={0} borderBottomWidth={1.5} maxWidth={280} minWidth={180} width={"auto"}></Container>
                         </Container>
-                        <Container borderColor={colors.foreground} borderWidth={0} borderBottomWidth={1.5} maxWidth={280} minWidth={180} width={"auto"}></Container>
-                    </>
-                ))}
+                    ))}
+                </Container>
             </Backdrop>
         )
     }

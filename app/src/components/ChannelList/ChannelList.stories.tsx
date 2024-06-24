@@ -67,7 +67,9 @@ const meta: Meta<typeof ChannelList> = {
                 timeEnd: "17:00",
                 imageUrl: "https://itv-api.ard.de/ardstart/img/services/28106.png",
             },
-        ]
+        ],
+        regions: ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Stuttgart"],
+        time: "12:00",
     },
 };
 

@@ -12,7 +12,7 @@ import {
 import { isXIntersection } from "@coconut-xr/xinteraction";
 import { Vector3 } from "three";
 import { ThreeEvent } from "@react-three/fiber";
-import { Container, Root } from "@react-three/uikit";
+import { Container, Root, ComponentInternals } from "@react-three/uikit";
 
 
 const sessionOptions: XRSessionInit = {
@@ -20,19 +20,18 @@ const sessionOptions: XRSessionInit = {
 };
 
 
-
-
 export default function Index() {
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
-  const view = useRef(null);
-  const handle = useRef(null);
+  const view = useRef<ComponentInternals>(null);
+  const handle = useRef<ComponentInternals>(null);
+  const resize = useRef<ComponentInternals>(null);
   const downState = useRef<{
     pointerId: number;
-    pointToObjectOffset: Vector3;
-    curPosition: Vector3;
+    point: Vector3;
+    transformation: Vector3;
   }>();
 
-  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+  const handleDragPointerDown = (e: ThreeEvent<PointerEvent>) => {
     if (
       view.current != null &&
       downState.current == null &&
@@ -41,16 +40,16 @@ export default function Index() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX");
-      let y = view.current.getComputedProperty("transformTranslateY");
-      let z = view.current.getComputedProperty("transformTranslateZ");
+      let x = view.current.getComputedProperty("transformTranslateX") || 0;
+      let y = view.current.getComputedProperty("transformTranslateY") || 0;
+      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
 
       let pos = new Vector3(x, y, z);
 
       downState.current = {
         pointerId: e.pointerId,
-        pointToObjectOffset: e.point,  //pos.clone().sub(e.point)
-        curPosition: pos
+        point: e.point,
+        transformation: pos
       };
     }
   };
@@ -62,9 +61,10 @@ export default function Index() {
     downState.current = undefined;
   };
 
-  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+  const handleDragPointerMove = (e: ThreeEvent<PointerEvent>) => {
     if (
       handle.current == null ||
+      resize.current == null ||
       view.current == null ||
       downState.current == null ||
       e.pointerId != downState.current.pointerId ||
@@ -75,13 +75,77 @@ export default function Index() {
 
     const scale = 90; // Adjust this value as needed
 
-    let delta = downState.current.pointToObjectOffset.clone().sub(e.point)
-    let scaledDelta = new Vector3(-delta.x * scale, -delta.y * scale, -delta.z * scale);
-    let newPosition = downState.current.curPosition.clone().add(scaledDelta);
-    // ^-TODO: Not quite correct, elements "jump" sometimes
+    let delta = e.point.sub(downState.current.point.clone())
+    let scaledDelta = new Vector3(delta.x * scale, -delta.y * scale, delta.z * scale);
+    let newPosition = downState.current.transformation.clone().add(scaledDelta);
 
-    view.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
-    handle.current.setStyle({ transformTranslateX: newPosition.x, transformTranslateY: -newPosition.y, transformTranslateZ: newPosition.z });
+    view.current.setStyle({
+      ...view.current.getStyle(),  // Preserve other styles
+      ...{ transformTranslateX: newPosition.x, transformTranslateY: newPosition.y, transformTranslateZ: newPosition.z }
+    });
+  };
+
+  const handleResizePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    if (
+      resize.current != null &&
+      view.current != null &&
+      downState.current == null &&
+      isXIntersection(e)
+    ) {
+      e.stopPropagation();
+      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
+        let x = view.current.getComputedProperty("transformScaleX") || 1;
+        let y = view.current.getComputedProperty("transformScaleY") || 1;
+        let z = view.current.getComputedProperty("transformScaleZ") || 1;
+
+        let scale = new Vector3(x, y, z);
+
+        downState.current = {
+          pointerId: e.pointerId,
+          point: e.point,
+          transformation: scale
+        };
+      }
+  };
+
+  const handleResizePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    if (
+      handle.current == null ||
+      resize.current == null ||
+      view.current == null ||
+      downState.current == null ||
+      e.pointerId != downState.current.pointerId ||
+      !isXIntersection(e)
+    ) {
+      return;
+    }
+
+    const ratio = view.current.size.v[0] / view.current.size.v[1];
+
+    let delta = downState.current.point.clone().sub(e.point)
+
+    let scaledDelta = new Vector3(-delta.x, delta.y, delta.z);
+    let newScale = downState.current.transformation.clone().add(scaledDelta);
+    newScale.y = newScale.x / 2 * ratio;
+
+    // enforce min/max size
+    const newSizeX = newScale.x * view.current.size.v[0];
+    if ((newSizeX < 100) || (newSizeX > 500)) {
+      return;
+    }
+
+    view.current.setStyle({
+      ...view.current.getStyle(),  // Preserve other styles
+      ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
+    });
+
+    let deltaY = (handle.current.size.v[1] - (handle.current.size.v[1] * 1/newScale.y)) / 2;
+    // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
+
+    // preserve size of handle and resize
+    handle.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
+    resize.current.setStyle({ transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
   };
 
   return (
@@ -90,14 +154,14 @@ export default function Index() {
     >
       <button onClick={enterVR}>Enter AR</button>
       <XRCanvas>
-        <Root flexDirection={"column"}>
+        <Root 
+          height={100} width={200}
+          flexDirection={"column"}
+          ref={view}  
+        >
           <Container
-            height={100} width={200}
+            height={"100%"} width={"100%"}
             backgroundColor={"green"}
-            ref={view}
-            transformTranslateX={0}
-            transformTranslateY={0}
-            transformTranslateZ={0}
           >
           </Container>
           <Container
@@ -106,14 +170,25 @@ export default function Index() {
             backgroundColor={"red"}
             borderRadius={8}
             ref={handle}
-            transformTranslateX={0}
-            transformTranslateY={0}
-            transformTranslateZ={0}
-            onPointerDown={handlePointerDown}
+            onPointerDown={handleDragPointerDown}
             onPointerUp={handlePointerUp}
-            onPointerMove={handlePointerMove}
+            onPointerMove={handleDragPointerMove}
           >
           </Container>
+          <Container
+            height={10} width={10}
+            backgroundColor={"blue"}
+            alignSelf={"flex-end"}
+            marginTop={-15}
+            marginRight={-5}
+            ref={resize}
+            onPointerDown={handleResizePointerDown}
+            onPointerUp={handlePointerUp}
+            onPointerMove={handleResizePointerMove}
+          >
+            
+          </Container>
+            
         </Root>
         <NonImmersiveCamera position={[0, 0, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>

@@ -96,6 +96,21 @@ export default function App() {
     });
   };
 
+  const shrinkTabsMargin = () => {
+    if (tabs.current != null) {
+      const tabsWidth = tabs.current.size.v[0];
+      const currentMargin = tabs.current.getComputedProperty("marginRight") || 0;
+      const newMargin = currentMargin - tabsWidth;
+      tabs.current.setStyle({ marginRight: newMargin });
+    }
+  };
+
+  const enlargeTabsMargin = () => {
+    if (tabs.current != null) {
+      tabs.current.setStyle({ marginRight: 50 });
+    }
+  }
+
   return (
     <div
       style={{
@@ -116,7 +131,13 @@ export default function App() {
               height={"auto"}
               alignSelf={"center"}
             >
-              <Container paddingRight={50} alignSelf={"center"} ref={tabs}>
+              <Container
+                marginRight={50}
+                alignSelf={"center"}
+                ref={tabs}
+                onPointerOver={shrinkTabsMargin}
+                onPointerOut={enlargeTabsMargin}
+              >
                 <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
               </Container>
               <Container flexDirection={"column"} height={"auto"}>

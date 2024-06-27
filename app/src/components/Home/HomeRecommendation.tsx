@@ -19,9 +19,9 @@ const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl }:
                 <Image width={45} src={imageUrl}></Image>
             </Container>
             <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"}>
-                <Text paddingBottom={10}>{name}</Text>
-                <Text>{description}</Text>
-                <Text>{timeStart + " - " + timeEnd}</Text>
+                <Text color={colors.foreground} paddingBottom={10}>{name}</Text>
+                <Text color={colors.foreground}>{description}</Text>
+                <Text color={colors.foreground}>{timeStart + " - " + timeEnd}</Text>
             </Container>
         </Backdrop>
     );

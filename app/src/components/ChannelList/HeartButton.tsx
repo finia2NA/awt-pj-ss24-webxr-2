@@ -3,6 +3,7 @@ import heartSVG from "../../assets/heart.svg";
 import { HeartIcon } from "@react-three/uikit-lucide";
 import { Button } from "../apfel/button";
 import { Svg } from "@react-three/uikit";
+import { ThreeEvent } from "@react-three/fiber";
 
 
 
@@ -17,7 +18,8 @@ const HeartButton = ({ channelID }: HeartButtonProps) => {
   const isHearted = heartedChannels.has(channelID);
 
 
-  const onClick = () => {
+  const onClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
     console.log("toggling: ", channelID);
     toggleHeartedChannelByID(channelID);
   }

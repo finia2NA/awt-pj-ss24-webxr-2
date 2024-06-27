@@ -5,11 +5,24 @@ import { ChevronDown } from "@react-three/uikit-lucide";
 import { useState } from "react";
 
 export interface DropdownProps {
+    /**
+     * The index of the active item.
+     */
     activeIndex: number;
+    /**
+     * The items to display in the dropdown.
+     */
     items: string[];
+    /**
+     * Callback for when an item is selected.
+     */
     onSelectItem: (index: number) => void;
 }
 
+/**
+ * Dropdown component for selecting items from a list in the proper styling for the app.
+ * We also need this since *select* from HTML likely doesn't work anyway in three.
+ */
 const Dropdown = ({ activeIndex, items, onSelectItem }: DropdownProps) => {
     const colors = useColors();
     const [isOpen, setIsOpen] = useState(false);

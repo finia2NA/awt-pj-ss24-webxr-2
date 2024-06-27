@@ -3,13 +3,31 @@ import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
 
 export interface HomeRecommendationProps {
+    /**
+     * Name of the channel
+     */
     name: string;
+    /**
+     * Description (most likely show title)
+     */
     description: string;
+    /**
+     * Time at which the show starts (e.g. 10:00)
+     */
     timeStart: string;
+    /**
+     * Time at which the show ends (e.g. 11:00)
+     */
     timeEnd: string;
+    /**
+     * URL of the image to display
+     */
     imageUrl: string;
 }
 
+/**
+ * Renders a home recommendation component.
+ */
 const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl }: HomeRecommendationProps) => {
     const colors = useColors();
 

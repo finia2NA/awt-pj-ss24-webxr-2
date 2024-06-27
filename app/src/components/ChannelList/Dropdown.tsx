@@ -1,4 +1,4 @@
-import { Container, Image, Text } from "@react-three/uikit";
+import { Container, Text } from "@react-three/uikit";
 import Backdrop from "../Backdrop";
 import useColors from "../../hooks/useColors";
 import { ChevronDown } from "@react-three/uikit-lucide";

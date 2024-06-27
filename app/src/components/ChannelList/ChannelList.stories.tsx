@@ -81,7 +81,7 @@ export const Default: Story = {
     render: (args) => {
         return (
             <>
-                <StoryHelper>
+                <StoryHelper wide>
                     <ChannelList {...args} />
                 </StoryHelper>
             </>

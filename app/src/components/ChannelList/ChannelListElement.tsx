@@ -1,6 +1,7 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
+import HeartButton from "./HeartButton";
 
 export interface ChannelListElementProps {
     number: number;
@@ -27,6 +28,9 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
                 <Text color={colors.foreground} paddingBottom={10}>{name}</Text>
                 <Text color={colors.foreground}>{description}</Text>
                 <Text color={colors.foreground}>{timeStart + " - " + timeEnd}</Text>
+            </Container>
+            <Container height={90} display={"flex"} justifyContent={"flex-start"} flexDirection={"column"} alignItems={"flex-start"}>
+                <HeartButton channelID={number.toString()}></HeartButton>
             </Container>
         </Backdrop>
     )

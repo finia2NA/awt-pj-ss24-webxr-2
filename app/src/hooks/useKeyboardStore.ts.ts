@@ -24,6 +24,7 @@ export interface KeyboardState extends KeyboardListeners {
   visible: boolean;
   // eslint-disable-next-line no-unused-vars
   setIsVisible: (isVisible: boolean) => void;
+  toggleVisibility: () => void;
 }
 
 const useKeyboardStore = create<KeyboardState>((set, get) => ({
@@ -68,6 +69,7 @@ const useKeyboardStore = create<KeyboardState>((set, get) => ({
 
   visible: false,
   setIsVisible: (isVisible) => set({ visible: isVisible }),
+  toggleVisibility: () => set((state) => ({ visible: !state.visible })),
 }));
 
 export default useKeyboardStore;

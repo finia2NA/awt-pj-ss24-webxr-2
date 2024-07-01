@@ -9,18 +9,20 @@ const normalRows: string[][] = [
   "1234567890ß".split("").concat("<-"),
   "qwertzuiopü".split(""),
   "asdfghjklöä".split("").concat("hide"),
-  ["shift"].concat("yxcvbnm,.-".split("")).concat("seach"),
+  ["shift"].concat("yxcvbnm,.-".split("")).concat("search"),
+  ["space"]
 ];
 
 const shiftRows: string[][] = [
   "!\"§$%&/()=?".split("").concat("<-"),
   "QWERTZUIOPÜ".split(""),
   "ASDFGHJKLÖÄ".split("").concat("hide"),
-  ["shift"].concat("YXCVBNM;:_".split("")).concat("seach"),
+  ["shift"].concat("YXCVBNM;:_".split("")).concat("search"),
+  ["space"]
 ];
 
-const paddings = [24, 48, 24, 0];
-const widths = [[20, 20], [30, 10], [30, 10], [30, 10]];
+const paddings = [24, 48, 24, 0, 80];
+const widths = [[20, 20], [30, 10], [30, 10], [30, 10], [400, 0]];
 
 const KeyboardUI = () => {
   const listeners: KeyboardListeners = useKeyboardStore((state) => state);
@@ -43,6 +45,9 @@ const KeyboardUI = () => {
         break;
       case "shift":
         setShift(shift => !shift);
+        break;
+      case "space":
+        onKeyPress(" ");
         break;
       default:
         onKeyPress(key);

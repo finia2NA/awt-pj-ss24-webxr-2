@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Fullscreen, Root } from '@react-three/uikit';
-import useDisplayModeStore, { DisplayModeState } from './hooks/useDisplayModeStore';
+import useSettingsStore, { SettingsState } from './hooks/useSettingsStore';
 
 interface StoryHelperProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface StoryHelperProps {
 // p much every story will need this so let's just write it once ok?
 const StoryHelper = ({ children, wide }: StoryHelperProps) => {
 
-  const { biTheme, toggleTheme } = useDisplayModeStore((state) => state) as DisplayModeState;
+  const { biTheme, toggleTheme } = useSettingsStore((state) => state) as SettingsState;
 
   return (
     <>

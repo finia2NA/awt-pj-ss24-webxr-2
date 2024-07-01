@@ -4,13 +4,13 @@ import { Button } from "../components/apfel/button";
 import { Card } from "../components/apfel/card";
 import { Container, Text } from "@react-three/uikit";
 import useColors from "../hooks/useColors";
-import useDisplayModeStore, { BiTheme, DisplayModeState } from "../hooks/useDisplayModeStore";
+import useSettingsStore, { BiTheme, SettingsState } from "../hooks/useSettingsStore";
 
 
 const SettingsWindow = () => {
 
   const colors = useColors();
-  const { setBiTheme } = useDisplayModeStore((state) => state) as DisplayModeState;
+  const { setBiTheme } = useSettingsStore((state) => state) as SettingsState;
 
 
   const onColorChange = ({ index, option }: OnBGClickProps) => {

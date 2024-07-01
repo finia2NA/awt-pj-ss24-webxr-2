@@ -13,27 +13,34 @@ export enum TriTheme {
   SYSTEM = 'System',
 }
 
-export interface DisplayModeState {
+export interface SettingsState {
   biTheme: BiTheme;
   setBiTheme: (biTheme: BiTheme) => void;
   toggleTheme: () => void;
+
+  dvbiUrl: string | null;
+  setDvbiUrl: (dvbiUrl: string) => void;
 }
 
-export const useDisplayModeStore = create(
+export const useSettingsStore = create(
   persist(
     (set) => ({
       biTheme: BiTheme.DARK,
       setBiTheme: (biTheme: BiTheme) => set({ biTheme }),
       toggleTheme: () =>
-        set((state: DisplayModeState) => ({
+        set((state: SettingsState) => ({
           biTheme: state.biTheme === BiTheme.DARK ? BiTheme.LIGHT : BiTheme.DARK,
         })),
+
+
+      dvbiUrl: null,
+      setDvbiUrl: (dvbiUrl: string) => set({ dvbiUrl }),
     }),
     {
-      name: 'display-mode', // name of the item in the storage (must be unique)
+      name: 'settings-storage', // name of the item in the storage (must be unique)
       storage: createJSONStorage(() => sessionStorage), // (optional) by default, 'localStorage' is used
     },
   ),
 )
 
-export default useDisplayModeStore;
+export default useSettingsStore;

@@ -24,7 +24,6 @@ const meta: Meta<typeof GuideStrip> = {
                 width: 220,
             }
         ],
-        imageUrl: "https://corsproxy.io/?https%3A%2F%2Fitv-api.ard.de%2Fardstart%2Fimg%2Fservices%2F28106.png",
     },
 };
 

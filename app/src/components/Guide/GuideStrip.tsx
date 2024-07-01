@@ -3,7 +3,6 @@ import GuideStripProgram, { GuideStripProgramProps } from "./GuideStripProgram";
 
 export interface GuideStripProps {
     programs: GuideStripProgramProps[];
-    imageUrl: string;
 }
 
 const GuideStrip = ({ programs }: GuideStripProps) => {

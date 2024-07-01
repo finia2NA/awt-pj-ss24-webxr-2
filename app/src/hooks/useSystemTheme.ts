@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BiTheme } from './useDisplayModeStore';
+import { BiTheme } from './useSettingsStore';
 
 function useSystemTheme() {
   const [biTheme, setBiTheme] = useState(BiTheme.DARK);

@@ -1,5 +1,5 @@
 import { Color } from "three"
-import useDisplayModeStore, { BiTheme } from "./useDisplayModeStore"
+import useSettingsStore, { BiTheme } from "./useSettingsStore"
 
 
 function hsl(h: number, s: number, l: number) {
@@ -55,7 +55,7 @@ const lightColors: Colors = {
 
 
 const useColors = () => {
-  const biTheme = useDisplayModeStore((state) => state.biTheme);
+  const biTheme = useSettingsStore((state) => state.biTheme);
   return biTheme === BiTheme.DARK ? darkColors : lightColors;
 }
 

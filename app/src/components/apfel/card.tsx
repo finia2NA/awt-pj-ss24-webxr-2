@@ -2,7 +2,7 @@ import { ComponentInternals, Container, ContainerProperties, DefaultProperties }
 import { ReactNode, RefAttributes, forwardRef } from 'react'
 import { GlassMaterial, LightGlassMaterial } from './theme.js'
 import useColors from '../../hooks/useColors.js'
-import useDisplayModeStore, { BiTheme, DisplayModeState } from '../../hooks/useDisplayModeStore.js'
+import useSettingsStore, { BiTheme, SettingsState } from '../../hooks/useSettingsStore.js'
 
 export type CardProperties = ContainerProperties
 
@@ -10,7 +10,7 @@ export const Card: (props: CardProperties & RefAttributes<ComponentInternals>) =
   ({ children, ...props }, ref) => {
 
     const colors = useColors()
-    const biTheme = useDisplayModeStore((state) => state.biTheme) as DisplayModeState;
+    const biTheme = useSettingsStore((state) => state.biTheme) as SettingsState;
 
     return (
       <Container

@@ -17,7 +17,7 @@ const meta: Meta<typeof Guide> = {
                     {
                         title: "Generische Talkshow",
                         startTime: "00:00",
-                        endTime: "01:00"
+                        endTime: "00:50"
                     },
                     {
                         title: "Generische Talkshow",
@@ -101,7 +101,7 @@ const meta: Meta<typeof Guide> = {
                 schedule: [
                     {
                         title: "Etwas anderes",
-                        startTime: "00:00",
+                        startTime: "00:30",
                         endTime: "01:20"
                     },
                     {

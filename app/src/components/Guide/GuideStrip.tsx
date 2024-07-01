@@ -1,4 +1,4 @@
-import { Container, Text } from "@react-three/uikit"
+import { Container } from "@react-three/uikit"
 import GuideStripProgram, { GuideStripProgramProps } from "./GuideStripProgram";
 
 export interface GuideStripProps {

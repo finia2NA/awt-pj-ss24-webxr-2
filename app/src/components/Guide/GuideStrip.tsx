@@ -1,5 +1,4 @@
-import { Container, Image } from "@react-three/uikit"
-import useColors from "../../hooks/useColors";
+import { Container, Text } from "@react-three/uikit"
 import GuideStripProgram, { GuideStripProgramProps } from "./GuideStripProgram";
 
 export interface GuideStripProps {
@@ -7,17 +6,13 @@ export interface GuideStripProps {
     imageUrl: string;
 }
 
-const GuideStrip = ({ programs, imageUrl }: GuideStripProps) => {
-    const colors = useColors();
+const GuideStrip = ({ programs }: GuideStripProps) => {
 
     return (
-        <Container display={"flex"} flexDirection={"row"} alignItems={"center"} gap={10} >
-            <Image width={100} src={imageUrl}/>
-            <Container>
-                {programs.map((program, index) => (
-                    <GuideStripProgram key={index} {...program} />
-                ))}
-            </Container>
+        <Container display={"flex"} flexDirection={"row"} alignItems={"center"} gap={0} justifyContent={"flex-start"} >
+            {programs.map((program, index) => (
+                <GuideStripProgram key={index} {...program} />
+            ))}
         </Container>
     )
 }

@@ -29,12 +29,7 @@ export const Default: Story = {
           <HeartButton channelID='4' />
         </StoryHelper>
 
-        <span style={{ backgroundColor: "white" }}>Currently hearted channels:{Array.from(heartedChannels).join(", ")}
-
-
-          <br /><br />
-          Note: when it seems like the click isn't going through, this is because react presses the button 2x (you can confirm this in the console. I think this would be fixed in prod, if not is fixable)
-        </span>
+        <span style={{ backgroundColor: "white" }}>Currently hearted channels:{Array.from(heartedChannels).join(", ")}</span>
       </>
     )
   }

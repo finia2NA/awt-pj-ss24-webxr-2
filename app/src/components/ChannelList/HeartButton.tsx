@@ -13,9 +13,9 @@ interface HeartButtonProps {
 
 const HeartButton = ({ channelID }: HeartButtonProps) => {
 
-  const { heartedChannels, toggleHeartedChannelByID } = useHeartedChannelsStore((state) => state);
+  const { hasHeartedChannelByID, toggleHeartedChannelByID } = useHeartedChannelsStore((state) => state);
 
-  const isHearted = heartedChannels.has(channelID);
+  const isHearted = hasHeartedChannelByID(channelID);
 
 
   const onClick = (e: ThreeEvent<MouseEvent>) => {

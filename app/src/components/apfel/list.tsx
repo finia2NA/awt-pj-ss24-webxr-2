@@ -44,7 +44,7 @@ export const ListItem: (props: ListItemProperties & RefAttributes<ComponentInter
         flexDirection="row"
         alignItems="center"
         gapColumn={16}
-        backgroundColor={type === 'plain' ? colors.foreground : colors.background}
+        backgroundColor={type === 'plain' ? colors.primary : colors.background}
         backgroundOpacity={type === 'plain' ? (selected ? 0.2 : 0) : 0.2}
         hover={{
           backgroundOpacity: type === 'plain' ? (selected ? 0.2 : 0.1) : 0.1,
@@ -60,7 +60,7 @@ export const ListItem: (props: ListItemProperties & RefAttributes<ComponentInter
         ref={ref}
         {...props}
       >
-        <DefaultProperties color={colors.foreground}>
+        <DefaultProperties color={colors.primary}>
           {leadingAccessory && <Container>{leadingAccessory}</Container>}
           <Container flexDirection="column" flexGrow={1}>
             <DefaultProperties fontSize={18}>{children}</DefaultProperties>

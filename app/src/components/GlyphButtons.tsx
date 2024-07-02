@@ -32,6 +32,7 @@ import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIc
 
 import { ReactElement } from "react";
 import useColors from "../hooks/useColors";
+import { ThreeEvent } from "@react-three/fiber";
 
 const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Home, <HomeIcon />],
@@ -84,8 +85,16 @@ const GlyphButton = (props: GlyphButtonProps) => {
 
   const colors = useColors();
 
+  const myOnClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    if (onClick) {
+      onClick();
+    }
+  }
+
+
   return (
-    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={onClick} selected={active} backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity}>
+    <Button variant="icon" size="md" alignSelf={"center"} platter disabled={disabled} onClick={myOnClick} selected={active} backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity}>
       {icon}
     </Button >
   )

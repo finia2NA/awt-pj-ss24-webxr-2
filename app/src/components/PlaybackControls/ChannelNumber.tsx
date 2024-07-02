@@ -22,7 +22,7 @@ const ChannelNumber = ({ channel, setChannel }: ChannelNumberProps) => {
       paddingLeft={12}
       justifyContent={"space-between"}>
 
-      <Text color={colors.foreground}>{channel.toString()}</Text>
+      <Text color={colors.primary}>{channel.toString()}</Text>
 
       <Container
         flexDirection={"column"}
@@ -34,11 +34,11 @@ const ChannelNumber = ({ channel, setChannel }: ChannelNumberProps) => {
         alignItems={"center"}>
 
         <Button size={20} variant="icon">
-          <Svg src={triangleicon} color={colors.foreground} onClick={() => setChannel(channel + 1)} />
+          <Svg src={triangleicon} color={colors.primary} onClick={() => setChannel(channel + 1)} />
         </Button>
-        <Container backgroundColor={colors.foreground} height={2} width={22} />
+        <Container backgroundColor={colors.primary} height={2} width={22} />
         <Button size={20} variant="icon">
-          <Svg src={triangleicon} color={colors.foreground} onClick={() => setChannel(channel - 1)} transformRotateZ={180} />
+          <Svg src={triangleicon} color={colors.primary} onClick={() => setChannel(channel - 1)} transformRotateZ={180} />
         </Button>
 
 

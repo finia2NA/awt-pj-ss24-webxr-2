@@ -15,8 +15,8 @@ const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
       {/* FIXME: fix CORS */}
       <Image src={imageSrc} />
       <Container flexDirection={"column"}>
-        <Text color={colors.foreground}>{title}</Text>
-        <Text color={colors.foreground}>{description}</Text>
+        <Text color={colors.primary}>{title}</Text>
+        <Text color={colors.primary}>{description}</Text>
       </Container>
     </Container>
   )

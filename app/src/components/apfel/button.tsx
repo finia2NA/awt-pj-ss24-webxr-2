@@ -76,7 +76,7 @@ export const Button: (props: ButtonProperties & RefAttributes<ComponentInternals
         borderRadius={variant === 'rect' ? borderRadius : height / 2}
         justifyContent="center"
         alignItems="center"
-        backgroundColor={colors.foreground}
+        backgroundColor={colors.primary}
         backgroundOpacity={disabled ? 0.1 : selected ? 1 : platter ? colors.backgroundOpacity : 0}
         hover={{
           backgroundOpacity: disabled ? 0.1 : selected ? 1 : 0.2,
@@ -85,7 +85,7 @@ export const Button: (props: ButtonProperties & RefAttributes<ComponentInternals
         {...props}
       >
         <DefaultProperties
-          color={selected && !disabled ? colors.background : colors.foreground}
+          color={selected && !disabled ? colors.background : colors.primary}
           opacity={disabled ? 0.4 : 1}
           fontSize={fontSize}
           width={variant === 'icon' ? iconSize : undefined}

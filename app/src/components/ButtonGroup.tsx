@@ -27,7 +27,7 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
   return (
     <Backdrop borderTopRadius={roundTop ? 20 : undefined} borderBottomRadius={roundBottom ? 20 : undefined}>
       <Text
-        color={colors.foreground}
+        color={colors.primary}
         fontSize={20}
         fontWeight={'normal'}
         width={100}
@@ -49,7 +49,7 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
               }
               onClick={() => onClick({ index: options.indexOf(option), option: option })}
             >
-              <Text color={colors.foreground} >{option}</Text>
+              <Text color={colors.primary} >{option}</Text>
             </Button>
           </Container>
         ))}

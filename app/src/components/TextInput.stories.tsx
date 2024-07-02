@@ -12,13 +12,16 @@ const meta = {
   parameters: {
     layout: 'centered',
   },
+  args: {
+    placeholder: "Type here...",
+  },
 } as Meta<typeof TextInput>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  render: () => {
+  render: (args) => {
 
     const [value, setValue] = useState("Type here...");
 
@@ -26,7 +29,7 @@ export const Default: Story = {
       <>
         <StoryHelper wide dynamicKeyboard>
           <Card alignSelf={"flex-start"} padding={6}>
-            <TextInput value={value} setValue={setValue} onSearch={() => console.log("searching")} />
+            <TextInput {...args} value={value} setValue={setValue} onSearch={() => console.log("searching")} />
           </Card>
         </StoryHelper>
       </>

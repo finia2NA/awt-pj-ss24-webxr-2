@@ -102,7 +102,7 @@ export const TabBarItem: (props: TabBarItemProperties & RefAttributes<ComponentI
         minWidth={44}
         height={44}
         borderRadius={22}
-        backgroundColor={colors.foreground}
+        backgroundColor={colors.primary}
         backgroundOpacity={isSelected ? 0.2 : 0}
         hover={isSelected ? undefined : { backgroundOpacity: 0.1 }}
         cursor="pointer"
@@ -116,7 +116,7 @@ export const TabBarItem: (props: TabBarItemProperties & RefAttributes<ComponentI
           props.onClick?.(e)
         }}
       >
-        <DefaultProperties color={colors.foreground} fontSize={16}>
+        <DefaultProperties color={colors.primary} fontSize={16}>
           <Container width={44} flexDirection="row" justifyContent="center">
             <DefaultProperties width={22} height={22}>
               {icon}

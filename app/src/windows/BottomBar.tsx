@@ -1,10 +1,11 @@
-import { Container, Icon, } from "@react-three/uikit";
+import { Container } from "@react-three/uikit";
 import { useState } from "react";
 
 
 interface BottomBarProps {
   environmentControls?: boolean;
   environmentValue?: number;
+  // eslint-disable-next-line no-unused-vars
   setEnvironmentValue?: (value: number) => void;
   debugColoring?: boolean;
 }

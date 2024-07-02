@@ -6,19 +6,30 @@ import GlyphButton, { ButtonType } from "../components/GlyphButtons";
 
 
 export interface PlaybackControlsProps {
-  channel: number;
-  // eslint-disable-next-line no-unused-vars
-  setChannel: (channel: number) => void;
-  togglePlayPause: () => void;
-  toggleChannelList: () => void;
-  toggleCaptions: () => void;
+  // Info
   channelImageSrc: string;
   channelTitle: string;
   channelDescription: string;
+
+  // Channel control
+  channel: number;
+  // eslint-disable-next-line no-unused-vars
+  setChannel?: (channel: number) => void;
+
+  // Play/Pause control
   isPlaying: boolean;
+  togglePlayPause?: () => void;
+
+  // Toggle channel list
+  toggleChannelList?: () => void;
+
+  // captions
+  captionsAvailable?: boolean;
+  toggleCaptions?: () => void;
+
 }
 
-const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying }: PlaybackControlsProps) => {
+const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, captionsAvailable, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying }: PlaybackControlsProps) => {
   return (
     <Card
       height={80}
@@ -28,13 +39,13 @@ const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelL
       gap={10}
       alignSelf={"flex-start"}>
 
-      <ChannelNumber channel={channel} setChannel={setChannel} />
+      <ChannelNumber channel={channel} setChannel={setChannel ? setChannel : () => { }} />
       <PlaybackInfo imageSrc={channelImageSrc} title={channelTitle} description={channelDescription} />
 
       <Container gapColumn={8}>
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
-        <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />
+        {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />}
         <GlyphButton type={ButtonType.Volume2} />
       </Container>
 

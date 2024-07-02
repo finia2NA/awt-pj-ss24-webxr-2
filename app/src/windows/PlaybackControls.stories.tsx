@@ -18,6 +18,7 @@ const meta: Meta<typeof PlaybackControls> = {
     channelImageSrc: "https://itv-api.ard.de/ardstart/img/services/28106.png",
     channelTitle: 'Das Erste',
     channelDescription: 'Surfreportage',
+    captionsAvailable: true,
   },
 };
 
@@ -26,6 +27,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
 
+  render: (args) =>
+    <>
+      <StoryHelper wide>
+        <PlaybackControls {...args} />
+      </StoryHelper >
+    </>
+};
+
+export const NoCaptions: Story = {
+  args: {
+    captionsAvailable: false
+  },
   render: (args) =>
     <>
       <StoryHelper wide>

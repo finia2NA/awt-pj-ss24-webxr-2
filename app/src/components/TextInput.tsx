@@ -9,12 +9,13 @@ import { useEffect } from "react";
 
 interface TextInputProps {
   value: string;
+  placeholder: string;
   // eslint-disable-next-line no-unused-vars
   setValue: (value: string) => void;
   onSearch?: () => void;
 }
 
-const TextInput = ({ value, setValue, onSearch }: TextInputProps) => {
+const TextInput = ({ value, placeholder, setValue, onSearch }: TextInputProps) => {
   const colors = useColors();
   const keyboardProperties = useKeyboardStore((state) => state);
 
@@ -71,8 +72,9 @@ const TextInput = ({ value, setValue, onSearch }: TextInputProps) => {
   return (
     <>
       {/* <Input color={colors.foreground} defaultValue="Type here..." /> */}
-      <Container onClick={onTextFieldClick} padding={12}>
-        <Text color={colors.foreground}>{value}</Text>
+      <Container onClick={onTextFieldClick} padding={12} flexDirection={"column"}>
+        <Text color={value ? colors.primary : colors.secondary}>{value ? value : placeholder}</Text>
+        <Container height={2} backgroundColor={colors.primary} marginTop={-2} />
       </Container>
     </>
   );

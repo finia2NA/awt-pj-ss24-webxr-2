@@ -27,7 +27,7 @@ export function Defaults(props: DefaultPropertiesProperties) {
 
   return (
     <DefaultProperties
-      scrollbarColor={colors.foreground}
+      scrollbarColor={colors.primary}
       scrollbarBorderRadius={4}
       scrollbarOpacity={0.3}
       color={colors.cardBackground}

@@ -11,6 +11,9 @@ const useCurrentTime = () => {
       setCurrentTime(`${hours}:${minutes}`);
     };
 
+    // Initial update
+    updateTime();
+
     // Calculate delay until next minute
     const now = new Date();
     const delay = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();

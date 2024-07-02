@@ -24,16 +24,16 @@ export const Checkbox: (props: CheckboxProperties & RefAttributes<ComponentInter
         height={28}
         borderWidth={2}
         borderRadius={15}
-        backgroundColor={!disabled && value ? colors.accent : colors.foreground}
+        backgroundColor={!disabled && value ? colors.accent : colors.primary}
         backgroundOpacity={!disabled && value ? 0.9 : 0.1}
-        borderColor={!disabled && value ? colors.accent : colors.foreground}
+        borderColor={!disabled && value ? colors.accent : colors.primary}
         hover={
           disabled
             ? undefined
             : {
               backgroundOpacity: value ? 1 : 0.3,
-              backgroundColor: value ? colors.accent : colors.foreground,
-              borderColor: value ? colors.accent : colors.foreground,
+              backgroundColor: value ? colors.accent : colors.primary,
+              borderColor: value ? colors.accent : colors.primary,
             }
         }
         borderOpacity={disabled ? 0.2 : value ? 1 : 0.5}

@@ -20,7 +20,6 @@ const HeartButton = ({ channelID }: HeartButtonProps) => {
 
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    console.log("toggling: ", channelID);
     toggleHeartedChannelByID(channelID);
   }
 

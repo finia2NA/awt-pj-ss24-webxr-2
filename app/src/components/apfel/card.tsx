@@ -25,7 +25,7 @@ export const Card: (props: CardProperties & RefAttributes<ComponentInternals>) =
         ref={ref}
         {...props}
       >
-        <DefaultProperties color={colors.foreground}>{children}</DefaultProperties>
+        <DefaultProperties color={colors.primary}>{children}</DefaultProperties>
       </Container>
     )
   },

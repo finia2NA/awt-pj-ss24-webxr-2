@@ -1,5 +1,5 @@
 import { Color } from "three"
-import useSettingsStore, { BiTheme } from "./useSettingsStore"
+import useSettingsStore, { BiTheme, SettingsState } from "./useSettingsStore"
 
 
 function hsl(h: number, s: number, l: number) {
@@ -8,7 +8,8 @@ function hsl(h: number, s: number, l: number) {
 
 interface Colors {
   // main colors
-  foreground: Color;
+  primary: Color;
+  secondary: Color;
   background: Color;
   backgroundOpacity: number;
   accent: Color;
@@ -24,7 +25,8 @@ interface Colors {
 
 
 const darkColors: Colors = {
-  foreground: hsl(0, 0, 100),
+  primary: hsl(0, 0, 100),
+  secondary: hsl(0, 0, 80),
   background: hsl(0, 0, 0),
   backgroundOpacity: 0.3,
   accent: hsl(210, 100, 52),
@@ -39,7 +41,8 @@ const darkColors: Colors = {
 }
 
 const lightColors: Colors = {
-  foreground: hsl(0, 0, 0),
+  primary: hsl(0, 0, 0),
+  secondary: hsl(0, 0, 20),
   background: hsl(0, 0, 100),
   backgroundOpacity: 0.4,
   accent: hsl(210, 100, 48),
@@ -55,7 +58,7 @@ const lightColors: Colors = {
 
 
 const useColors = () => {
-  const biTheme = useSettingsStore((state) => state.biTheme);
+  const { biTheme } = useSettingsStore((state) => state) as SettingsState;
   return biTheme === BiTheme.DARK ? darkColors : lightColors;
 }
 

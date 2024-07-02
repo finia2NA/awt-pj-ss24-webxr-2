@@ -13,8 +13,8 @@ export interface HomeSectionProps {
 const HomeSection = ({ title, channels }: HomeSectionProps) => {
     const colors = useColors();
     return (
-        <Container width={2000} display={"flex"} flexDirection={"column"} gapRow={8} >
-            <Text color={colors.foreground} fontSize={13} fontWeight={"medium"}>{title}</Text>
+        <Container display={"flex"} flexDirection={"column"} gapRow={8} >
+            <Text color={colors.primary} fontSize={13} fontWeight={"medium"}>{title}</Text>
             <Container display={"flex"} gap={10} flexDirection={"row"} overflow={"scroll"} height={100}>
                 {channels.map((channel, index) => (
                     <HomeRecommendation key={index} {...channel} />

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import BottomBar from './BottomBar'
 import StoryHelper from '../StoryHelper'
+import { useState } from 'react';
 
 
 const meta = {
@@ -11,6 +12,7 @@ const meta = {
     layout: 'centered',
   },
   args: {
+    // debugColoring: true
   },
 } as Meta<typeof BottomBar>;
 
@@ -22,4 +24,20 @@ export const Default: Story = {
     <StoryHelper>
       <BottomBar {...args} />
     </StoryHelper>
+};
+
+export const WithEnvironmentControls: Story = {
+  args: {
+    environmentControls: true,
+  },
+  render: (args) => {
+
+    const [envValue, setEnvValue] = useState(0.5);
+
+    return (
+      <StoryHelper>
+        <BottomBar environmentControls environmentValue={envValue} setEnvironmentValue={setEnvValue} {...args} />
+      </StoryHelper>
+    )
+  }
 };

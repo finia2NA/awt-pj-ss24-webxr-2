@@ -21,6 +21,7 @@ const StoryHelper = ({ children, wide, dynamicKeyboard }: StoryHelperProps) => {
     <>
       <button onClick={toggleTheme}>Curr. Theme: {biTheme}</button>
       <hr />
+
       <Canvas style={{ height: '500px', width: wide ? '800px' : 'auto' }}>
         <Fullscreen flexDirection="row" padding={10} gap={10}>
           <Root />
@@ -28,6 +29,7 @@ const StoryHelper = ({ children, wide, dynamicKeyboard }: StoryHelperProps) => {
         </Fullscreen>
         <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={5} />
       </Canvas>
+
       {dynamicKeyboard && keyboardVisible &&
         <Canvas style={{ height: '500px', width: '800px' }}>
           <Fullscreen flexDirection="row" padding={10} gap={10}>

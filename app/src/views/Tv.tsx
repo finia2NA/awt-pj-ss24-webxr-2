@@ -15,7 +15,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const [isPlaying, setIsPlaying] = useState(true);
 
-    debugger;
     const { services, loading, error } = useServiceList(true, false);
 
     if (loading) {
@@ -33,34 +32,16 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         }
     });
 
-    if (programs.length > 0) {
-        debugger;
-    }
+    // const [dashPlayerSrc, setDashPlayerSrc] = useState(programs[0].src);
+    // const [programSelected, setProgramSelected] = useState(true);
 
-    const programsOld = [
-        {
-            title: "Big Buck Bunny",
-            src: "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd",
-            selected: true
-        },
-        {
-            title: "Elephants Dream",
-            src: "https://vod-dash-ww-rd-live.akamaized.net/elephants_dream/1/client_manifest-all.mpd",
-            selected: false
-        },
-        {
-            title: "Sintel",
-            src: "https://bitdash-a.akamaihd.net/content/sintel/sintel.mpd",
-            selected: false
-        }
-    ];
+    // const handleItemClick = (item: ProgramItem) => {
+    //     setDashPlayerSrc(item.src); // Assuming each ProgramItem has a 'src' property
+    //     setProgramSelected(true);
+    // };
 
-    const [dashPlayerSrc, setDashPlayerSrc] = useState(programs[0].src);
-    const [programSelected, setProgramSelected] = useState(true);
-
+    const dashPlayerSrc = programs[1].src;
     const handleItemClick = (item: ProgramItem) => {
-        setDashPlayerSrc(item.src); // Assuming each ProgramItem has a 'src' property
-        setProgramSelected(true);
     };
 
     return (

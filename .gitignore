@@ -1,2 +1,2 @@
 .DS_Store
-app/src/assets/secret.ts
+app/.env

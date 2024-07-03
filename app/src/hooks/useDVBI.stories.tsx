@@ -14,7 +14,6 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => {
-    // debugger;
     const dvbi = useDVBI();
     const services = useServiceList();
     const filteredServices = useServiceList(true);

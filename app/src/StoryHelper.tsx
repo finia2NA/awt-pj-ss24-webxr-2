@@ -3,6 +3,7 @@ import { Fullscreen, Root } from '@react-three/uikit';
 import useSettingsStore, { SettingsState } from './hooks/useSettingsStore';
 import KeyboardUI from './components/KeyboardUI';
 import useKeyboardStore from './hooks/useKeyboardStore.ts';
+import { useServiceList } from './hooks/useDVBI.ts';
 
 interface StoryHelperProps {
   children: React.ReactNode;
@@ -16,6 +17,8 @@ const StoryHelper = ({ children, wide, dynamicKeyboard }: StoryHelperProps) => {
 
   const { biTheme, toggleTheme } = useSettingsStore((state) => state) as SettingsState;
   const { visible: keyboardVisible } = useKeyboardStore((state) => state);
+
+  const {services, loading, error} = useServiceList(true, false);
 
   return (
     <>

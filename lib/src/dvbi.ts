@@ -50,6 +50,10 @@ class DVBI {
    * This method needs to be called at least once before using DVBI functionality.
    */
   public async init(apiURL: string) {
+    // We have already initialized with this URL. Refreshes should be called explicitly.
+    if (apiURL === this.apiURL) {
+      return;
+    }
     this.apiURL = apiURL;
     await this.refreshData();
   }

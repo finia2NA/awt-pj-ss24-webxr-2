@@ -34,68 +34,93 @@ export const useDVBI = () => {
   return { dvbi, loading, error };
 };
 
-export const useServiceList = (includeIncomplete: boolean = false, includeGuide: boolean = false) => {
-  const { dvbi, loading, error } = useDVBI();
+export const useServiceList = (includeIncomplete = false, includeGuide = false) => {
+  const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
+
   const [services, setServices] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!dvbi) return;
+    if (dvbiLoading) {
+      setLoading(true);
+      return;
+    }
+
+    if (dvbiError) {
+      setError(dvbiError);
+      setLoading(false);
+      return;
+    }
+
+    if (!dvbi) {
+      setError(new Error("Didn't get a DVBI instance"));
+      setLoading(false);
+      return;
+    }
 
     const fetchServices = async () => {
-      const allChannels = dvbi.services;
+      try {
+        const allChannels = dvbi.services;
 
-      const filtered = allChannels.filter((channel) => {
-        return channel.dashStreamAvailable && channel.contentGuideAvailable;
-      });
-
-      const result = includeIncomplete ? filtered : allChannels;
-
-      if (includeGuide) {
-        result.forEach((channel) => {
-          channel.getContentGuide();
+        const filtered = allChannels.filter((channel) => {
+          return channel.dashStreamAvailable && channel.contentGuideAvailable;
         });
-      }
 
-      setServices(result);
+        const result = includeIncomplete ? filtered : allChannels;
+
+        if (includeGuide) {
+          for (const channel of result) {
+            await channel.getContentGuide();
+          }
+        }
+
+        setServices(result);
+        setLoading(false);
+      } catch (fetchError) {
+        setError(fetchError as Error);
+        setLoading(false);
+      }
     };
 
     fetchServices();
-  }, [dvbi, includeIncomplete, includeGuide]);
+  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide]);
 
   return { services, loading, error };
 };
 
-export const useService = (id: string, includeGuide: boolean = false) => {
-  const { dvbi, loading, error: dvbiError } = useDVBI();
-  const [service, setService] = useState<Service | null>(null);
-  const [error, setError] = useState<Error | null>(dvbiError);
 
-  useEffect(() => {
-    if (!dvbi) return;
+// export const useService = (id: string, includeGuide: boolean = false) => {
+//   const { dvbi, loading, error: dvbiError } = useDVBI();
+//   const [service, setService] = useState<Service | null>(null);
+//   const [error, setError] = useState<Error | null>(dvbiError);
 
-    const fetchService = async () => {
-      try {
-        const theService = dvbi.services.find((channel) => channel.serviceID === id);
+//   useEffect(() => {
+//     if (!dvbi) return;
 
-        if (!theService) {
-          setService(null);
-          setError(new Error(`Channel with ID ${id} not found`));
-          return;
-        }
+//     const fetchService = async () => {
+//       try {
+//         const theService = dvbi.services.find((channel) => channel.serviceID === id);
 
-        if (includeGuide) {
-          await theService.getContentGuide();
-        }
+//         if (!theService) {
+//           setService(null);
+//           setError(new Error(`Channel with ID ${id} not found`));
+//           return;
+//         }
 
-        setService(theService);
-      } catch (err) {
-        setError(err as Error);
-      }
-    };
+//         if (includeGuide) {
+//           await theService.getContentGuide();
+//         }
 
-    fetchService();
-  }, [dvbi, id, includeGuide]);
+//         setService(theService);
+//       } catch (err) {
+//         setError(err as Error);
+//       }
+//     };
 
-  return { service, loading, error };
-};
+//     fetchService();
+//   }, [dvbi, id, includeGuide]);
+
+//   return { service, loading, error };
+// };
 

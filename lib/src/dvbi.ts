@@ -51,9 +51,11 @@ class DVBI {
    */
   public async init(apiURL: string) {
     // We have already initialized with this URL. Refreshes should be called explicitly.
-    if (apiURL === this.apiURL) {
-      return;
-    }
+    // FIXME: this is not working rn, figure out why
+    // if (apiURL === this.apiURL) {
+    //   debugger;
+    //   return;
+    // }
     this.apiURL = apiURL;
     await this.refreshData();
   }

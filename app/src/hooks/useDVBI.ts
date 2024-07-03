@@ -26,7 +26,7 @@ export const useServiceList = async (includeIncomplete?: boolean, includeGuide?:
   const allChannels = dvbi.services;
 
   const filtered = allChannels.filter((channel) => {
-    return channel.dashStreamAvailable && channel.guideAvailable;
+    return channel.dashStreamAvailable && channel.contentGuideAvailable;
   });
 
   const re = includeIncomplete ? filtered : allChannels;

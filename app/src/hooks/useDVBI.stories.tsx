@@ -18,6 +18,7 @@ export const Default: Story = {
     const dvbi = useDVBI();
     const services = useServiceList();
     const filteredServices = useServiceList(true);
+    const filteredServicesWithGuide = useServiceList(true, true);
     const service = useService('tag:mitxp.com,2021:1.1021.28334');
 
     return (
@@ -33,7 +34,11 @@ export const Default: Story = {
         <button onClick={() => {
           console.log(filteredServices);
         }
-        }>print filtered services</button>
+        }>print filteredServices</button>
+        <button onClick={() => {
+          console.log(filteredServicesWithGuide);
+        }
+        }>print filteredServicesWithGuide</button>
         <button onClick={() => {
           console.log(service);
         }

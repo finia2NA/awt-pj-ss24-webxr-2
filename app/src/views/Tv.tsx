@@ -3,6 +3,7 @@ import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { ProgramList, ProgramItem } from "../windows/ProgramList"
 import { useServiceList } from '../hooks/useDVBI';
+import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -15,7 +16,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const [isPlaying, setIsPlaying] = useState(true);
 
-    const { services, loading, error } = useServiceList(true, false);
+    const { services, loading, error } = useServiceList(true, true);
 
     if (loading) {
         return <Text>Loading</Text>
@@ -28,9 +29,14 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         return {
             title: service.serviceName,
             src: service.dashStreams[0].manifestUrl,
-            selected: false
+            selected: false,
+            channelNumber: service.lcns[0].channelNumber,
+            // description: service.contentGuide?.getData() || "",
         }
     });
+
+    const theProgram = programs[1];
+
 
     // const [dashPlayerSrc, setDashPlayerSrc] = useState(programs[0].src);
     // const [programSelected, setProgramSelected] = useState(true);
@@ -40,7 +46,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     //     setProgramSelected(true);
     // };
 
-    const dashPlayerSrc = programs[1].src;
+    const dashPlayerSrc = theProgram.src;
     const handleItemClick = (item: ProgramItem) => {
     };
 
@@ -48,7 +54,17 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         <Container flexDirection={"row"}>
             <Container flexDirection="column" alignContent={"center"}>
                 <Container height={"auto"}>
-                    <DashPlayer src={dashPlayerSrc} width={900} playing={isPlaying} viewRef={viewRef} handleRef={handleRef} tabsRef={tabsRef} listRef={list} />
+                    <DashPlayer
+                        src={dashPlayerSrc}
+                        channelTitle={theProgram.title}
+                        channelDescription={"TODO"}
+                        channelNumber={theProgram.channelNumber}
+                        width={900}
+                        playing={isPlaying}
+                        viewRef={viewRef}
+                        handleRef={handleRef}
+                        tabsRef={tabsRef}
+                        listRef={list} />
                 </Container>
             </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>

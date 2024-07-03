@@ -12,6 +12,9 @@ const meta: Meta<typeof DashPlayer> = {
   args: {
     src: "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd",
     width: 640,
+    channelTitle: "Channel Title",
+    channelDescription: "Channel Description",
+    channelNumber: 1,
   },
 };
 

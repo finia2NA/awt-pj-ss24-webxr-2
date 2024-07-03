@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { Container, ComponentInternals } from "@react-three/uikit";
+import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { ProgramList, ProgramItem } from "../windows/ProgramList"
+import { useServiceList } from '../hooks/useDVBI';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -9,12 +10,34 @@ interface TvProps {
     tabsRef: React.RefObject<ComponentInternals>;
 }
 
-export default function Tv( {viewRef, handleRef, tabsRef}: TvProps) {
+export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const list = useRef<ComponentInternals>(null);
-    
+
     const [isPlaying, setIsPlaying] = useState(true);
 
-    const programs = [
+    debugger;
+    const { services, loading, error } = useServiceList(true, false);
+
+    if (loading) {
+        return <Text>Loading</Text>
+    }
+    if (error) {
+        return <Text>Error</Text>
+    }
+
+    const programs = services.map((service) => {
+        return {
+            title: service.serviceName,
+            src: service.dashStreams[0].manifestUrl,
+            selected: false
+        }
+    });
+
+    if (programs.length > 0) {
+        debugger;
+    }
+
+    const programsOld = [
         {
             title: "Big Buck Bunny",
             src: "https://dash.akamaized.net/akamai/bbb_30fps/bbb_30fps.mpd",

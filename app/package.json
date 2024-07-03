@@ -21,6 +21,7 @@
     "@react-three/uikit": "^0.3.6",
     "@react-three/uikit-lucide": "^0.3.4",
     "dashjs": "^4.7.4",
+    "dvbi-lib": "file:../lib",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.165.0"

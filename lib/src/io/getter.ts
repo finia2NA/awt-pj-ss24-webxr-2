@@ -13,11 +13,7 @@ async function getWholeDataAsJson(url: string) {
   const response = await fetch(url);
   const xml = await response.text();
 
-  // NOTE: THE TYPE IS ONLY FOR SYNTACTIC SUGAR!
-  // Since Typescript is transpiled to Javascript, the type is not enforced at runtime.
-  // This is.. unfortunate, since it would help us catch errors, but.. it is what it is.
-  const jObj: Data = parser.parse(xml);
-  // const jObj = parser.parse(xml);
+  const jObj = parser.parse(xml);
 
   return jObj;
 }

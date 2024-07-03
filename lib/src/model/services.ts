@@ -1,5 +1,7 @@
 import DVBI from "../dvbi";
 import { LCN } from "./lcnTables";
+import { ContentGuide } from "./contentGuide";
+import { castToArray } from "../utils/utils";
 
 function getServices() {
   const dvbi = DVBI.getInstance();
@@ -62,19 +64,14 @@ class Service {
     this.serviceName = rawServiceData.ServiceName;
     this.serviceType = rawServiceData.ServiceType["@_href"];
 
-    console.log(`Service Name: ${this.serviceName}, Content Source Ref: ${this.contentGuideSourceRef}`);
-
     if (contentGuideMap[this.contentGuideSourceRef]) {
       this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;
       this.programInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].programInfoEndpoint;
     }
 
-
     // Sometimes, rawServiceData.ServiceInstance is an object, and not an array
     // That is why this check + cast is necessary
-    const serviceInstancesData = Array.isArray(rawServiceData.ServiceInstance) ?
-      rawServiceData.ServiceInstance :
-      [rawServiceData.ServiceInstance];
+    const serviceInstancesData = castToArray(rawServiceData.ServiceInstance);
 
     const dashRawDataList = serviceInstancesData.filter(instance => instance.DASHDeliveryParameters != null);
 
@@ -85,6 +82,19 @@ class Service {
       }
       this.dashStreams.sort((a, b) => a.priority - b.priority);
     }
+  }
+
+  /**
+   * Retrieves the content guide for this service. If no start and end time are provided,
+   * the current and next programme will be returned.
+   * @param {Date} [start]  start time for the range of scheduled programmes
+   * @param {Date} [end]  end time for the range of scheduled programmes
+   * @returns The content guide with program descriptions for this service.
+   */
+  public async getContentGuide(start: Date = null, end: Date = null) {
+    const contentGuide = new ContentGuide(this, start, end);
+    await contentGuide.getData();
+    return contentGuide;
   }
 }
 

@@ -90,37 +90,56 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
 };
 
 
-// export const useService = (id: string, includeGuide: boolean = false) => {
-//   const { dvbi, loading, error: dvbiError } = useDVBI();
-//   const [service, setService] = useState<Service | null>(null);
-//   const [error, setError] = useState<Error | null>(dvbiError);
+export const useService = (id: string, includeGuide: boolean = false) => {
+  const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
 
-//   useEffect(() => {
-//     if (!dvbi) return;
+  const [service, setService] = useState<Service | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-//     const fetchService = async () => {
-//       try {
-//         const theService = dvbi.services.find((channel) => channel.serviceID === id);
+  useEffect(() => {
+    if (dvbiLoading) {
+      setLoading(true);
+      return;
+    }
 
-//         if (!theService) {
-//           setService(null);
-//           setError(new Error(`Channel with ID ${id} not found`));
-//           return;
-//         }
+    if (dvbiError) {
+      setError(dvbiError);
+      setLoading(false);
+      return;
+    }
 
-//         if (includeGuide) {
-//           await theService.getContentGuide();
-//         }
+    if (!dvbi) {
+      setError(new Error("Didn't get a DVBI instance"));
+      setLoading(false);
+      return;
+    }
 
-//         setService(theService);
-//       } catch (err) {
-//         setError(err as Error);
-//       }
-//     };
+    const fetchService = async () => {
+      try {
+        const theService = dvbi.services.find((channel) => channel.serviceID === id);
 
-//     fetchService();
-//   }, [dvbi, id, includeGuide]);
+        if (!theService) {
+          setService(null);
+          setError(new Error(`Channel with ID ${id} not found`));
+          return;
+        }
 
-//   return { service, loading, error };
-// };
+        if (includeGuide) {
+          await theService.getContentGuide();
+        }
+
+        setService(theService);
+        setLoading(false);
+      } catch (err) {
+        setError(err as Error);
+        setLoading(false);
+      }
+    };
+
+    fetchService();
+  }, [dvbi, dvbiError, dvbiLoading, id, includeGuide]);
+
+  return { service, loading, error };
+};
 

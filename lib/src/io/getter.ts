@@ -1,4 +1,5 @@
-const { XMLParser } = require("fast-xml-parser");
+import { Data } from '../types/dataType';
+import { XMLParser } from "fast-xml-parser";
 
 const options = {
   ignoreAttributes: false,

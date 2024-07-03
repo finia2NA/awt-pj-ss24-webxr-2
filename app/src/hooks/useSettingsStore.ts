@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
+import API_URL from '../assets/secret';
 
 export enum BiTheme {
   LIGHT = 'Light',
@@ -33,7 +34,7 @@ export const useSettingsStore = create(
         })),
 
 
-      dvbiUrl: null,
+      dvbiUrl: API_URL,
       setDvbiUrl: (dvbiUrl: string) => set({ dvbiUrl }),
     }),
     {

@@ -37,6 +37,7 @@ class DASHStream {
 
 class Service {
 
+  public guideAvailable: boolean = false;
   public contentGuideServiceRef: string;
   public contentGuideSourceRef: string;
   public providerName: string;
@@ -55,6 +56,8 @@ class Service {
   // (gets filled later in DVBI.refreshData() / init())
   public lcns: LCN[] = [];
 
+  public contentGuide?: ContentGuide;
+
   constructor(rawServiceData, contentGuideMap) {
     this.contentGuideServiceRef = rawServiceData.ContentGuideServiceRef;
     this.contentGuideSourceRef = rawServiceData.ContentGuideSourceRef;
@@ -67,6 +70,9 @@ class Service {
     if (contentGuideMap[this.contentGuideSourceRef]) {
       this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;
       this.programInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].programInfoEndpoint;
+      if (this.scheduleInfoEndpoint && this.programInfoEndpoint) {
+        this.guideAvailable = true;
+      }
     }
 
     // Sometimes, rawServiceData.ServiceInstance is an object, and not an array
@@ -94,6 +100,7 @@ class Service {
   public async getContentGuide(start: Date = null, end: Date = null) {
     const contentGuide = new ContentGuide(this, start, end);
     await contentGuide.getData();
+    this.contentGuide = contentGuide;
     return contentGuide;
   }
 }

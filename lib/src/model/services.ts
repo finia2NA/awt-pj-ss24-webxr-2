@@ -37,7 +37,7 @@ class DASHStream {
 
 class Service {
 
-  public guideAvailable: boolean = false;
+  public contentGuideAvailable: boolean = false;
   public contentGuideServiceRef: string;
   public contentGuideSourceRef: string;
   public providerName: string;
@@ -71,7 +71,7 @@ class Service {
       this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;
       this.programInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].programInfoEndpoint;
       if (this.scheduleInfoEndpoint && this.programInfoEndpoint) {
-        this.guideAvailable = true;
+        this.contentGuideAvailable = true;
       }
     }
 

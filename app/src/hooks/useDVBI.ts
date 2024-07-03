@@ -48,6 +48,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
     }
 
     if (dvbiError) {
+      console.error(dvbiError);
       setError(dvbiError);
       setLoading(false);
       return;
@@ -55,6 +56,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
 
     if (!dvbi) {
       setError(new Error("Didn't get a DVBI instance"));
+      console.error("Didn't get a DVBI instance");
       setLoading(false);
       return;
     }
@@ -79,6 +81,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
         setLoading(false);
       } catch (fetchError) {
         setError(fetchError as Error);
+        console.error(fetchError);
         setLoading(false);
       }
     };

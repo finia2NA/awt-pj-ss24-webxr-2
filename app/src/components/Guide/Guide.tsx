@@ -103,21 +103,21 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
         return timeTexts;
     };
 
-    const GeneratedChannelStrip = ({programSchedule, guideStartTime}: {programSchedule: ProgramSchedule, guideStartTime: string}) => {
-        const programs: (GuideStripProgramProps & {key: number})[] = [];
+    const GeneratedChannelStrip = ({ programSchedule, guideStartTime }: { programSchedule: ProgramSchedule, guideStartTime: string }) => {
+        const programs: (GuideStripProgramProps & { key: number })[] = [];
         let lastEndTime: string = programSchedule.schedule[0] ? programSchedule.schedule[0].startTime : "00:00";
-        
+
         programSchedule.schedule.forEach((scheduleEntry, index) => {
             const startTime = scheduleEntry.startTime;
             const endTime = scheduleEntry.endTime;
             const programWidth = getTimeDifferenceInMinutes(startTime, endTime) * 4 * zoomLevel;
-            const program = { 
-                text: scheduleEntry.title, 
-                width: programWidth, 
+            const program = {
+                text: scheduleEntry.title,
+                width: programWidth,
                 key: index,
                 gapBefore: 0
             };
-        
+
             // Check if there's a previous program and if there's a gap
             if (lastEndTime && startTime > lastEndTime) {
                 const gapBefore = getTimeDifferenceInMinutes(lastEndTime, startTime) * 4 * zoomLevel;
@@ -126,7 +126,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 const gapBefore = getTimeDifferenceInMinutes(guideStartTime, startTime) * 4 * zoomLevel;
                 program.gapBefore = gapBefore; // Set the gapBefore property
             }
-        
+
             programs.push(program);
             lastEndTime = endTime; // Update the lastEndTime to the current program's endTime
         });
@@ -138,8 +138,10 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     }
 
     return (
-        <Container display={"flex"} flexDirection={"row"} gap={20} >
+        <Container display={"flex"} flexDirection={"row"} gap={20} overflow={"scroll"} >
+            {/** Channels displayed by their logo */}
             <Container display={"flex"} flexDirection={"column"} alignItems={"center"} gap={10} flexGrow={0} flexShrink={0}>
+                {/** Empty top row to match the time header of the actual schedule */}
                 <Container display={"flex"} flexDirection={"row"} gap={10} height={20}>
                 </Container>
                 {schedule.map((scheduleEntry, index) => (
@@ -148,15 +150,19 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                     </Container>
                 ))}
             </Container>
-            <Container display={"flex"} flexDirection={"column"} alignItems={"flex-start"} justifyContent={"flex-start"} gap={10} overflow={"scroll"} flexGrow={0} flexShrink={0}>
+            {/** Actual schedule display including the time titles */}
+            <Container display={"flex"} flexDirection={"column"} alignItems={"flex-start"} justifyContent={"flex-start"} gap={10} flexGrow={0} flexShrink={0}>
+                {/** Time display */}
                 <Container height={20}>
                     {timeTitles().map((time, index) => (
                         <Text key={index} color={colors.foreground} positionType={"absolute"} positionLeft={index * 120 * zoomLevel} textAlign={"center"} transformTranslateX={"-50%"}>{time}</Text>
                     ))}
                 </Container>
-                {schedule.map((scheduleEntry, index) => (
-                    <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} guideStartTime={overrideStartTime ? overrideStartTime : getFirstProgramStartTime(schedule)} />
-                ))}
+                <Container overflow={"scroll"} flexDirection={"column"} gap={10}>
+                    {schedule.map((scheduleEntry, index) => (
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} guideStartTime={overrideStartTime ? overrideStartTime : getFirstProgramStartTime(schedule)} />
+                    ))}
+                </Container>
             </Container>
         </Container>
     )

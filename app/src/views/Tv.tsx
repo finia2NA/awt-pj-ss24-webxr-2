@@ -1,7 +1,9 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
+import { alterDateDays, getDateISO } from '../utils/dateHelpers';
+import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 import { alterDateDays, getDateISO } from '../utils/dateHelpers';
@@ -39,7 +41,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         return (`${hours}:${minutes}`);
     }
 
-    const channels = services.map((service) => {        
+    const channels = services.map((service) => {
         const programInfos = {
             description: "No Title Available",
             timeStart: "xx:xx",
@@ -67,7 +69,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     channels.sort((a, b) => a.number - b.number);
-    console.log(tunedChannel);
     let activeChannel = channels.find(channel => channel.id === tunedChannel);
     
     const handleChannelClick = (channelNumber: number, channelId: string) => {

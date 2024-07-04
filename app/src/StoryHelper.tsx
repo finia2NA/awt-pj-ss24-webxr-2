@@ -27,7 +27,8 @@ const StoryHelper = ({ children, wide, dynamicKeyboard }: StoryHelperProps) => {
           <Root />
           {children}
         </Fullscreen>
-        <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={5} />
+        <ambientLight intensity={1.5} />
+        <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={3} />
       </Canvas>
 
       {dynamicKeyboard && keyboardVisible &&
@@ -36,7 +37,8 @@ const StoryHelper = ({ children, wide, dynamicKeyboard }: StoryHelperProps) => {
             <Root />
             <KeyboardUI />
           </Fullscreen>
-          <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={5} />
+          <ambientLight intensity={1.5} />
+          <pointLight position={[-1, 1, 5]} color="#ffffff" intensity={3} />
         </Canvas>
       }
     </>

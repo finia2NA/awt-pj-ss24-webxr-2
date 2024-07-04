@@ -6,6 +6,9 @@ import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
+import { alterDateDays, getDateISO } from '../utils/dateHelpers';
+import useRoutingStore from '../hooks/useRoutingStore';
+import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -14,10 +17,11 @@ interface TvProps {
 }
 
 export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
+    const { tunedChannel, setTunedChannel } = useRoutingStore();
+    const { addRecentChannelToFrontByID } = useRecentChannelsStore();
     const list = useRef<ComponentInternals>(null);
 
     const [isPlaying, setIsPlaying] = useState(true);
-    const [selectedChannelNumber, setSelectedChannelNumber] = useState(13);
     const currentTime = useCurrentTime();
 
     const date = new Date("2022-09-10");
@@ -54,6 +58,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
         return {
             number: service.lcns[0].channelNumber,
+            id: service.serviceID,
             name: service.serviceName,
             description: programInfos.description,
             timeStart: programInfos.timeStart,
@@ -64,13 +69,16 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     channels.sort((a, b) => a.number - b.number);
-    let activeChannel = channels.find(channel => channel.number === selectedChannelNumber);
-
-    const handleChannelClick = (channelID: number) => {
-        const service = services.find((service) => service.lcns[0].channelNumber === channelID);
+    let activeChannel = channels.find(channel => channel.id === tunedChannel);
+    
+    const handleChannelClick = (channelNumber: number, channelId: string) => {
+        const service = services.find((service) => service.lcns[0].service?.serviceID === channelId);
         if (service && service.dashStreams[0]) {
-            setSelectedChannelNumber(channelID);
-            activeChannel = channels.find(channel => channel.number === selectedChannelNumber);
+            console.log("In here")
+            console.log(channels.find(channel => channel.id === channelId))
+            activeChannel = channels.find(channel => channel.id === channelId);
+            setTunedChannel(channelId);
+            addRecentChannelToFrontByID(channelId);
         }
     }
 
@@ -92,7 +100,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                 </Container>
             </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>
-                <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={selectedChannelNumber} />
+                <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
             </Container>
         </Container>
     );

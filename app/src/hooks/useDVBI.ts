@@ -34,7 +34,7 @@ export const useDVBI = () => {
   return { dvbi, loading, error };
 };
 
-export const useServiceList = (includeIncomplete = false, includeGuide = false) => {
+export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart = new Date(), guideEnd = new Date()) => {
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
 
   const [services, setServices] = useState<Service[]>([]);
@@ -48,6 +48,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
     }
 
     if (dvbiError) {
+      console.error(dvbiError);
       setError(dvbiError);
       setLoading(false);
       return;
@@ -55,6 +56,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
 
     if (!dvbi) {
       setError(new Error("Didn't get a DVBI instance"));
+      console.error("Didn't get a DVBI instance");
       setLoading(false);
       return;
     }
@@ -71,7 +73,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
 
         if (includeGuide) {
           for (const channel of result) {
-            await channel.getContentGuide();
+            await channel.getContentGuide(guideStart, guideEnd);
           }
         }
 
@@ -79,6 +81,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
         setLoading(false);
       } catch (fetchError) {
         setError(fetchError as Error);
+        console.error(fetchError);
         setLoading(false);
       }
     };

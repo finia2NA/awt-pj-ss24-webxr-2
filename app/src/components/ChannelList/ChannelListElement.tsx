@@ -33,18 +33,20 @@ export interface ChannelListElementProps {
 /**
  * Renders a single channel inside the list of channels.
  */
-const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl }: ChannelListElementProps) => {
+const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl, handleItemClick, selected }: ChannelListElementProps & { handleItemClick: (channelID: number) => void, selected: boolean} ) => {
     const colors = useColors();
 
     return (
-        <Backdrop height={90} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={240} margin={0} marginTop={0}>
-            <Container width={30} paddingLeft={10} borderRightWidth={2} borderColor={colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
-                <Text color={colors.primary}>{number.toString()}</Text>
+        <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onClick={() => handleItemClick(number)}>
+            <Container width={30} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
+                <Text color={selected ? colors.accent : colors.primary}>{number.toString()}</Text>
                 <Image width={20} height={20} src={imageUrl}></Image>
             </Container>
-            <Container paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} width={150}>
-                <Text color={colors.primary} paddingBottom={10}>{name}</Text>
-                <Text color={colors.primary}>{description}</Text>
+            <Container paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} width={270}>
+                <Text color={selected ? colors.accent : colors.primary} paddingBottom={10}>{name}</Text>
+                <Text color={colors.primary}>
+                    {description.length > 50 ? `${description.substring(0, 50)}...` : description}
+                </Text>
                 <Text color={colors.primary}>{timeStart + " - " + timeEnd}</Text>
             </Container>
             <Container height={90} display={"flex"} justifyContent={"flex-start"} flexDirection={"column"} alignItems={"flex-start"}>

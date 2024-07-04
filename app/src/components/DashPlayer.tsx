@@ -14,7 +14,14 @@ import { isXIntersection } from "@coconut-xr/xinteraction";
 
 
 interface DashPlayerProps {
+
+    // Info
     src: string;
+    channelTitle: string;
+    channelDescription: string;
+    channelNumber: number;
+
+    // Internal
     width: number;
     viewRef: React.RefObject<ComponentInternals>;
     handleRef: React.RefObject<ComponentInternals>;
@@ -25,7 +32,7 @@ interface DashPlayerProps {
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(( {src, width, viewRef, handleRef, tabsRef, listRef, playing=true}: DashPlayerProps ) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, playing = true }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
 
@@ -62,84 +69,84 @@ const DashPlayer = forwardRef(( {src, width, viewRef, handleRef, tabsRef, listRe
         pointerId: number;
         point: Vector3;
         scale: Vector3;
-      }>();
+    }>();
 
     const handleResizePointerDown = (e: ThreeEvent<PointerEvent>) => {
         if (
-          resize.current != null &&
-          viewRef.current != null &&
-          downState.current == null &&
-          isXIntersection(e)
+            resize.current != null &&
+            viewRef.current != null &&
+            downState.current == null &&
+            isXIntersection(e)
         ) {
-          e.stopPropagation();
-          (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    
+            e.stopPropagation();
+            (e.target as HTMLElement).setPointerCapture(e.pointerId);
+
             let x = viewRef.current.getComputedProperty("transformScaleX") || 1;
             let y = viewRef.current.getComputedProperty("transformScaleY") || 1;
             let z = viewRef.current.getComputedProperty("transformScaleZ") || 1;
-    
-            let scale = new Vector3(x, y, z);
-    
-            downState.current = {
-              pointerId: e.pointerId,
-              point: e.point,
-              scale: scale
-            };
-          }
-      };
 
-      const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+            let scale = new Vector3(x, y, z);
+
+            downState.current = {
+                pointerId: e.pointerId,
+                point: e.point,
+                scale: scale
+            };
+        }
+    };
+
+    const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
         if (downState.current?.pointerId != e.pointerId) {
-          return;
+            return;
         }
         downState.current = undefined;
-      };
-    
-      const handleResizePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    };
+
+    const handleResizePointerMove = (e: ThreeEvent<PointerEvent>) => {
         if (
-          handleRef.current == null ||
-          resize.current == null ||
-          viewRef.current == null ||
-          video.current == null ||
-          controls.current == null ||
-          tabsRef.current == null ||
-          listRef.current == null ||
-          downState.current == null ||
-          e.pointerId != downState.current.pointerId ||
-          !isXIntersection(e)
+            handleRef.current == null ||
+            resize.current == null ||
+            viewRef.current == null ||
+            video.current == null ||
+            controls.current == null ||
+            tabsRef.current == null ||
+            listRef.current == null ||
+            downState.current == null ||
+            e.pointerId != downState.current.pointerId ||
+            !isXIntersection(e)
         ) {
-          return;
+            return;
         }
-    
+
         const ratio = video.current.size.v[0] / video.current.size.v[1];
-    
+
         let delta = downState.current.point.clone().sub(e.point)
-    
+
         let scaledDelta = new Vector3(-delta.x, delta.y, delta.z);
         let newScale = downState.current.scale.clone().add(scaledDelta);
         newScale.y = newScale.x / 2 * ratio;
-    
+
         // enforce min/max size
         const newSizeX = newScale.x * viewRef.current.size.v[0];
         if ((newSizeX < 2000) || (newSizeX > 3500)) {
-          return;
+            return;
         }
-    
+
         viewRef.current.setStyle({
-          ...viewRef.current.getStyle(),  // Preserve other styles
-          ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
+            ...viewRef.current.getStyle(),  // Preserve other styles
+            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
         });
-    
-        let deltaY = (controls.current.size.v[1] - (controls.current.size.v[1] * 1/newScale.y)) / 2;
+
+        let deltaY = (controls.current.size.v[1] - (controls.current.size.v[1] * 1 / newScale.y)) / 2;
         // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
-    
+
         // preserve size of other components
-        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
-        resize.current.setStyle({ transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
-        controls.current.setStyle({ transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
-        tabsRef.current.setStyle({ transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
-        listRef.current.setStyle({ transformScaleX: 1/newScale.x, transformScaleY: 1/newScale.y, transformScaleZ: 1/newScale.z });
-      };
+        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        tabsRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        listRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+    };
 
     return (
         <Container flexDirection={"column"} alignContent={"center"}>
@@ -164,7 +171,7 @@ const DashPlayer = forwardRef(( {src, width, viewRef, handleRef, tabsRef, listRe
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={0} setChannel={() => { }} channelImageSrc={""} channelTitle={"Big Buck Bunny"} channelDescription={"Description"} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} />
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={""} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} />
             </Container>
         </Container>
     );
@@ -196,6 +203,12 @@ export const InsideVideo = forwardRef(({ src }: { src: string }, ref: React.Ref<
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
             playerRef.current.setMute(true); // Mute the video
         }
+        return () => {
+            if (playerRef.current) {
+                playerRef.current.destroy(); // Destroy the Dash player instance
+                playerRef.current = null;
+            }
+        };
     }, [src, videoElement]); // Re-run effect when src or videoElement changes
 
     return <></>; // Return an empty fragment as this component does not render anything itself

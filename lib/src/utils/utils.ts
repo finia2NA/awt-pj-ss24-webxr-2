@@ -22,6 +22,16 @@ function parseDuration(duration): Date {
   return new Date(0, 0, 0, hours, minutes, seconds);
 }
 
+function parseDurationMinutes(duration): number {
+  const match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+
+  const hours = (match[1] ? parseInt(match[1]) : 0);
+  const minutes = (match[2] ? parseInt(match[2]) : 0);
+  const seconds = (match[3] ? parseInt(match[3]) : 0);
+
+  return hours * 60 + minutes + seconds / 60;
+}
+
 /**
  * Converts a Date object to a Unix timestamp.
  * @param date The date to convert.
@@ -32,4 +42,4 @@ function convertDateToUnix(date: Date): number {
   return Math.floor(date.getTime() / 1000);
 }
 
-export { castToArray, parseDuration, convertDateToUnix };
+export { castToArray, parseDuration, parseDurationMinutes, convertDateToUnix };

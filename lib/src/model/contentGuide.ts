@@ -1,6 +1,6 @@
 import { Service } from "./services";
 import { getWholeDataAsJson } from "../io/getter";
-import { castToArray, parseDuration, convertDateToUnix } from "../utils/utils";
+import { castToArray, parseDuration, convertDateToUnix, parseDurationMinutes } from "../utils/utils";
 
 
 class ProgramDescription {
@@ -10,6 +10,7 @@ class ProgramDescription {
   public mediaUri: string;
   public start: Date;
   public duration: Date;
+  public durationMinutes: number;
 
   constructor(information, schedule) {
     this.pid = information["@_programId"].replace("crid://", "");
@@ -28,6 +29,7 @@ class ProgramDescription {
     const scheduleEvent = schedule.find(event => event.Program["@_crid"] === information["@_programId"]);
     this.start = new Date(scheduleEvent.PublishedStartTime);
     this.duration = parseDuration(scheduleEvent.PublishedDuration);
+    this.durationMinutes = parseDurationMinutes(scheduleEvent.PublishedDuration);
   }
 }
 
@@ -74,7 +76,7 @@ class ContentGuide {
 
     const description = data.TVAMain.ProgramDescription;
     const information = castToArray(description.ProgramInformationTable.ProgramInformation);
-    const schedule = castToArray(description.ProgramLocationTable.Schedule.ScheduleEvent);
+    const schedule = castToArray(description.ProgramLocationTable.Schedule ? description.ProgramLocationTable.Schedule.ScheduleEvent : []);
 
     if (!information[0] || !schedule[0]) {
       return;

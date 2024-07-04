@@ -203,6 +203,12 @@ export const InsideVideo = forwardRef(({ src }: { src: string }, ref: React.Ref<
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
             playerRef.current.setMute(true); // Mute the video
         }
+        return () => {
+            if (playerRef.current) {
+                playerRef.current.destroy(); // Destroy the Dash player instance
+                playerRef.current = null;
+            }
+        };
     }, [src, videoElement]); // Re-run effect when src or videoElement changes
 
     return <></>; // Return an empty fragment as this component does not render anything itself

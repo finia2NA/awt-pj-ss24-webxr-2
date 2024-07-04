@@ -21,6 +21,7 @@ import Tabs, { Tab } from "./components/Tabs";
 import BottomBar from "./windows/BottomBar";
 import Tv from './views/Tv';
 import Home from './views/Home';
+import GuideView from "./views/GuideView";
 
 
 const sessionOptions = {
@@ -144,6 +145,7 @@ export default function App() {
                 <Container height={"auto"}>
                   {selectedTab === Tab.HOME && <Home />}
                   {selectedTab === Tab.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {selectedTab === Tab.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                 </Container>
               </Container>
             </Container>

@@ -34,7 +34,7 @@ export const useDVBI = () => {
   return { dvbi, loading, error };
 };
 
-export const useServiceList = (includeIncomplete = false, includeGuide = false) => {
+export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart = new Date(), guideEnd = new Date()) => {
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
 
   const [services, setServices] = useState<Service[]>([]);
@@ -73,7 +73,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false) 
 
         if (includeGuide) {
           for (const channel of result) {
-            await channel.getContentGuide();
+            await channel.getContentGuide(guideStart, guideEnd);
           }
         }
 

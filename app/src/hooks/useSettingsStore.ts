@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
+import DVBIUrl from '../assets/secret';
 
 export enum BiTheme {
   LIGHT = 'Light',
@@ -33,7 +34,7 @@ export const useSettingsStore = create(
         })),
 
 
-      dvbiUrl: import.meta.env.__API_URL__,
+      dvbiUrl: DVBIUrl,
       setDvbiUrl: (dvbiUrl: string) => set({ dvbiUrl }),
     }),
     {

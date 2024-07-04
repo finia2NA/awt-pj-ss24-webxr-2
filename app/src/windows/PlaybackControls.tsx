@@ -20,6 +20,9 @@ export interface PlaybackControlsProps {
   isPlaying: boolean;
   togglePlayPause?: () => void;
 
+  isMuted?: boolean;
+  toggleMute?: () => void;
+
   // Toggle channel list
   toggleChannelList?: () => void;
 
@@ -29,7 +32,7 @@ export interface PlaybackControlsProps {
 
 }
 
-const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, captionsAvailable, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying }: PlaybackControlsProps) => {
+const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, captionsAvailable, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying, toggleMute, isMuted }: PlaybackControlsProps) => {
   return (
     <Card
       height={80}
@@ -46,7 +49,7 @@ const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelL
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
         {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />}
-        <GlyphButton type={ButtonType.Volume2} />
+        <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume2} onClick={toggleMute}/>
       </Container>
 
     </Card>

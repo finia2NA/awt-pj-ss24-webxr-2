@@ -2,7 +2,7 @@ import useHeartedChannelsStore from "../hooks/useHeartedChannelsStore";
 import useRecentChannelsStore from "../hooks/useRecentChannelsStore";
 import { useServiceList } from "../hooks/useDVBI";
 import HomeWindow from "../windows/HomeWindow";
-import HomeRecommendation, { homeRecommPropsFromService } from "../components/Home/HomeRecommendation";
+import { homeRecommPropsFromService } from "../components/Home/HomeRecommendation";
 
 export default function Home() {
     const { heartedChannels } = useHeartedChannelsStore(state => state)
@@ -13,10 +13,11 @@ export default function Home() {
     const heartedList = services.filter(service => heartedChannels.has(service.serviceID))
     const recentList = recentChannels.map(serviceID => services.find(service => service.serviceID === serviceID))
 
-    const transformedHearted = heartedList.map(service => (
-        homeRecommPropsFromService(service)
-    ))
-    let transformedRecent = recentList.map(service => {
+    const transformedHearted = heartedList.map(service => {
+        // debugger;
+        return homeRecommPropsFromService(service)
+    });
+    const transformedRecent = recentList.map(service => {
         if (!service) {
             return null;
         } else {

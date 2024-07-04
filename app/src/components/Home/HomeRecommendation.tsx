@@ -32,7 +32,7 @@ export const homeRecommPropsFromService = (service: Service): HomeRecommendation
     let description = "";
     let timeStart = "";
     let timeEnd = "";
-    let imageUrl = "";
+    let imageUrl = ""; // TODO: get image URL from service
 
     // finding out what's there...
     const descriptionAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.title !== undefined;

@@ -9,6 +9,10 @@ export interface ChannelListElementProps {
      */
     number: number;
     /**
+     * Unique channel ID from the API
+     */
+    id: string;
+    /**
      * Name of the channel
      */
     name: string;
@@ -33,11 +37,11 @@ export interface ChannelListElementProps {
 /**
  * Renders a single channel inside the list of channels.
  */
-const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl, handleItemClick, selected }: ChannelListElementProps & { handleItemClick: (channelID: number) => void, selected: boolean} ) => {
+const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl, handleItemClick, selected, id }: ChannelListElementProps & { handleItemClick: (channelNumber: number, channelId: string) => void, selected: boolean} ) => {
     const colors = useColors();
 
     return (
-        <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onClick={() => handleItemClick(number)}>
+        <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onClick={() => handleItemClick(number, id)}>
             <Container width={30} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
                 <Text color={selected ? colors.accent : colors.primary}>{number.toString()}</Text>
                 <Image width={20} height={20} src={imageUrl}></Image>

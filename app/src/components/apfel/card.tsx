@@ -10,13 +10,13 @@ export const Card: (props: CardProperties & RefAttributes<ComponentInternals>) =
   ({ children, ...props }, ref) => {
 
     const colors = useColors()
-    const biTheme = useSettingsStore((state) => state.biTheme) as SettingsState;
+    const { biTheme } = useSettingsStore((state) => state) as SettingsState;
 
     return (
       <Container
         backgroundColor={colors.cardBackground}
         backgroundOpacity={colors.cardBackgroundOpacity}
-        borderColor={colors.cardForeground}
+        borderColor={colors.cardBorder}
         borderOpacity={0.8}
         borderWidth={4}
         borderBend={0.3}

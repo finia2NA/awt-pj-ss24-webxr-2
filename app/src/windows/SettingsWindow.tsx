@@ -10,7 +10,7 @@ import useSettingsStore, { BiTheme, SettingsState } from "../hooks/useSettingsSt
 const SettingsWindow = () => {
 
   const colors = useColors();
-  const { setBiTheme } = useSettingsStore((state) => state) as SettingsState;
+  const { biTheme, setBiTheme } = useSettingsStore((state) => state) as SettingsState;
 
 
   const onColorChange = ({ index, option }: OnBGClickProps) => {
@@ -39,7 +39,7 @@ const SettingsWindow = () => {
 
       <Container flexDirection={"column"} gap={1}>
 
-        <ButtonGroup roundTop title="Theme" options={[BiTheme.LIGHT, BiTheme.DARK]} selected={0} onClick={onColorChange} />
+        <ButtonGroup roundTop title="Theme" options={[BiTheme.LIGHT, BiTheme.DARK]} selected={biTheme} onClick={onColorChange} />
 
         <ButtonGroup title="DVBI-API" options={["Default", "Custom"]} selected={0} onClick={notImplemented} />
 

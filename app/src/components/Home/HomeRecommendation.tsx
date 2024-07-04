@@ -3,6 +3,7 @@ import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
 import { Service } from "dvbi-lib/src/model/services";
 import { formatTime } from "../../utils/dateHelpers";
+import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 
 export interface HomeRecommendationProps {
     /**
@@ -25,6 +26,11 @@ export interface HomeRecommendationProps {
      * URL of the image to display
      */
     imageUrl: string;
+
+    /**
+     * Service ID
+     */
+    serviceID: string;
 }
 
 export const homeRecommPropsFromService = (service: Service): HomeRecommendationProps => {
@@ -61,19 +67,25 @@ export const homeRecommPropsFromService = (service: Service): HomeRecommendation
         description: description,
         timeStart: timeStart,
         timeEnd: timeEnd,
-        imageUrl: imageUrl
-
+        imageUrl: imageUrl,
+        serviceID: service.serviceID
     };
 }
 
 /**
  * Renders a home recommendation component.
  */
-const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl }: HomeRecommendationProps) => {
+const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl, serviceID }: HomeRecommendationProps) => {
     const colors = useColors();
+    const { setRoute, setTunedChannel } = useRoutingStore();
 
     return (
-        <Backdrop height={75} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={20} width={240} margin={0} marginTop={0} flexShrink={0} flexGrow={0}>
+        <Backdrop height={75} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={20} width={240} margin={0} marginTop={0} flexShrink={0} flexGrow={0}
+            hover={{ backgroundColor: colors.hover }}
+            onClick={() => {
+                setRoute(Route.TV);
+                setTunedChannel(serviceID);
+            }}>
             <Container width={55} paddingLeft={10} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
                 <Image width={45} src={imageUrl}></Image>
             </Container>

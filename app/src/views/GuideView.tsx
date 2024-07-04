@@ -14,13 +14,24 @@ interface TvProps {
 }
 
 export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
-    const list = useRef<ComponentInternals>(null);
+    /**
+     * Hardcoded date for testing purposes
+     * since we don't have real-time data
+     */
+    const [date, setDate] = useState(new Date("2022-09-10"));
 
-    const [isPlaying, setIsPlaying] = useState(true);
-    const [selectedChannelNumber, setSelectedChannelNumber] = useState(13);
+    function getDateISO(date: Date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    function alterDateDays(date: Date, days: number) {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + days);
+        return newDate;
+    }
     const currentTime = useCurrentTime();
 
-    const { services, loading, error } = useServiceList(true, true, new Date("2022-09-09T22:00:00Z"), new Date("2022-09-10T21:59:59Z"));
+    const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
 
     if (loading) {
         return <Text>Loading</Text>
@@ -38,9 +49,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     services.sort((a, b) => a.lcns[0].channelNumber - b.lcns[0].channelNumber);
 
     const schedule: ProgramSchedule[] = services.map((service) => {
-        let scheduleEntries = service.contentGuide?.programDescriptions.map((program) => {
-            if (program.title.startsWith('Der Humboldtstrom')) console.log(new Date(new Date(program.start)));
-            if (program.title.startsWith('Der Humboldtstrom')) console.log(formatTime(program.start));
+        const scheduleEntries = service.contentGuide?.programDescriptions.map((program) => {
             return {
                 title: program.title,
                 startTime: formatTime(program.start),
@@ -48,7 +57,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
             }
         });
 
-        let generatedSchedule: ProgramSchedule = {
+        const generatedSchedule: ProgramSchedule = {
             imageUrl: "",
             fallbackText: service.serviceName || "No name available",
             schedule: scheduleEntries || [],
@@ -58,6 +67,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     return (
-        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} zoomLevel={1} overrideStartTime='15:00'/>
+        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} zoomLevel={1} overrideStartTime='15:00' />
     );
 }

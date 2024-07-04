@@ -38,7 +38,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     // => 1 pixel = 0.25 minutes
     // => 1 minute = 4 pixels
     const timeTitles = () => {
-        const startTime = overrideStartTime ? overrideStartTime : getStartTime(schedule);
+        const startTime = getStartTime(schedule);
 
         /**
          * Get the end time by going through the entire schedule
@@ -57,11 +57,9 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     }
 
     const getStartTime = (schedule: ProgramSchedule[]): string => {
-        /**
-                 * Get the start time from the first program in the first channel
-                 * If there is no start time, default to 00:00
-                 * If there is an override, use that
-                 */
+        if (overrideStartTime) {
+            return overrideStartTime;
+        }
         let startTime: string | null = null;
 
         schedule.forEach((channel) => {
@@ -75,12 +73,6 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
         if (startTime === null) {
             startTime = "00:00";
         }
-        return startTime;
-    }
-
-    const getFirstProgramStartTime = (schedule: ProgramSchedule[]): string => {
-        let startTime = schedule[0].schedule[0].startTime ? schedule[0].schedule[0].startTime : "00:00";
-        startTime = overrideStartTime ? overrideStartTime : startTime;
         return startTime;
     }
 
@@ -124,12 +116,17 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
 
     const GeneratedChannelStrip = ({ programSchedule }: { programSchedule: ProgramSchedule }) => {
         const programs: (GuideStripProgramProps & { key: number })[] = [];
-        let lastEndTime: string = programSchedule.schedule[0] ? programSchedule.schedule[0].startTime : "00:00";
+        const guideStartTime = getStartTime(schedule);
+        let lastEndTime: string = guideStartTime;
 
         programSchedule.schedule.forEach((scheduleEntry, index) => {
-            const guideStartTime = getStartTime(schedule);
             
-            const startTime = scheduleEntry.startTime > guideStartTime ? scheduleEntry.startTime : guideStartTime;
+            //console.log(guideStartTime);
+            //scheduleEntry.endTime < guideStartTime ? console.log("End time smaller") : console.log("End time larger")            // Discard everything before the guide start time
+            if (scheduleEntry.endTime < guideStartTime) return;
+            //console.log("Still executed")
+
+            const startTime = scheduleEntry.startTime;
             const endTime = scheduleEntry.endTime;
             const programWidth = getTimeDifferenceInMinutes(startTime, endTime) * 4 * zoomLevel;
             const program = {
@@ -146,8 +143,9 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
             } else if (index === 0 && startTime > guideStartTime) {
                 const gapBefore = getTimeDifferenceInMinutes(guideStartTime, startTime) * 4 * zoomLevel;
                 program.gapBefore = gapBefore; // Set the gapBefore property
+            } else if (startTime < guideStartTime) {
+                program.width -= getTimeDifferenceInMinutes(startTime, guideStartTime) * 4 * zoomLevel;
             }
-
             programs.push(program);
             lastEndTime = endTime; // Update the lastEndTime to the current program's endTime
         });

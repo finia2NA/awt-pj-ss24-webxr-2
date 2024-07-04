@@ -20,7 +20,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     const [selectedChannelNumber, setSelectedChannelNumber] = useState(13);
     const currentTime = useCurrentTime();
 
-    const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T21:59:59Z"));
+    const { services, loading, error } = useServiceList(true, true, new Date("2022-09-09T22:00:00Z"), new Date("2022-09-10T21:59:59Z"));
 
     if (loading) {
         return <Text>Loading</Text>
@@ -58,6 +58,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     return (
-        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} zoomLevel={1}/>
+        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} zoomLevel={1} overrideStartTime='15:00'/>
     );
 }

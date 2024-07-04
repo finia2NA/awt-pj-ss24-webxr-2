@@ -1,9 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
-import { alterDateDays, getDateISO } from '../utils/dateHelpers';
-import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 import { alterDateDays, getDateISO } from '../utils/dateHelpers';
@@ -24,8 +22,8 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const [isPlaying, setIsPlaying] = useState(true);
     const currentTime = useCurrentTime();
 
-    const date = new Date("2022-09-10");
-    const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
+    // Note to F: I set those dates as default when no date is given now, so no more need to pass them here. (I did this so we always use the same dates) - R
+    const { services, loading, error } = useServiceList(true, true);
     //const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
 
     if (loading) {
@@ -48,6 +46,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             timeEnd: "xx:xx",
         }
 
+        // debugger;
         service.contentGuide?.programDescriptions.forEach((program) => {
             if (formatTime(program.start) <= currentTime && currentTime < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000))) {
                 programInfos.description = program.title;
@@ -70,7 +69,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     channels.sort((a, b) => a.number - b.number);
     let activeChannel = channels.find(channel => channel.id === tunedChannel);
-    
+
     const handleChannelClick = (channelNumber: number, channelId: string) => {
         const service = services.find((service) => service.lcns[0].service?.serviceID === channelId);
         if (service && service.dashStreams[0]) {

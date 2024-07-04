@@ -8,17 +8,26 @@ export interface HomeSectionProps {
      */
     title: string;
     channels: HomeRecommendationProps[];
+    altText: string
 }
 
-const HomeSection = ({ title, channels }: HomeSectionProps) => {
+const HomeSection = ({ title, channels, altText }: HomeSectionProps) => {
     const colors = useColors();
     return (
         <Container display={"flex"} flexDirection={"column"} gapRow={8} >
             <Text color={colors.primary} fontSize={13} fontWeight={"medium"}>{title}</Text>
             <Container display={"flex"} gap={10} flexDirection={"row"} overflow={"scroll"} height={100}>
-                {channels.map((channel, index) => (
-                    <HomeRecommendation key={index} {...channel} />
-                ))}
+                {channels.length > 0 &&
+                    channels.map((channel, index) => (
+                        <HomeRecommendation key={index} {...channel} />
+                    ))
+                }
+                {channels.length === 0 &&
+                    <Container flexDirection={"column"}>
+                        <Text fontSize={14} color={colors.primary}>No Data Available.</Text>
+                        <Text fontSize={14} color={colors.primary}>{altText}</Text>
+                    </Container>
+                }
             </Container>
         </Container>
     );

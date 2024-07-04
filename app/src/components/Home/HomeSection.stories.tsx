@@ -11,6 +11,7 @@ const meta: Meta<typeof HomeSection> = {
     },
     args: {
         title: "Your Favorite Channels",
+        altText: "No data available",
         channels: [
             {
                 name: "TestName",
@@ -57,6 +58,18 @@ export const Default: Story = {
             <>
                 <StoryHelper>
                     <HomeSection {...args} />
+                </StoryHelper>
+            </>
+        )
+    }
+};
+
+export const Empty: Story = {
+    render: (args) => {
+        return (
+            <>
+                <StoryHelper>
+                    <HomeSection title='Empty Section' channels={[]} altText='This section is empty' />
                 </StoryHelper>
             </>
         )

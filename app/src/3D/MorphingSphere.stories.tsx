@@ -13,7 +13,8 @@ const meta: Meta<typeof MorphingSphere> = {
   args: {
     sliderValue: 0.5,
     position: [0, 0, 0],
-    scale: [1, 1, 1]
+    scale: [2, 1, 2],
+    rotation: [-0.5 * Math.PI, 0, 0],
   },
   argTypes: {
     sliderValue: {
@@ -38,6 +39,8 @@ export const Default: Story = {
         <directionalLight position={[10, 10, 5]} intensity={1.5} />
         <MorphingSphere {...args} />
         <OrbitControls />
+        <gridHelper args={[4, 4]} />
+        <axesHelper args={[2]} />
         <color attach="background" args={['black']} />
       </Canvas>
     </div>

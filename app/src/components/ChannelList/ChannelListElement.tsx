@@ -37,7 +37,7 @@ export interface ChannelListElementProps {
 /**
  * Renders a single channel inside the list of channels.
  */
-const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl, handleItemClick, selected, id }: ChannelListElementProps & { handleItemClick: (channelNumber: number, channelId: string) => void, selected: boolean} ) => {
+const ChannelListElement = ({ number, name, description, timeStart, timeEnd, imageUrl, handleItemClick, selected, id }: ChannelListElementProps & { handleItemClick: (channelNumber: number, channelId: string) => void, selected: boolean }) => {
     const colors = useColors();
 
     return (
@@ -54,7 +54,7 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
                 <Text color={colors.primary}>{timeStart + " - " + timeEnd}</Text>
             </Container>
             <Container height={90} display={"flex"} justifyContent={"flex-start"} flexDirection={"column"} alignItems={"flex-start"}>
-                <HeartButton channelID={number.toString()}></HeartButton>
+                <HeartButton channelID={id}></HeartButton>
             </Container>
         </Backdrop>
     )

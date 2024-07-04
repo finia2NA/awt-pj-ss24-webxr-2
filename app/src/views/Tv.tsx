@@ -1,9 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
-import { alterDateDays, getDateISO } from '../utils/dateHelpers';
-import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 import { alterDateDays, getDateISO } from '../utils/dateHelpers';

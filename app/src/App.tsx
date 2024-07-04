@@ -171,8 +171,8 @@ export default function App() {
           <Hands type="pointer" />
           <Controllers type="pointer" />
         </ImmersiveSessionOrigin>
-        <ambientLight intensity={1} />
-        <pointLight position={[-3, 3, 0]} intensity={10} />
+        <ambientLight intensity={2} />
+        <pointLight position={[-3, 3, 0]} intensity={8} />
 
         {/* I'm using this stuff for color tuning and stuff - R */}
         {/* <axesHelper />

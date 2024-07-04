@@ -6,8 +6,8 @@ export class GlassMaterial extends MeshPhongMaterial {
 
   constructor() {
     super({
-      specular: '#555',
-      shininess: 100,
+      specular: '#474747',
+      shininess: 20,
     })
   }
 }
@@ -15,8 +15,10 @@ export class GlassMaterial extends MeshPhongMaterial {
 export class LightGlassMaterial extends MeshPhongMaterial {
   constructor() {
     super({
-      specular: '#555',
-      shininess: 20,
+      color: '#ffffff',
+      specular: '#ffffff',
+      shininess: 10,
+      reflectivity: 1,
     })
   }
 }

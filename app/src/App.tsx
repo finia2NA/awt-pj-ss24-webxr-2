@@ -22,6 +22,7 @@ import BottomBar from "./windows/BottomBar";
 import Tv from './views/Tv';
 import Home from './views/Home';
 import GuideView from "./views/GuideView";
+import SettingsView from "./views/SettingsView";
 
 
 const sessionOptions = {
@@ -146,15 +147,16 @@ export default function App() {
                   {selectedTab === Tab.HOME && <Home />}
                   {selectedTab === Tab.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
                   {selectedTab === Tab.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {selectedTab === Tab.SETTINGS && <SettingsView />}
                 </Container>
               </Container>
             </Container>
-            <Container 
+            <Container
               alignSelf={"center"}
               alignItems={"center"}
               height={25}
               marginLeft={selectedTab == Tab.TV ? -100 : 0}
-              
+
               ref={handle}
               onPointerDown={handlePointerDown}
               onPointerUp={handlePointerUp}
@@ -169,6 +171,17 @@ export default function App() {
           <Hands type="pointer" />
           <Controllers type="pointer" />
         </ImmersiveSessionOrigin>
+        <ambientLight intensity={1} />
+        <pointLight position={[-3, 3, 0]} intensity={10} />
+
+        {/* I'm using this stuff for color tuning and stuff - R */}
+        {/* <axesHelper />
+        <mesh position={[-3, 3, 0]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshBasicMaterial color="red" />
+        </mesh> */}
+        {/* <gridHelper /> */}
+        <color attach="background" args={["#bfbebe"]} />
       </XRCanvas>
     </div>
   );

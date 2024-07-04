@@ -1,12 +1,9 @@
-import { useEffect } from 'react';
-import { useLoader } from "@react-three/fiber";
-import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide } from "three";
+import { useEffect, useRef } from 'react';
+import { useFrame, useLoader } from "@react-three/fiber";
+import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide, Euler } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface EnvironmentProps {
-  position: Vector3;
-  scale: Vector3;
-  viewDirection: Vector3;
   immersionLevel: number;
   nightMode: boolean;
 }
@@ -172,24 +169,51 @@ const Lighting = (props: dayNightProps) => {
   )
 }
 
-
-const Environment = (props: EnvironmentProps) => {
-
-  // TODO: memoize
-  const envPath = props.nightMode ? "nightenv.png" : "dayenv.png";
+/**
+ * Returns an environment, where the canonical camera position is at the origin, view is to the front (as you would expect).
+ * The @param immersionLevel prop controls the level of immersion, currently just fully there if > 0.
+ * The @param nightMode prop controls the day/night mode.
+ */
+const Environment = ({ immersionLevel, nightMode, position, scale, viewDirection }: EnvironmentProps) => {
+  const envPath = nightMode ? "nightenv.png" : "dayenv.png";
   const envTexture = useLoader(TextureLoader, envPath);
 
+  // References to the groups
+  const translationRef = useRef(null);
+  const rotationRef = useRef(null);
+
+  useEffect(() => {
+    // Set the group's position to simulate the camera's previous position
+    if (translationRef.current) {
+      const theRef = translationRef.current as Object3D;
+      theRef.position.set(-23, -5, -22);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (rotationRef.current) {
+      // Rotate the pivot point
+      const theRef = rotationRef.current as Object3D;
+      theRef.rotation.y = -0.2;
+    }
+  }, []);
+
   return (
-    <>
-      <Grass texture={envTexture} />
-      <Trees texture={envTexture} />
-      <Wood texture={envTexture} />
-      <Water texture={envTexture} />
-      <Sail texture={envTexture} />
-      <SkySphere texture={envTexture} />
-      <Lighting nightMode={props.nightMode} />
-    </>
+    <group ref={rotationRef}>
+      <group ref={translationRef}>
+        {immersionLevel > 0 && <>
+          <Grass texture={envTexture} />
+          <Trees texture={envTexture} />
+          <Wood texture={envTexture} />
+          <Water texture={envTexture} />
+          <Sail texture={envTexture} />
+          <SkySphere texture={envTexture} />
+          <Lighting nightMode={nightMode} />
+        </>
+        }
+      </group>
+    </group>
   );
-}
+};
 
 export default Environment;

@@ -202,6 +202,13 @@ export const InsideVideo = forwardRef(({ src }: { src: string }, ref: React.Ref<
             playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
             playerRef.current.setMute(true); // Mute the video
+            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, function () {
+                console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+                if (playerRef.current && videoRef.current) {
+                    playerRef.current.setMute(true);
+                    playerRef.current.initialize(videoRef.current, src, true);
+                }
+            });
         }
         return () => {
             if (playerRef.current) {

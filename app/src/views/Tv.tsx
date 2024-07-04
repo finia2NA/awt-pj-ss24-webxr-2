@@ -44,7 +44,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         }
 
         service.contentGuide?.programDescriptions.forEach((program) => {
-            if (formatTime(program.start) < currentTime && currentTime < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000))) {
+            if (formatTime(program.start) <= currentTime && currentTime < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000))) {
                 programInfos.description = program.title;
                 programInfos.timeStart = formatTime(program.start);
                 programInfos.timeEnd = formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000));

@@ -1,9 +1,7 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
-import { ProgramList, ProgramItem } from "../windows/ProgramList"
 import { useServiceList } from '../hooks/useDVBI';
-import ChannelNumber from '../components/PlaybackControls/ChannelNumber';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 
@@ -36,6 +34,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     }
 
     const channels = services.map((service) => {
+        console.log(service.contentGuide?.programDescriptions[0]?.start);
         return {
             number: service.lcns[0].channelNumber,
             name: service.serviceName,

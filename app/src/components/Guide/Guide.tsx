@@ -10,6 +10,10 @@ export interface ScheduleEntry {
 }
 export interface ProgramSchedule {
     imageUrl: string;
+    /**
+     * Fallback text to display if there is no image
+     */
+    fallbackText?: string;
     schedule: ScheduleEntry[];
 }
 
@@ -34,13 +38,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     // => 1 pixel = 0.25 minutes
     // => 1 minute = 4 pixels
     const timeTitles = () => {
-        /**
-         * Get the start time from the first program in the first channel
-         * If there is no start time, default to 00:00
-         * If there is an override, use that
-         */
-        let startTime = schedule[0].schedule[0].startTime ? schedule[0].schedule[0].startTime : "00:00";
-        startTime = overrideStartTime ? overrideStartTime : startTime;
+        const startTime = overrideStartTime ? overrideStartTime : getStartTime(schedule);
 
         /**
          * Get the end time by going through the entire schedule
@@ -55,8 +53,29 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 }
             }
         }
-
         return generateTimeTexts(startTime, endTime);
+    }
+
+    const getStartTime = (schedule: ProgramSchedule[]): string => {
+        /**
+                 * Get the start time from the first program in the first channel
+                 * If there is no start time, default to 00:00
+                 * If there is an override, use that
+                 */
+        let startTime: string | null = null;
+
+        schedule.forEach((channel) => {
+            channel.schedule.forEach((program) => {
+                if (startTime === null || program.startTime < startTime) {
+                    startTime = program.startTime;
+                }
+            });
+        });
+
+        if (startTime === null) {
+            startTime = "00:00";
+        }
+        return startTime;
     }
 
     const getFirstProgramStartTime = (schedule: ProgramSchedule[]): string => {
@@ -103,12 +122,14 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
         return timeTexts;
     };
 
-    const GeneratedChannelStrip = ({ programSchedule, guideStartTime }: { programSchedule: ProgramSchedule, guideStartTime: string }) => {
+    const GeneratedChannelStrip = ({ programSchedule }: { programSchedule: ProgramSchedule }) => {
         const programs: (GuideStripProgramProps & { key: number })[] = [];
         let lastEndTime: string = programSchedule.schedule[0] ? programSchedule.schedule[0].startTime : "00:00";
 
         programSchedule.schedule.forEach((scheduleEntry, index) => {
-            const startTime = scheduleEntry.startTime;
+            const guideStartTime = getStartTime(schedule);
+            
+            const startTime = scheduleEntry.startTime > guideStartTime ? scheduleEntry.startTime : guideStartTime;
             const endTime = scheduleEntry.endTime;
             const programWidth = getTimeDifferenceInMinutes(startTime, endTime) * 4 * zoomLevel;
             const program = {
@@ -146,7 +167,9 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 {schedule.map((scheduleEntry, index) => (
                     <Container key={index} height={65} display={"flex"} flexDirection={"column"} justifyContent={"center"}>
-                        <Image width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
+                        {scheduleEntry.imageUrl ?
+                            <Image width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
+                            : <Text width={100} color={colors.primary} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>
                 ))}
             </Container>
@@ -155,12 +178,12 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 {/** Time display */}
                 <Container height={20}>
                     {timeTitles().map((time, index) => (
-                        <Text key={index} color={colors.foreground} positionType={"absolute"} positionLeft={index * 120 * zoomLevel} textAlign={"center"} transformTranslateX={"-50%"}>{time}</Text>
+                        <Text key={index} color={colors.primary} positionType={"absolute"} positionLeft={index * 120 * zoomLevel + getTimeDifferenceInMinutes(getStartTime(schedule), timeTitles()[0] || getStartTime(schedule)) * 4} textAlign={"center"} transformTranslateX={"-50%"}>{time}</Text>
                     ))}
                 </Container>
-                <Container overflow={"scroll"} flexDirection={"column"} gap={10}>
+                <Container overflow={"visible"} flexDirection={"column"} gap={10}>
                     {schedule.map((scheduleEntry, index) => (
-                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} guideStartTime={overrideStartTime ? overrideStartTime : getFirstProgramStartTime(schedule)} />
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} />
                     ))}
                 </Container>
             </Container>

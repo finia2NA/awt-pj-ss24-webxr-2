@@ -7,12 +7,13 @@ import { useState } from "react";
 export interface GuideWindowProps extends GuideProps {
     time: string;
     regions: string[];
+    width?: number;
 }
-const GuideWindow = ({time, regions, ...rest}: GuideWindowProps) => {
+const GuideWindow = ({time, regions, width, ...rest}: GuideWindowProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
     return (
-        <Card>
+        <Card width={width ? width : "auto"}>
             <Container display={"flex"} flexDirection={"column"} gap={10} paddingX={20} paddingY={20} padding={20}>
                 <Container display={"flex"} flexDirection={"row"} justifyContent={"space-between"} >
                     <Container display={"flex"} flexDirection={"row"} gap={10}>

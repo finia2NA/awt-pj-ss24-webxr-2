@@ -5,26 +5,26 @@ import TextInput from "../components/TextInput";
 import { useState } from "react";
 import useKeyboardStore from "../hooks/useKeyboardStore.ts";
 import useCurrentTime from "../hooks/useCurrentTime.ts";
-import useRecentChannelsStore from "../hooks/useRecentChannelsStore.ts";
-import useHeartedChannelsStore from "../hooks/useHeartedChannelsStore.ts";
 import HomeSection from "../components/Home/HomeSection.tsx";
+import { HomeRecommendationProps } from "../components/Home/HomeRecommendation.tsx";
 
 
+interface HomeWindowProps {
+  loading?: boolean;
+  hearted: HomeRecommendationProps[];
+  recent: HomeRecommendationProps[];
+}
 
-const HomeWindow = () => {
+const HomeWindow = ({ loading, hearted, recent }: HomeWindowProps) => {
 
   const [searchString, setSearchString] = useState("")
   const { toggleVisibility: toggleKeyboard } = useKeyboardStore();
   const timeString = useCurrentTime();
 
-  const { recentChannels } = useRecentChannelsStore();
-  const { heartedChannels } = useHeartedChannelsStore();
-
   return (
-    <Card alignSelf={"flex-start"} padding={10} flexDirection={"column"} gap={10}>
-
+    <Card alignSelf={"flex-start"} paddingY={14} paddingX={10} flexDirection={"column"} gap={20} maxWidth={600}>
       {/* Top Layout */}
-      <Container justifyContent={"space-between"} width={480}>
+      <Container justifyContent={"space-between"} marginX={10}>
         {/* Searching */}
         <Container>
           <GlyphButton type={ButtonType.Search} onClick={toggleKeyboard} />
@@ -34,19 +34,28 @@ const HomeWindow = () => {
         <Text>{timeString}</Text>
       </Container>
 
-      {/* Content Layout */}
-      <Container marginX={20} flexDirection={"column"} gap={14}>
-        {
-          heartedChannels.size > 0 &&
-          <HomeSection title="Your Favorite Channels" channels={[]} />
-        }
-        {
-          recentChannels.length > 0 &&
-          <HomeSection title="Recently watched channels" channels={[]} />
-        }
+      {/* Loading Layout */}
+      {loading &&
+        <Container margin={100}>
+          <Text fontSize={20}> Loading...</Text>
+        </Container >
+      }
 
-      </Container>
-    </Card>
+      {/* Content Layout */}
+      {
+        !loading &&
+        <Container marginY={10} marginX={20} flexDirection={"column"} gap={20}>
+          {
+            hearted.length > 0 &&
+            <HomeSection title="Your Favorite Channels" channels={hearted} />
+          }
+          {
+            hearted.length > 0 &&
+            <HomeSection title="Recently watched channels" channels={recent} />
+          }
+        </Container>
+      }
+    </Card >
   );
 }
 

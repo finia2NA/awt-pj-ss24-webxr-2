@@ -7,6 +7,7 @@ import useCurrentTime from '../hooks/useCurrentTime';
 import GuideWindow from '../components/Guide/GuideWindow';
 import { ProgramSchedule } from '../components/Guide/Guide';
 import { alterDateDays, getDateISO } from '../utils/dateHelpers';
+import { formatTime } from '../utils/dateHelpers';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -20,7 +21,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
      * since we don't have real-time data
      */
     const [date, setDate] = useState(new Date("2022-09-10"));
-    
+
     const currentTime = useCurrentTime();
 
     const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
@@ -32,11 +33,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
         return <Text>Error</Text>
     }
 
-    function formatTime(date: Date) {
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        return (`${hours}:${minutes}`);
-    }
 
     services.sort((a, b) => a.lcns[0].channelNumber - b.lcns[0].channelNumber);
 

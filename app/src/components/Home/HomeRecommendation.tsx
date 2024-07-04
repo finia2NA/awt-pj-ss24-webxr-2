@@ -1,6 +1,8 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
+import { Service } from "dvbi-lib/src/model/services";
+import { formatTime } from "../../utils/dateHelpers";
 
 export interface HomeRecommendationProps {
     /**
@@ -23,6 +25,45 @@ export interface HomeRecommendationProps {
      * URL of the image to display
      */
     imageUrl: string;
+}
+
+export const homeRecommPropsFromService = (service: Service): HomeRecommendationProps => {
+    const guideLoaded = service.contentGuide !== undefined;
+    let description = "";
+    let timeStart = "";
+    let timeEnd = "";
+    let imageUrl = "";
+
+    // finding out what's there...
+    const descriptionAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.title !== undefined;
+    const startTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.start !== undefined;
+    const endTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.durationMinutes !== undefined;
+
+    if (descriptionAvailable) {
+        description = service.contentGuide?.programDescriptions[0]?.title || "";
+    }
+    if (startTimeAvailable) {
+        const startTime = service.contentGuide?.programDescriptions[0]?.start;
+        if (startTime) {
+            timeStart = formatTime(startTime);
+        }
+    }
+    if (startTimeAvailable && endTimeAvailable) {
+        const programDescription = service.contentGuide?.programDescriptions[0];
+        if (programDescription) {
+            const endTime = new Date(programDescription.start.getTime() + programDescription.durationMinutes * 60000);
+            timeEnd = formatTime(endTime);
+        }
+    }
+
+    return {
+        name: service.serviceName,
+        description: description,
+        timeStart: timeStart,
+        timeEnd: timeEnd,
+        imageUrl: imageUrl
+
+    };
 }
 
 /**

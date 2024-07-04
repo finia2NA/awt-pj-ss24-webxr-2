@@ -8,4 +8,10 @@ function alterDateDays(date: Date, days: number) {
     return newDate;
 }
 
-export { getDateISO, alterDateDays };
+function formatTime(date: Date) {
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return (`${hours}:${minutes}`);
+}
+
+export { getDateISO, alterDateDays, formatTime };

@@ -9,8 +9,8 @@ export interface ChannelListProps {
     channels: ChannelListElementProps[];
     regions: string[];
     time: string;
-    handleItemClick?: (channelID: number) => void;
-    selectedChannel?: number;
+    handleItemClick?: (channelNumber: number, channelId: string) => void;
+    selectedChannel?: string;
 }
 
 /**
@@ -20,9 +20,9 @@ const ChannelList = ({ channels, regions, time, handleItemClick, selectedChannel
     const colors = useColors();
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const handleElementClick = (channelID: number) => {
+    const handleElementClick = (channelNumber: number, channelId: string) => {
         if (handleItemClick) {
-            handleItemClick(channelID);
+            handleItemClick(channelNumber, channelId);
         }
     }
 
@@ -34,7 +34,7 @@ const ChannelList = ({ channels, regions, time, handleItemClick, selectedChannel
             </Container>
             <Container flexDirection={"column"} display={"flex"} scrollbarWidth={8} scrollbarBorderRadius={4} scrollbarColor={colors.scrollbar} overflow={"scroll"} paddingX={10} gap={6}>
                 {channels.map((channel, index) => (
-                    <ChannelListElement key={index} {...channel} handleItemClick={handleElementClick} selected={selectedChannel === channel.number} />
+                    <ChannelListElement key={index} {...channel} handleItemClick={handleElementClick} selected={selectedChannel === channel.id} />
                 ))}
             </Container>
         </Card>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import useSettingsStore, { SettingsState } from "./useSettingsStore";
 import DVBI from 'dvbi-lib';
 import { Service } from "dvbi-lib/src/model/services";
+import { alterDateDays, getDateISO } from "../utils/dateHelpers";
 
 export const useDVBI = () => {
   const { dvbiUrl } = useSettingsStore((state) => state) as SettingsState;
@@ -34,7 +35,17 @@ export const useDVBI = () => {
   return { dvbi, loading, error };
 };
 
-export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart = new Date(), guideEnd = new Date()) => {
+export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart?: Date, guideEnd?: Date) => {
+
+
+  if (!guideStart || !guideEnd) {
+    const date = new Date("2022-09-10");
+    // normally, it is not allowed to change props in the component, but here they are undefined, so eh
+    guideStart = new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z");
+    guideEnd = new Date(getDateISO(date) + "T21:59:59Z")
+  }
+
+
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
 
   const [services, setServices] = useState<Service[]>([]);

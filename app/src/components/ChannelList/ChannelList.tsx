@@ -34,7 +34,7 @@ const ChannelList = ({ channels, regions, time, handleItemClick, selectedChannel
             </Container>
             <Container flexDirection={"column"} display={"flex"} scrollbarWidth={8} scrollbarBorderRadius={4} scrollbarColor={colors.scrollbar} overflow={"scroll"} paddingX={10} gap={6}>
                 {channels.map((channel, index) => (
-                    <ChannelListElement key={index} {...channel} handleItemClick={handleElementClick} selected={selectedChannel === channel.id} />
+                    <ChannelListElement key={index} {...channel} handleItemClick={handleElementClick} selected={selectedChannel === channel.id} id={channel.id} />
                 ))}
             </Container>
         </Card>

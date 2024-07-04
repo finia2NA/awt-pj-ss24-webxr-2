@@ -45,14 +45,8 @@ const HomeWindow = ({ loading, hearted, recent }: HomeWindowProps) => {
       {
         !loading &&
         <Container marginY={10} marginX={20} flexDirection={"column"} gap={20}>
-          {
-            hearted.length > 0 &&
-            <HomeSection title="Your Favorite Channels" channels={hearted} />
-          }
-          {
-            hearted.length > 0 &&
-            <HomeSection title="Recently watched channels" channels={recent} />
-          }
+          <HomeSection title="Your Favorite Channels" channels={hearted} altText="Heart Channels to display them here" />
+          <HomeSection title="Recently watched channels" channels={recent} altText="Watch Channels to display them here" />
         </Container>
       }
     </Card >

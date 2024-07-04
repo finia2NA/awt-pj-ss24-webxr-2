@@ -30,7 +30,7 @@ const sessionOptions = {
 
 export default function App() {
 
-  const [selectedTab, setSelectedTab] = useState(Tab.GUIDE);
+  const [selectedTab, setSelectedTab] = useState(Tab.TV);
 
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);

@@ -4,6 +4,7 @@ import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
+import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -18,7 +19,9 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const [selectedChannelNumber, setSelectedChannelNumber] = useState(13);
     const currentTime = useCurrentTime();
 
-    const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
+    const date = new Date("2022-09-10");
+    const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
+    //const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
 
     if (loading) {
         return <Text>Loading</Text>
@@ -33,16 +36,27 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         return (`${hours}:${minutes}`);
     }
 
-    const channels = services.map((service) => {
-        console.log(service.contentGuide?.programDescriptions[0]?.start);
+    const channels = services.map((service) => {        
+        const programInfos = {
+            description: "No Title Available",
+            timeStart: "xx:xx",
+            timeEnd: "xx:xx",
+        }
+
+        service.contentGuide?.programDescriptions.forEach((program) => {
+            if (formatTime(program.start) < currentTime && currentTime < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000))) {
+                programInfos.description = program.title;
+                programInfos.timeStart = formatTime(program.start);
+                programInfos.timeEnd = formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000));
+            }
+        });
+
         return {
             number: service.lcns[0].channelNumber,
             name: service.serviceName,
-            description: service.contentGuide?.programDescriptions[0]?.title || "No Title Available",
-            timeStart: service.contentGuide?.programDescriptions[0] ? formatTime(service.contentGuide?.programDescriptions[0]?.start) : "xx:xx",
-            timeEnd: service.contentGuide?.programDescriptions[0] 
-                ? formatTime(new Date(new Date(service.contentGuide?.programDescriptions[0]?.start).getTime() + service.contentGuide?.programDescriptions[0]?.durationMinutes * 60000)) 
-                : "xx:xx",
+            description: programInfos.description,
+            timeStart: programInfos.timeStart,
+            timeEnd: programInfos.timeEnd,
             imageUrl: "TODO",
             src: service.dashStreams[0].manifestUrl,
         }

@@ -6,6 +6,7 @@ import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 import GuideWindow from '../components/Guide/GuideWindow';
 import { ProgramSchedule } from '../components/Guide/Guide';
+import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -19,16 +20,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
      * since we don't have real-time data
      */
     const [date, setDate] = useState(new Date("2022-09-10"));
-
-    function getDateISO(date: Date) {
-        return date.toISOString().split('T')[0];
-    }
-
-    function alterDateDays(date: Date, days: number) {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + days);
-        return newDate;
-    }
+    
     const currentTime = useCurrentTime();
 
     const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));

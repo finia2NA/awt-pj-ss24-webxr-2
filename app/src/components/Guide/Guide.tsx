@@ -28,7 +28,7 @@ export interface GuideProps {
      * Zoom level of the guide
      * Default is 1
      */
-    zoomLevel?: number;
+    zoomLevel: number;
 }
 
 const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {

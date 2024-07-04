@@ -59,6 +59,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     return (
-        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} zoomLevel={1} overrideStartTime='15:00' />
+        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} defaultZoomLevel={1} overrideStartTime='15:00' />
     );
 }

@@ -3,6 +3,7 @@ import useSettingsStore, { SettingsState } from "./useSettingsStore";
 import DVBI from 'dvbi-lib';
 import { Service } from "dvbi-lib/src/model/services";
 import { alterDateDays, getDateISO } from "../utils/dateHelpers";
+import useServiceStore from "./useDVBICacheStore";
 
 export const useDVBI = () => {
   const { dvbiUrl } = useSettingsStore((state) => state) as SettingsState;
@@ -36,21 +37,18 @@ export const useDVBI = () => {
 };
 
 export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart?: Date, guideEnd?: Date) => {
-
-
   if (!guideStart || !guideEnd) {
     const date = new Date("2022-09-10");
-    // normally, it is not allowed to change props in the component, but here they are undefined, so eh
     guideStart = new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z");
-    guideEnd = new Date(getDateISO(date) + "T21:59:59Z")
+    guideEnd = new Date(getDateISO(date) + "T21:59:59Z");
   }
 
-
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
-
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  const { getCache, setCache } = useServiceStore();
 
   useEffect(() => {
     setLoading(true);
@@ -75,6 +73,14 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
 
     const fetchServices = async () => {
       try {
+        const cachedServices = getCache();
+
+        if (cachedServices) {
+          setServices(cachedServices);
+          setLoading(false);
+          return;
+        }
+
         const allChannels = dvbi.services;
 
         const filtered = allChannels.filter((channel) => {
@@ -90,6 +96,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         }
 
         setServices(result);
+        setCache(result);
         setLoading(false);
       } catch (fetchError) {
         setError(fetchError as Error);
@@ -99,7 +106,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
     };
 
     fetchServices();
-  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide, guideStart, guideEnd]);
+  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide, guideStart, guideEnd, getCache, setCache]);
 
   return { services, loading, error };
 };

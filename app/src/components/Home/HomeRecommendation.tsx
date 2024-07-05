@@ -38,12 +38,13 @@ export const homeRecommPropsFromService = (service: Service): HomeRecommendation
     let description = "";
     let timeStart = "";
     let timeEnd = "";
-    let imageUrl = ""; // TODO: get image URL from service
+    let imageUrl = "";
 
     // finding out what's there...
     const descriptionAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.title !== undefined;
     const startTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.start !== undefined;
     const endTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.durationMinutes !== undefined;
+    const imageUrlAvailable = guideLoaded && service.logoUrl !== undefined;
 
     if (descriptionAvailable) {
         description = service.contentGuide?.programDescriptions[0]?.title || "";
@@ -60,6 +61,9 @@ export const homeRecommPropsFromService = (service: Service): HomeRecommendation
             const endTime = new Date(programDescription.start.getTime() + programDescription.durationMinutes * 60000);
             timeEnd = formatTime(endTime);
         }
+    }
+    if (imageUrlAvailable) {
+        imageUrl = service.logoUrl;
     }
 
     return {

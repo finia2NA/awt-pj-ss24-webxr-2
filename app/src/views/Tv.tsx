@@ -62,7 +62,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             description: programInfos.description,
             timeStart: programInfos.timeStart,
             timeEnd: programInfos.timeEnd,
-            imageUrl: "TODO",
+            imageUrl: service.logoUrl,
             src: service.dashStreams[0].manifestUrl,
         }
     });

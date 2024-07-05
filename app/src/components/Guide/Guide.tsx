@@ -2,6 +2,7 @@ import { Container, Image, Text } from "@react-three/uikit"
 import GuideStrip from "./GuideStrip";
 import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
+import { useState } from "react";
 
 export interface ScheduleEntry {
     title: string;
@@ -33,6 +34,7 @@ export interface GuideProps {
 
 const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     const colors = useColors();
+    const [imageError, setImageError] = useState(false);
 
     // 120 pixel = 30 minutes
     // => 1 pixel = 0.25 minutes
@@ -165,7 +167,10 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 {schedule.map((scheduleEntry, index) => (
                     <Container key={index} height={65} display={"flex"} flexDirection={"column"} justifyContent={"center"}>
-                        {scheduleEntry.imageUrl ?
+                        {scheduleEntry.imageUrl && !imageError ?
+                            // FIXME: This is a workaround for the missing onError event in uikit
+                            // This is how you would do error handling for an image: onError={() => setImageError(true)}
+                            // However, this event simply doesn't exist with uikit currently
                             <Image width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
                             : <Text width={100} color={colors.primary} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>

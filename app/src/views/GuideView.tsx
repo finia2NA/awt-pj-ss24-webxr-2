@@ -47,6 +47,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
 
         const generatedSchedule: ProgramSchedule = {
             imageUrl: "",
+            //imageUrl: service.logoUrl || "",
             fallbackText: service.serviceName || "No name available",
             schedule: scheduleEntries || [],
         }

@@ -53,6 +53,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    setLoading(true);
     if (dvbiLoading) {
       setLoading(true);
       return;
@@ -98,7 +99,8 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
     };
 
     fetchServices();
-  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide]);
+  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide, guideStart.getTime(), guideEnd.getTime()]);
+
 
   return { services, loading, error };
 };

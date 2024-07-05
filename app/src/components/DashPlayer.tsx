@@ -28,11 +28,14 @@ interface DashPlayerProps {
     tabsRef: React.RefObject<ComponentInternals>;
     listRef: React.RefObject<ComponentInternals>;
     playing?: boolean;
+
+    // Channel control
+    tuneUpDown: (direction: number) => void;
 }
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, playing = true }: DashPlayerProps) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, playing = true }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(true); // State to track if the video is muted
     const playerRef = useRef<InsideVideoRef | null>(null); // Reference to the Dash player instance
@@ -166,7 +169,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     <VideoImpl borderRadius={6}>
                         <Container>
-                            <InsideVideo src={src} ref={playerRef} isMuted={isMuted} setIsMuted={setIsMuted}/>
+                            <InsideVideo src={src} ref={playerRef} isMuted={isMuted} setIsMuted={setIsMuted} />
                         </Container>
                     </VideoImpl>
                 </Container>
@@ -183,7 +186,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={""} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute}/>
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={""} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>
         </Container>
     );

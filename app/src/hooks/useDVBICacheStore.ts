@@ -8,7 +8,7 @@ interface ServiceListKey {
   guideEnd?: Date;
 }
 
-export interface ServiceStore {
+export interface ServiceListStore {
   cache: Record<string, any>;
   setCache: (value: any, key: ServiceListKey) => void;
   getCache: (key: ServiceListKey) => any;
@@ -16,7 +16,7 @@ export interface ServiceStore {
 
 const serializeKey = (key: ServiceListKey) => JSON.stringify(key);
 
-const useServiceStore = create<ServiceStore>((set, get) => ({
+const useServiceStore = create<ServiceListStore>((set, get) => ({
   cache: {},
   setCache: (value, key) => set((state) => ({
     cache: {

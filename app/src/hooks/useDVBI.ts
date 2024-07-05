@@ -98,7 +98,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
     };
 
     fetchServices();
-  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide]);
+  }, [dvbi, dvbiLoading, dvbiError, includeIncomplete, includeGuide, guideStart, guideEnd]);
 
   return { services, loading, error };
 };

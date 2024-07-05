@@ -81,6 +81,16 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         }
     }
 
+    const handleTuneUpDown = (direction: number) => {
+        if (!activeChannel) return;
+        const index = channels.findIndex(channel => activeChannel && channel.id === activeChannel.id);
+        const newIndex = index + direction % channels.length;
+        const newChannel = channels[newIndex];
+        setTunedChannel(newChannel.id);
+        addRecentChannelToFrontByID(newChannel.id);
+    }
+
+
     return (
         <Container flexDirection={"row"}>
             <Container flexDirection="column" alignContent={"center"}>
@@ -95,7 +105,9 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         viewRef={viewRef}
                         handleRef={handleRef}
                         tabsRef={tabsRef}
-                        listRef={list} />
+                        listRef={list}
+                        tuneUpDown={handleTuneUpDown}
+                    />
                 </Container>
             </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>

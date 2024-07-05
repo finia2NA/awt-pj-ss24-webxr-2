@@ -1,25 +1,33 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable no-unused-vars */
 import create from 'zustand';
 
-
 interface ServiceListKey {
-  includeIncomplete?: boolean;
-  includeGuide?: boolean;
-  guideStart?: number;
-  guideEnd?: number;
+  includeIncomplete: boolean;
+  includeGuide: boolean;
+  guideStart?: Date;
+  guideEnd?: Date;
 }
 
 export interface ServiceStore {
-  cache: null,
-  setCache: (value: any) => void,
-  getCache: () => any,
+  cache: Record<string, any>;
+  setCache: (value: any, key: ServiceListKey) => void;
+  getCache: (key: ServiceListKey) => any;
 }
 
+const serializeKey = (key: ServiceListKey) => JSON.stringify(key);
 
 const useServiceStore = create<ServiceStore>((set, get) => ({
-  cache: null,
-  setCache: (value: any) => set({ cache: value }),
-  getCache: () => get().cache,
+  cache: {},
+  setCache: (value, key) => set((state) => ({
+    cache: {
+      ...state.cache,
+      [serializeKey(key)]: value,
+    }
+  })),
+  getCache: (key) => {
+    const state = get();
+    return state.cache[serializeKey(key)];
+  },
 }));
 
 export default useServiceStore;

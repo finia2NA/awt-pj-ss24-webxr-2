@@ -51,6 +51,9 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
   const { getCache, setCache } = useServiceStore();
 
   useEffect(() => {
+
+    const key = { includeIncomplete, includeGuide, guideStart, guideEnd };
+
     setLoading(true);
     if (dvbiLoading) {
       setLoading(true);
@@ -73,7 +76,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
 
     const fetchServices = async () => {
       try {
-        const cachedServices = getCache();
+        const cachedServices = getCache(key);
 
         if (cachedServices) {
           setServices(cachedServices);
@@ -96,7 +99,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         }
 
         setServices(result);
-        setCache(result);
+        setCache(result, key);
         setLoading(false);
       } catch (fetchError) {
         setError(fetchError as Error);

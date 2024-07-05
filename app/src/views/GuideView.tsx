@@ -20,17 +20,12 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
      * Hardcoded date for testing purposes
      * since we don't have real-time data
      */
+    const defaultDate = new Date("2022-09-10");
     const [date, setDate] = useState(new Date("2022-09-10"));
 
     const currentTime = useCurrentTime();
 
     let { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
-
-    // TODO: Handle error like loading
-    if (error) {
-        return <Text>Error</Text>
-    }
-
 
     services.sort((a, b) => a.lcns[0].channelNumber - b.lcns[0].channelNumber);
 
@@ -55,6 +50,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     return (
-        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} defaultZoomLevel={1} overrideStartTime={currentTime} date={date} setDate={setDate} loading={loading} />
+        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} defaultZoomLevel={1} overrideStartTime={currentTime} date={date} setDate={setDate} loading={loading} error={error ? true : false} defaultDate={defaultDate} />
     );
 }

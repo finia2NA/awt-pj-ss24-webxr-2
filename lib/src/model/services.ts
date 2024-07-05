@@ -49,6 +49,8 @@ class Service {
   public dashStreamAvailable: boolean = false;
   public dashStreams: DASHStream[] = [];
 
+  public logoUrl: string;
+
   public scheduleInfoEndpoint?: string;
   public programInfoEndpoint?: string;
 
@@ -66,6 +68,18 @@ class Service {
     this.serviceID = rawServiceData.UniqueIdentifier;
     this.serviceName = rawServiceData.ServiceName;
     this.serviceType = rawServiceData.ServiceType["@_href"];
+
+    if (rawServiceData.RelatedMaterial) {
+      const relatedMaterials = Array.isArray(rawServiceData.RelatedMaterial)
+        ? rawServiceData.RelatedMaterial
+        : [rawServiceData.RelatedMaterial];
+    
+      relatedMaterials.forEach(relatedMaterial => {
+        if (relatedMaterial.HowRelated["@_href"] === "urn:dvb:metadata:cs:HowRelatedCS:2020:1001.2") {
+          this.logoUrl = relatedMaterial.MediaLocator["tva:MediaUri"]["#text"];
+        }
+      });
+    }
 
     if (contentGuideMap[this.contentGuideSourceRef]) {
       this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;

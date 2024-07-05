@@ -3,6 +3,7 @@ import GuideStrip from "./GuideStrip";
 import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
 import { useState } from "react";
+import useRoutingStore from "../../hooks/useRoutingStore";
 
 export interface ScheduleEntry {
     title: string;
@@ -16,6 +17,7 @@ export interface ProgramSchedule {
      */
     fallbackText?: string;
     schedule: ScheduleEntry[];
+    serviceId?: string;
 }
 
 export interface GuideProps {
@@ -35,6 +37,7 @@ export interface GuideProps {
 const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     const colors = useColors();
     const [imageError, setImageError] = useState(false);
+    const { tunedChannel, setTunedChannel } = useRoutingStore();
 
     // 120 pixel = 30 minutes
     // => 1 pixel = 0.25 minutes
@@ -116,17 +119,14 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
         return timeTexts;
     };
 
-    const GeneratedChannelStrip = ({ programSchedule }: { programSchedule: ProgramSchedule }) => {
+    const GeneratedChannelStrip = ({ programSchedule, active = false, handleClick = () => {} }: { programSchedule: ProgramSchedule, active?: boolean, handleClick?: () => void }) => {
         const programs: (GuideStripProgramProps & { key: number })[] = [];
         const guideStartTime = getStartTime(schedule);
         let lastEndTime: string = guideStartTime;
 
         programSchedule.schedule.forEach((scheduleEntry, index) => {
-            
-            //console.log(guideStartTime);
-            //scheduleEntry.endTime < guideStartTime ? console.log("End time smaller") : console.log("End time larger")            // Discard everything before the guide start time
+            // Discard everything before the guide start time
             if (scheduleEntry.endTime < guideStartTime) return;
-            //console.log("Still executed")
 
             const startTime = scheduleEntry.startTime;
             const endTime = scheduleEntry.endTime;
@@ -151,9 +151,10 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
             programs.push(program);
             lastEndTime = endTime; // Update the lastEndTime to the current program's endTime
         });
+
         return (
             <>
-                <GuideStrip programs={programs} />
+                <GuideStrip programs={programs} active={active} handleClick={handleClick} />
             </>
         )
     }
@@ -172,7 +173,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                             // This is how you would do error handling for an image: onError={() => setImageError(true)}
                             // However, this event simply doesn't exist with uikit currently
                             <Image width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
-                            : <Text width={100} color={colors.primary} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
+                            : <Text width={100} color={scheduleEntry.serviceId === tunedChannel ? colors.accent : colors.primary} fontWeight={scheduleEntry.serviceId === tunedChannel ? "semi-bold" : "medium"} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>
                 ))}
             </Container>
@@ -186,7 +187,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 <Container overflow={"visible"} flexDirection={"column"} gap={10}>
                     {schedule.map((scheduleEntry, index) => (
-                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} />
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!) }/>
                     ))}
                 </Container>
             </Container>

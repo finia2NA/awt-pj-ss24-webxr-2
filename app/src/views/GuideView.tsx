@@ -50,6 +50,7 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
             //imageUrl: service.logoUrl || "",
             fallbackText: service.serviceName || "No name available",
             schedule: scheduleEntries || [],
+            serviceId: service.serviceID || "",
         }
 
         return generatedSchedule;

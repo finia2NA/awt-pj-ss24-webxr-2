@@ -14,7 +14,6 @@ export interface GuideWindowProps extends Omit<GuideProps, 'zoomLevel'> {
 const GuideWindow = ({ time, regions, width, defaultZoomLevel, ...rest }: GuideWindowProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(defaultZoomLevel);
-    console.log(zoomLevel);
 
     return (
         <Card width={width ? width : "auto"}>

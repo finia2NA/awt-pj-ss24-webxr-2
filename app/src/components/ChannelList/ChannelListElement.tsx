@@ -42,9 +42,9 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
 
     return (
         <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onClick={() => handleItemClick(number, id)}>
-            <Container width={30} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
+            <Container width={80} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} alignItems={"center"} height={90} >
                 <Text color={selected ? colors.accent : colors.primary}>{number.toString()}</Text>
-                <Image width={20} height={20} src={imageUrl}></Image>
+                <Image width={50} src={imageUrl}></Image>
             </Container>
             <Container paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} width={270}>
                 <Text color={selected ? colors.accent : colors.primary} paddingBottom={10}>{name}</Text>

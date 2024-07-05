@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
@@ -24,11 +24,9 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const currentTime = useCurrentTime();
 
-    const { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
+    let { services, loading, error } = useServiceList(true, true, new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z"), new Date(getDateISO(date) + "T21:59:59Z"));
 
-    if (loading) {
-        return <Text>Loading</Text>
-    }
+    // TODO: Handle error like loading
     if (error) {
         return <Text>Error</Text>
     }
@@ -57,6 +55,6 @@ export default function GuideView({ viewRef, handleRef, tabsRef }: TvProps) {
     });
 
     return (
-        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} defaultZoomLevel={1} overrideStartTime='15:00' />
+        <GuideWindow time={currentTime} regions={["All Regions"]} schedule={schedule} width={900} defaultZoomLevel={1} overrideStartTime={currentTime} date={date} setDate={setDate} loading={loading} />
     );
 }

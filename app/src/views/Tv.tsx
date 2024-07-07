@@ -7,6 +7,7 @@ import useCurrentTime from '../hooks/useCurrentTime';
 import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 import useRoutingStore from '../hooks/useRoutingStore';
 import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
+import { Card } from '../components/apfel/card';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -27,10 +28,10 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     //const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
 
     if (loading) {
-        return <Text>Loading</Text>
+        return <Card height={600} width={800} backgroundColor={"grey"}><Text>Loading</Text></Card>
     }
     if (error) {
-        return <Text>Error</Text>
+        return <Card height={600} width={800} backgroundColor={"red"}><Text>Error</Text></Card>
     }
 
     function formatTime(date: Date) {
@@ -92,9 +93,8 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
 
     return (
-        <Container flexDirection={"row"}>
-            <Container flexDirection="column" alignContent={"center"}>
-                <Container height={"auto"}>
+        <Container flexDirection={"row"} alignContent={"center"}>
+                <Container height={"auto"} width={"auto"}>
                     <DashPlayer
                         src={activeChannel ? activeChannel.src : ''}
                         channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
@@ -109,7 +109,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         tuneUpDown={handleTuneUpDown}
                     />
                 </Container>
-            </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>
                 <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
             </Container>

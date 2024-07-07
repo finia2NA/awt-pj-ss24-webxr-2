@@ -149,18 +149,20 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
 
         viewRef.current.setStyle({
             ...viewRef.current.getStyle(),  // Preserve other styles
-            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
+            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: 1 }
         });
 
         let deltaY = (controls.current.size.v[1] - (controls.current.size.v[1] * 1 / newScale.y)) / 2;
+        let listDeltaX = (listRef.current.size.v[0] - (listRef.current.size.v[0] * 1 / newScale.x)) /2;
+        let tabsDeltaX = (tabsRef.current.size.v[0] - (tabsRef.current.size.v[0] * 1 / newScale.x)) / 2;
         // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
 
         // preserve size of other components
-        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        tabsRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        listRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        tabsRef.current.setStyle({  transformTranslateX: tabsDeltaX,transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        listRef.current.setStyle({ transformTranslateX: -listDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
     };
 
     return (

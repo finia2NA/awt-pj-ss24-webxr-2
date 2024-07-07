@@ -24,17 +24,41 @@ import Home from './views/Home';
 import GuideView from "./views/GuideView";
 import SettingsView from "./views/SettingsView";
 
+import Environment from "./3D/Environment";
+import useRoutingStore, { Route } from './hooks/useRoutingStore';
+
+import KeyboardUI from "./components/KeyboardUI";
+import useKeyboardStore from './hooks/useKeyboardStore.ts';
+
 
 const sessionOptions = {
   requiredFeatures: ["local-floor", "hand-tracking"]
 };
 
 export default function App() {
-
-  const [selectedTab, setSelectedTab] = useState(Tab.TV);
-
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
+
+  const { route, setRoute } = useRoutingStore();
+  const [selectedTab, setSelectedTab] = useState(Tab.HOME);
+  const handleTabSelection = (tab: Tab) => {
+    if (tab === Tab.TV) {
+      setRoute(Route.TV);
+      setSelectedTab(Tab.TV);
+    } else if (tab === Tab.GUIDE) {
+      setRoute(Route.GUIDE);
+      setSelectedTab(Tab.GUIDE);
+
+    } else if (tab === Tab.SETTINGS) {
+      setRoute(Route.SETTINGS);
+      setSelectedTab(Tab.SETTINGS);
+    } else {
+      setRoute(Route.HOME);
+      setSelectedTab(Tab.HOME);
+    }
+  }
+
+  const { visible: keyboardVisible } = useKeyboardStore((state) => state);
 
   const view = useRef<ComponentInternals>(null);
   const handle = useRef<ComponentInternals>(null);
@@ -137,17 +161,15 @@ export default function App() {
                 marginRight={50}
                 alignSelf={"center"}
                 ref={tabs}
-                onPointerOver={shrinkTabsMargin}
-                onPointerOut={enlargeTabsMargin}
               >
-                <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+                <Tabs setSelectedTab={handleTabSelection} /> 
               </Container>
               <Container flexDirection={"column"} height={"auto"}>
                 <Container height={"auto"}>
-                  {selectedTab === Tab.HOME && <Home />}
-                  {selectedTab === Tab.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
-                  {selectedTab === Tab.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
-                  {selectedTab === Tab.SETTINGS && <SettingsView />}
+                  {route === Route.HOME && <Home />}
+                  {route === Route.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === Route.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === Route.SETTINGS && <SettingsView />}
                 </Container>
               </Container>
             </Container>
@@ -155,7 +177,7 @@ export default function App() {
               alignSelf={"center"}
               alignItems={"center"}
               height={25}
-              marginLeft={selectedTab == Tab.TV ? -100 : 0}
+              marginLeft={route === Route.TV ? -300 : 0}
 
               ref={handle}
               onPointerDown={handlePointerDown}
@@ -164,8 +186,18 @@ export default function App() {
             >
               <BottomBar />
             </Container>
+            {keyboardVisible && <Container 
+              alignSelf={"center"}
+              alignItems={"center"} 
+              height={500} width={800}
+              marginTop={30}
+              transformRotateX={-20}
+            >
+              <KeyboardUI />
+            </Container>}
           </Root>
         </group>
+        <Environment immersionLevel={1} nightMode={false} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
           <Hands type="pointer" />

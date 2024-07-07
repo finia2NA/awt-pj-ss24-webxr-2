@@ -27,7 +27,7 @@ const ChannelList = ({ channels, regions, time, handleItemClick, selectedChannel
     }
 
     return (
-        <Card flexDirection="column" gapRow={16} paddingY={25} paddingX={4} width={380} height={650} overflow={"visible"}>
+        <Card flexDirection="column" gapRow={16} paddingY={25} paddingX={4} width={380} height={450} overflow={"visible"}>
             <Container width={360} display={"flex"} justifyContent={"space-between"} alignItems={"space-evenly"} marginBottom={20} paddingRight={10} >
                 <Dropdown activeIndex={activeIndex} items={regions} onSelectItem={(index) => setActiveIndex(index)} />
                 <Text>{time}</Text>

@@ -41,6 +41,8 @@ export default function App() {
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
 
+  const [ immersionLevel, setImmersionLevel ] = useState(0);
+
   const { route, setRoute } = useRoutingStore();
   const [selectedTab, setSelectedTab] = useState(Tab.HOME);
   const handleTabSelection = (tab: Tab) => {
@@ -122,7 +124,7 @@ export default function App() {
 
     const scale = 90; // Adjust this value as needed
 
-    let delta = e.point.sub(downState.current.point.clone())
+    let delta = e.point.sub(downState.current.point.clone());
     let scaledDelta = new Vector3(delta.x * scale, -delta.y * scale, delta.z * scale);
     let newPosition = downState.current.position.clone().add(scaledDelta);
 
@@ -188,13 +190,19 @@ export default function App() {
               alignItems={"center"}
               height={25}
               marginLeft={route === Route.TV ? -300 : 0}
-
-              ref={handle}
-              onPointerDown={handlePointerDown}
-              onPointerUp={handlePointerUp}
-              onPointerMove={handlePointerMove}
             >
-              <BottomBar />
+              <BottomBar
+                environmentControls={true}
+                setEnvironmentValue={setImmersionLevel}
+                environmentValue={immersionLevel}
+                handleReference={handle}
+                dragHandlers={{
+                  onPointerDown: handlePointerDown,
+                  onPointerUp: handlePointerUp,
+                  onPointerMove: handlePointerMove
+                
+                }}
+              />
             </Container>
             {keyboardVisible && <Container 
               alignSelf={"center"}
@@ -207,7 +215,7 @@ export default function App() {
             </Container>}
           </Root>
         </group>
-        <Environment immersionLevel={1} nightMode={false} />
+        <Environment immersionLevel={immersionLevel} nightMode={false} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
           <Hands type="pointer" />

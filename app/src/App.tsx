@@ -36,8 +36,12 @@ const sessionOptions = {
 };
 
 export default function App() {
+  const cameraDistance = -3;
+
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
+
+  const [ immersionLevel, setImmersionLevel ] = useState(0);
 
   const { route, setRoute } = useRoutingStore();
   const [selectedTab, setSelectedTab] = useState(Tab.HOME);
@@ -67,6 +71,7 @@ export default function App() {
     pointerId: number;
     point: Vector3;
     position: Vector3;
+    rotation: Vector3;
   }>();
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -84,10 +89,17 @@ export default function App() {
 
       let pos = new Vector3(x, y, z);
 
+      let rotX = view.current.getComputedProperty("transformRotateX") || 0;
+      let rotY = view.current.getComputedProperty("transformRotateY") || 0;
+      let rotZ = view.current.getComputedProperty("transformRotateZ") || 0;
+
+      let rot = new Vector3(rotX, rotY, rotZ);
+
       downState.current = {
         pointerId: e.pointerId,
         point: e.point,
-        position: pos
+        position: pos,
+        rotation: rot
       };
     }
   };
@@ -112,13 +124,21 @@ export default function App() {
 
     const scale = 90; // Adjust this value as needed
 
-    let delta = e.point.sub(downState.current.point.clone())
+    let delta = e.point.sub(downState.current.point.clone());
     let scaledDelta = new Vector3(delta.x * scale, -delta.y * scale, delta.z * scale);
     let newPosition = downState.current.position.clone().add(scaledDelta);
 
+    const disCamera = Math.abs(cameraDistance);
+    const scaleRot = 20;
+    let rotY = downState.current.rotation.y + (delta.x * scaleRot / disCamera);
+    let rotX = downState.current.rotation.x + (delta.y * scaleRot / disCamera);
+
     view.current.setStyle({
       ...view.current.getStyle(),  // Preserve other styles
-      ...{ transformTranslateX: newPosition.x, transformTranslateY: newPosition.y, transformTranslateZ: newPosition.z }
+      ...{
+        transformTranslateX: newPosition.x, transformTranslateY: newPosition.y,
+        transformRotateX: rotX, transformRotateY: -rotY
+      }
     });
   };
 
@@ -135,8 +155,15 @@ export default function App() {
       <button onClick={enterVR}>Enter VR</button>
       <XRCanvas>
         {/* <OrbitControls /> */}
-        <group position={[0, 2, -3]}>
-          <Root ref={view} sizeX={20} sizeY={3} flexDirection="column" borderRadius={6} pixelSize={0.008}>
+        <group position={[0, 2, cameraDistance]}>
+          <Root
+            ref={view}
+            sizeX={20} sizeY={3}
+            transformTranslateX={route === Route.TV ? 175 : 0}
+            flexDirection="column"
+            borderRadius={6}
+            pixelSize={0.008}
+          >
             <Container
               flexDirection="row"
               height={"auto"}
@@ -163,13 +190,19 @@ export default function App() {
               alignItems={"center"}
               height={25}
               marginLeft={route === Route.TV ? -300 : 0}
-
-              ref={handle}
-              onPointerDown={handlePointerDown}
-              onPointerUp={handlePointerUp}
-              onPointerMove={handlePointerMove}
             >
-              <BottomBar />
+              <BottomBar
+                environmentControls={true}
+                setEnvironmentValue={setImmersionLevel}
+                environmentValue={immersionLevel}
+                handleReference={handle}
+                dragHandlers={{
+                  onPointerDown: handlePointerDown,
+                  onPointerUp: handlePointerUp,
+                  onPointerMove: handlePointerMove
+                
+                }}
+              />
             </Container>
             {keyboardVisible && <Container 
               alignSelf={"center"}
@@ -182,7 +215,7 @@ export default function App() {
             </Container>}
           </Root>
         </group>
-        <Environment immersionLevel={1} nightMode={false} />
+        <Environment immersionLevel={immersionLevel} nightMode={false} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
           <Hands type="pointer" />

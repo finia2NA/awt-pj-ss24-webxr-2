@@ -48,13 +48,13 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
     More complex pointer handling as onClick seems to be too trigger happy which could quickly get annoying
     */
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-        setPointerPosition([e.clientX, e.clientY]);
+        setPointerPosition([e.point.x,e.point.y]);
     }
 
     // TODO: These values might need fine tuning
     // Or maybe even put this into a generic function that could be used in other components?
     const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
-        if (Math.abs(pointerPosition[0] - e.clientX) < 5 && Math.abs(pointerPosition[1] - e.clientY) < 5) {
+        if (Math.abs(pointerPosition[0] - e.point.x) < 0.05 && Math.abs(pointerPosition[1] - e.point.y) < 0.05) {
             handleItemClick(number, id);
         }
     }

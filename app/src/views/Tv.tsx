@@ -8,6 +8,7 @@ import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 import useRoutingStore from '../hooks/useRoutingStore';
 import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
 import { Card } from '../components/apfel/card';
+import useColors from '../hooks/useColors';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -22,16 +23,26 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const [isPlaying, setIsPlaying] = useState(true);
     const currentTime = useCurrentTime();
+    const colors = useColors();
 
     // Note to F: I set those dates as default when no date is given now, so no more need to pass them here. (I did this so we always use the same dates) - R
     const { services, loading, error } = useServiceList(true, true);
     //const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
+    const [dashError, setDashError] = useState(false);
 
     if (loading) {
-        return <Card height={600} width={800} backgroundColor={"grey"}><Text>Loading</Text></Card>
+        return (
+            <Card display={"flex"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={colors.background} >
+                <Text fontSize={30} fontWeight={"medium"} color={colors.primary} >Loading...</Text>
+            </Card>
+        )
     }
     if (error) {
-        return <Card height={600} width={800} backgroundColor={"red"}><Text>Error</Text></Card>
+        return (
+            <Card display={"flex"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={"red"} >
+                <Text fontSize={30} fontWeight={"medium"} color={colors.primary}>Error loading channels</Text>
+            </Card>
+        )
     }
 
     function formatTime(date: Date) {
@@ -74,9 +85,8 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const handleChannelClick = (channelNumber: number, channelId: string) => {
         const service = services.find((service) => service.lcns[0].service?.serviceID === channelId);
         if (service && service.dashStreams[0]) {
-            console.log("In here")
-            console.log(channels.find(channel => channel.id === channelId))
             activeChannel = channels.find(channel => channel.id === channelId);
+            setDashError(false);
             setTunedChannel(channelId);
             addRecentChannelToFrontByID(channelId);
         }
@@ -87,14 +97,24 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         const index = channels.findIndex(channel => activeChannel && channel.id === activeChannel.id);
         const newIndex = index + direction % channels.length;
         const newChannel = channels[newIndex];
+        setDashError(false);
         setTunedChannel(newChannel.id);
         addRecentChannelToFrontByID(newChannel.id);
+    }
+
+    const handleError = () => {
+        setDashError(true);
     }
 
 
     return (
         <Container flexDirection={"row"} alignContent={"center"}>
-                <Container height={"auto"} width={"auto"}>
+            <Container height={"auto"} width={"auto"}>
+                {dashError ? 
+                    <Card display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={"red"} >
+                        <Text fontSize={30} fontWeight={"medium"}>Error playing channel</Text>
+                        <Text fontSize={28} fontWeight={"normal"}>Please select a different channel</Text>
+                    </Card> :
                     <DashPlayer
                         src={activeChannel ? activeChannel.src : ''}
                         channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
@@ -107,8 +127,10 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         tabsRef={tabsRef}
                         listRef={list}
                         tuneUpDown={handleTuneUpDown}
+                        onPlaybackError={handleError}
                     />
-                </Container>
+                }
+            </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>
                 <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
             </Container>

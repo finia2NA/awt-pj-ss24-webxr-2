@@ -5,6 +5,7 @@ import Dropdown from "../ChannelList/Dropdown";
 import { useState } from "react";
 import { Button } from "../apfel/button";
 import { alterDateDays, getDateISO } from "../../utils/dateHelpers";
+import useColors from "../../hooks/useColors";
 
 export interface GuideWindowProps extends Omit<GuideProps, 'zoomLevel'> {
     time: string;
@@ -20,18 +21,19 @@ export interface GuideWindowProps extends Omit<GuideProps, 'zoomLevel'> {
 const GuideWindow = ({ time, regions, width, defaultZoomLevel, date, setDate = () => { }, loading = false, error = false, defaultDate, overrideStartTime, ...rest }: GuideWindowProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
     const [zoomLevel, setZoomLevel] = useState(defaultZoomLevel);
+    const colors = useColors();
 
     const guideDisplay = () => {
         if(loading) {
             return (
                 <Container display={"flex"} justifyContent={"center"} alignItems={"center"} height={300} width={900}>
-                    <Text fontSize={20}>Loading...</Text>
+                    <Text fontSize={30} fontWeight={"medium"} color={colors.primary} >Loading...</Text>
                 </Container>
             )
         } else if (error) {
             return (
                 <Container display={"flex"} justifyContent={"center"} alignItems={"center"} height={300} width={900}>
-                    <Text fontSize={20}>Error</Text>
+                    <Text fontSize={30} fontWeight={"medium"} color={colors.primary}>Error loading guide</Text>
                 </Container>
             )
         } else {

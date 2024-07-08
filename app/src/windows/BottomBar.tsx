@@ -1,5 +1,6 @@
-import { Container } from "@react-three/uikit";
+import { Container, ComponentInternals } from "@react-three/uikit";
 import { useState } from "react";
+import { ThreeEvent } from "@react-three/fiber";
 
 
 interface BottomBarProps {
@@ -8,6 +9,12 @@ interface BottomBarProps {
   // eslint-disable-next-line no-unused-vars
   setEnvironmentValue?: (value: number) => void;
   debugColoring?: boolean;
+  handleReference: React.RefObject<ComponentInternals>;
+  dragHandlers: {
+    onPointerDown: (event: ThreeEvent<PointerEvent>) => void;
+    onPointerUp: (event: ThreeEvent<PointerEvent>) => void;
+    onPointerMove: (event: ThreeEvent<PointerEvent>) => void;
+  };
 }
 
 const indicatorSizes = {
@@ -15,7 +22,10 @@ const indicatorSizes = {
   maxDotSize: 20,
 }
 
-export default function BottomBar({ environmentControls, environmentValue, setEnvironmentValue, debugColoring }: BottomBarProps) {
+export default function BottomBar({
+  environmentControls, environmentValue, setEnvironmentValue, debugColoring,
+  handleReference, dragHandlers: { onPointerDown, onPointerUp, onPointerMove }
+}: BottomBarProps) {
 
   const [envControlIsActive, setEnvControlIsActive] = useState(false);
 
@@ -73,7 +83,11 @@ export default function BottomBar({ environmentControls, environmentValue, setEn
         </Container>
       }
       {/* The bar */}
-      <Container width={130} height={7} borderRadius={32} backgroundColor="white" hover={{ backgroundOpacity: 1 }} />
+      <Container
+        ref={handleReference}
+        width={130} height={7} borderRadius={32} backgroundColor="white" hover={{ backgroundOpacity: 1 }}
+        onPointerDown={onPointerDown} onPointerUp={onPointerUp} onPointerMove={onPointerMove}
+      />
     </Container>
   )
 }

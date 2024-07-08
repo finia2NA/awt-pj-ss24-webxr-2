@@ -4,6 +4,8 @@ import Backdrop from "../Backdrop";
 import { Service } from "dvbi-lib/src/model/services";
 import { formatTime } from "../../utils/dateHelpers";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
+import { useState } from "react";
+import { ThreeEvent } from "@react-three/fiber";
 
 export interface HomeRecommendationProps {
     /**
@@ -82,20 +84,37 @@ export const homeRecommPropsFromService = (service: Service): HomeRecommendation
 const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl, serviceID }: HomeRecommendationProps) => {
     const colors = useColors();
     const { setRoute, setTunedChannel } = useRoutingStore();
+    const [pointerPosition, setPointerPosition] = useState<[number, number]>([0, 0]);
+
+    /*
+    More complex pointer handling as onClick seems to be too trigger happy which could quickly get annoying
+    */
+    const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+        setPointerPosition([e.point.x,e.point.y]);
+    }
+
+    // TODO: These values might need fine tuning
+    // Or maybe even put this into a generic function that could be used in other components?
+    const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+        if (Math.abs(pointerPosition[0] - e.point.x) < 0.05 && Math.abs(pointerPosition[1] - e.point.y) < 0.05) {
+            setRoute(Route.TV);
+            setTunedChannel(serviceID);
+        }
+    }
 
     return (
-        <Backdrop height={75} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={20} width={240} margin={0} marginTop={0} flexShrink={0} flexGrow={0}
+        <Backdrop height={90} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={20} width={240} margin={0} marginTop={0} flexShrink={0} flexGrow={0}
             hover={{ backgroundColor: colors.hover }}
-            onClick={() => {
-                setRoute(Route.TV);
-                setTunedChannel(serviceID);
-            }}>
+            onPointerDown={handlePointerDown}
+            onPointerUp={handlePointerUp}>
             <Container width={55} paddingLeft={10} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
                 <Image width={45} src={imageUrl}></Image>
             </Container>
-            <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"}>
+            <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90}>
                 <Text color={colors.primary} paddingBottom={10}>{name}</Text>
-                <Text color={colors.primary}>{description}</Text>
+                <Text color={colors.primary}>
+                  {description.length > 22 ? `${description.substring(0, 22)}...` : description}
+                </Text>
                 <Text color={colors.primary}>{timeStart + " - " + timeEnd}</Text>
             </Container>
         </Backdrop>

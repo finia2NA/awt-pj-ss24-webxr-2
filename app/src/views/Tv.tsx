@@ -112,6 +112,9 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     }
 
 
+    console.log("a", activeChannel?.imageUrl)
+
+
     return (
         <Container flexDirection={"row"} alignContent={"center"}>
             <Container height={"auto"} width={"auto"}>
@@ -126,6 +129,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
                         channelNumber={activeChannel ? activeChannel.number : 0}
                         width={900}
+                        channelImageSrc={activeChannel?.imageUrl || undefined}
                         playing={isPlaying}
                         viewRef={viewRef}
                         handleRef={handleRef}

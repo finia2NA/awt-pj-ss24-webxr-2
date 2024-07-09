@@ -20,6 +20,7 @@ interface DashPlayerProps {
     channelTitle: string;
     channelDescription: string;
     channelNumber: number;
+    channelImageSrc?: string;
 
     // Internal
     width: number;
@@ -39,7 +40,7 @@ interface DashPlayerProps {
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, playing = true, onPlaybackError = () => { } }: DashPlayerProps) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, playing = true, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(true); // State to track if the video is muted
     const playerRef = useRef<InsideVideoRef | null>(null); // Reference to the Dash player instance
@@ -188,7 +189,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={""} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>
         </Container>
     );

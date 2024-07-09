@@ -7,7 +7,7 @@ import GlyphButton, { ButtonType } from "../components/GlyphButtons";
 
 export interface PlaybackControlsProps {
   // Info
-  channelImageSrc: string;
+  channelImageSrc?: string;
   channelTitle: string;
   channelDescription: string;
 
@@ -37,6 +37,9 @@ export interface PlaybackControlsProps {
 }
 
 const PlaybackControls = ({ channel, tuneUpDown, togglePlayPause, toggleChannelList, captionsAvailable, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying, toggleMute, isMuted }: PlaybackControlsProps) => {
+
+  console.log(channelImageSrc);
+
   return (
     <Card
       height={80}

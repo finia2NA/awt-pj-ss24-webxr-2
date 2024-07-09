@@ -132,8 +132,6 @@ export default function App() {
     });
   };
 
-  console.log(route)
-
   return (
     <div
       style={{

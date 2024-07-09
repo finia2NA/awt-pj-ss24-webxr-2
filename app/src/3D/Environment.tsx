@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { useFrame, useLoader } from "@react-three/fiber";
-import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide, Euler } from "three";
+import { forwardRef, useEffect, useRef } from 'react';
+import { useLoader } from "@react-three/fiber";
+import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide, Euler, Object3DEventMap, Group } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface EnvironmentProps {
@@ -174,8 +174,10 @@ const Lighting = (props: dayNightProps) => {
  * The @param immersionLevel prop controls the level of immersion, currently just fully there if > 0.
  * The @param nightMode prop controls the day/night mode.
  */
-const Environment = ({ immersionLevel, nightMode, position, scale, viewDirection }: EnvironmentProps) => {
-  const envPath = nightMode ? "nightenv.png" : "dayenv.png";
+const Environment = forwardRef(({ immersionLevel, nightMode }: EnvironmentProps, ref: React.Ref<Group<Object3DEventMap>>) => {
+
+
+  const envPath = nightMode ? 'nightenv.png' : 'dayenv.png';
   const envTexture = useLoader(TextureLoader, envPath);
 
   // References to the groups
@@ -199,21 +201,46 @@ const Environment = ({ immersionLevel, nightMode, position, scale, viewDirection
   }, []);
 
   return (
-    <group ref={rotationRef}>
-      <group ref={translationRef}>
-        {immersionLevel > 0 && <>
-          <Grass texture={envTexture} />
-          <Trees texture={envTexture} />
-          <Wood texture={envTexture} />
-          <Water texture={envTexture} />
-          <Sail texture={envTexture} />
-          <SkySphere texture={envTexture} />
-          <Lighting nightMode={nightMode} />
-        </>
-        }
+    <>
+      <group ref={ref}>
+        <group ref={rotationRef} layers={10}>
+          <group ref={translationRef}>
+            <>
+              {immersionLevel > 0 && <>
+                <Grass texture={envTexture} />
+                <Trees texture={envTexture} />
+                <Wood texture={envTexture} />
+                <Water texture={envTexture} />
+                <Sail texture={envTexture} />
+                <SkySphere texture={envTexture} />
+              </>
+              }
+              <Lighting nightMode={nightMode} />
+            </>
+          </group>
+        </group>
       </group>
-    </group>
+
+      {!nightMode &&
+        <>
+          <ambientLight intensity={1} />
+          <pointLight position={[-3, 3, 0]} intensity={4} />
+        </>
+      }
+      {nightMode &&
+        <ambientLight intensity={0.3} />
+      }
+
+      {/* I'm using this stuff for color tuning and stuff - R */}
+      {/* <axesHelper />
+        <mesh position={[-3, 3, 0]}>
+          <sphereGeometry args={[0.1, 32, 32]} />
+          <meshBasicMaterial color="red" />
+        </mesh> */}
+      {/* <gridHelper /> */}
+    </>
+
   );
-};
+});
 
 export default Environment;

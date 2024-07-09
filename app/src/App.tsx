@@ -32,6 +32,7 @@ import useKeyboardStore from './hooks/useKeyboardStore.ts';
 import useSettingsStore, { BiTheme, SettingsState } from "./hooks/useSettingsStore.ts";
 
 
+
 const sessionOptions = {
   requiredFeatures: ["local-floor", "hand-tracking"]
 };
@@ -212,20 +213,7 @@ export default function App() {
           <Hands type="pointer" />
           <Controllers type="pointer" />
         </ImmersiveSessionOrigin>
-        {biTheme === BiTheme.LIGHT &&
-          <><ambientLight intensity={1} /><pointLight position={[-3, 3, 0]} intensity={4} /></>
-        }
-        {biTheme === BiTheme.DARK &&
-          <ambientLight intensity={0.3} />
-        }
 
-        {/* I'm using this stuff for color tuning and stuff - R */}
-        {/* <axesHelper />
-        <mesh position={[-3, 3, 0]}>
-          <sphereGeometry args={[0.1, 32, 32]} />
-          <meshBasicMaterial color="red" />
-        </mesh> */}
-        {/* <gridHelper /> */}
         <color attach="background" args={["#bfbebe"]} />
       </XRCanvas>
     </div>

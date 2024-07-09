@@ -24,11 +24,11 @@ const ChannelNumber = ({ channel, tuneUpDown }: ChannelNumberProps) => {
     <Container
       backgroundColor={colors.background}
       backgroundOpacity={colors.backgroundOpacity}
-      width={56}
       height={62}
       borderRadius={12}
       paddingLeft={12}
-      justifyContent={"space-between"}>
+      justifyContent={"space-between"}
+      gap={8}>
 
       <Text color={colors.primary}>{channel.toString()}</Text>
 

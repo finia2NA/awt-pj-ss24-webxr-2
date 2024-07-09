@@ -112,9 +112,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     }
 
 
-    console.log("a", activeChannel?.imageUrl)
-
-
     return (
         <Container flexDirection={"row"} alignContent={"center"}>
             <Container height={"auto"} width={"auto"}>

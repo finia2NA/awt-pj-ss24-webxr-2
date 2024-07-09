@@ -31,7 +31,8 @@ export default function BottomBar({
 
   const currentDotSize = environmentValue ? indicatorSizes.minDotSize + (indicatorSizes.maxDotSize - indicatorSizes.minDotSize) * environmentValue : 0;
 
-  const onEnvControlClick = () => {
+  // This is if we actually had a dynamically immersive environment
+  const onEnvControlClickDynamic = () => {
     if (environmentValue === undefined || setEnvironmentValue === undefined) return;
 
     // we could do this with %1:
@@ -49,6 +50,16 @@ export default function BottomBar({
       setEnvironmentValue(0);
     } else {
       setEnvironmentValue((environmentValue + 0.2) % 1);
+    }
+  }
+
+  const onEnvControlClick = () => {
+    if (environmentValue === undefined || setEnvironmentValue === undefined) return;
+
+    if (environmentValue < 0.5) {
+      setEnvironmentValue(0.6);
+    } else {
+      setEnvironmentValue(0);
     }
   }
 

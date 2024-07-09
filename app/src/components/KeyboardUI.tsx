@@ -9,7 +9,7 @@ const normalRows: string[][] = [
   "1234567890ß".split("").concat("<-"),
   "qwertzuiopü".split(""),
   "asdfghjklöä".split("").concat("hide"),
-  ["shift"].concat("yxcvbnm,.-".split("")).concat("search"),
+  ["shift"].concat("yxcvbnm,.-".split("")).concat("enter"),
   ["space"]
 ];
 
@@ -17,9 +17,11 @@ const shiftRows: string[][] = [
   "!\"§$%&/()=?".split("").concat("<-"),
   "QWERTZUIOPÜ".split(""),
   "ASDFGHJKLÖÄ".split("").concat("hide"),
-  ["shift"].concat("YXCVBNM;:_".split("")).concat("search"),
+  ["shift"].concat("YXCVBNM;:_".split("")).concat("enter"),
   ["space"]
 ];
+
+const keyboardScale = 0.7;
 
 const paddings = [24, 48, 24, 0, 80];
 const widths = [[20, 20], [30, 10], [30, 10], [30, 10], [400, 0]];
@@ -40,7 +42,7 @@ const KeyboardUI = () => {
       case "hide":
         onHide();
         break;
-      case "search":
+      case "enter":
         onSearch();
         break;
       case "shift":
@@ -57,12 +59,12 @@ const KeyboardUI = () => {
 
   return (
     <Card alignSelf={"flex-start"}>
-      <Container flexDirection="column" margin={20} gap={6}>
+      <Container flexDirection="column" margin={20 * keyboardScale} gap={6 * keyboardScale}>
         {currentRows.map((row, i) => (
-          <Container key={i} flexDirection="row" gap={6} paddingLeft={paddings[i]}>
+          <Container key={i} flexDirection="row" gap={6 * keyboardScale} paddingLeft={paddings[i] * keyboardScale}>
             {row.map((key, j) => (
-              <Button key={j} onClick={() => clickHandler(key)} platter variant="pill" width={widths[i][0] + key.length * widths[i][1]} height={40}>
-                <Text>{key}</Text>
+              <Button key={j} onClick={() => clickHandler(key)} platter variant="pill" width={(widths[i][0] + key.length * widths[i][1]) * keyboardScale} height={40 * keyboardScale} paddingX={10 * keyboardScale}>
+                <Text fontSize={16 * keyboardScale}>{key}</Text>
               </Button>
             ))}
           </Container>

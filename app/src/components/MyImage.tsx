@@ -14,7 +14,7 @@ function replaceBase(original: string, replacementBasePath: string) {
   return newUrl;
 }
 
-const MyImage = (props: ImageProperties) => {
+const CacheEnabledImage = (props: ImageProperties) => {
   const originalSrc = props.src as string;
 
   const [texture, setTexture] = useState<Texture>();
@@ -62,4 +62,4 @@ const MyImage = (props: ImageProperties) => {
   );
 }
 
-export default MyImage;
+export default CacheEnabledImage;

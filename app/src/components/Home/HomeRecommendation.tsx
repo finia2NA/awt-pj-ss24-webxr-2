@@ -6,7 +6,7 @@ import { formatTime } from "../../utils/dateHelpers";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
-import MyImage from "../../utils/MyImage";
+import CacheEnabledImage from "../MyImage";
 
 export interface HomeRecommendationProps {
     /**
@@ -109,7 +109,7 @@ const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl, s
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}>
             <Container width={55} paddingLeft={10} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90} >
-                <MyImage width={45} src={imageUrl}></MyImage>
+                <CacheEnabledImage width={45} src={imageUrl}></CacheEnabledImage>
             </Container>
             <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90}>
                 <Text color={colors.primary} paddingBottom={10}>{name}</Text>

@@ -4,7 +4,7 @@ import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
 import { useState } from "react";
 import useRoutingStore from "../../hooks/useRoutingStore";
-import MyImage from "../../utils/MyImage";
+import CacheEnabledImage from "../MyImage";
 
 export interface ScheduleEntry {
     title: string;
@@ -173,7 +173,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                             // FIXME: This is a workaround for the missing onError event in uikit
                             // This is how you would do error handling for an image: onError={() => setImageError(true)}
                             // However, this event simply doesn't exist with uikit currently
-                            <MyImage width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
+                            <CacheEnabledImage width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
                             : <Text width={100} color={scheduleEntry.serviceId === tunedChannel ? colors.accent : colors.primary} fontWeight={scheduleEntry.serviceId === tunedChannel ? "semi-bold" : "medium"} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>
                 ))}

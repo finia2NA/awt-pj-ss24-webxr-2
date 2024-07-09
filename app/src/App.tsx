@@ -226,6 +226,9 @@ export default function App() {
         {biTheme === BiTheme.LIGHT &&
           <><ambientLight intensity={1} /><pointLight position={[-3, 3, 0]} intensity={4} /></>
         }
+        {biTheme === BiTheme.DARK &&
+        <ambientLight intensity={0.3} />
+        }
 
         {/* I'm using this stuff for color tuning and stuff - R */}
         {/* <axesHelper />

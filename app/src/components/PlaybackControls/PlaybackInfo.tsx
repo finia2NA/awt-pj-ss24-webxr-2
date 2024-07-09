@@ -11,8 +11,6 @@ interface PlaybackInfoProps {
 const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
   const colors = useColors();
 
-  console.log("c", imageSrc);
-
   return (
     <Container
       backgroundColor={colors.background}
@@ -20,14 +18,15 @@ const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
       width={400}
       height={62}
       borderRadius={12}
-      paddingLeft={12}
-      justifyContent={"center"}
+      paddingLeft={16}
       alignItems={"center"}
     >
       {imageSrc &&
-        <CacheEnabledImage src={imageSrc} width={50} />
+        <Container marginRight={"auto"}>
+          <CacheEnabledImage src={imageSrc} width={50} />
+        </Container>
       }
-      <Container flexDirection={"column"}>
+      <Container flexDirection={"column"} justifyContent={"center"} marginRight={"auto"}>
         <Text color={colors.primary}>{title}</Text>
         <Text color={colors.primary}>{description}</Text>
       </Container>

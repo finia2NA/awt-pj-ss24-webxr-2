@@ -105,9 +105,11 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         const result = includeIncomplete ? filtered : allChannels;
 
         if (includeGuide) {
-          for (const channel of result) {
-            await channel.getContentGuide(guideStart, guideEnd);
-          }
+          // Create an array of promises for each channel's getContentGuide call
+          const promises = result.map(channel => channel.getContentGuide(guideStart, guideEnd));
+
+          // Wait for all promises to resolve
+          await Promise.all(promises);
         }
 
         setServices(result);

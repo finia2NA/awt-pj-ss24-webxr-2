@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import MyImage from './MyImage';
+import CacheEnabledImage from './MyImage';
 import StoryHelper from '../StoryHelper';
 
-const meta: Meta<typeof MyImage> = {
+const meta: Meta<typeof CacheEnabledImage> = {
   title: 'Utils/MyImage',
-  component: MyImage,
+  component: CacheEnabledImage,
   tags: ["autodocs"],
   parameters: {
     layout: 'centered',
@@ -21,7 +21,7 @@ export const Default: Story = {
   render: (args) =>
     <>
       <StoryHelper>
-        <MyImage {...args} />
+        <CacheEnabledImage {...args} />
       </StoryHelper >
     </>
 };
@@ -33,7 +33,7 @@ export const NeedsCache: Story = {
   render: (args) =>
     <>
       <StoryHelper>
-        <MyImage {...args} />
+        <CacheEnabledImage {...args} />
       </StoryHelper >
     </>
 };

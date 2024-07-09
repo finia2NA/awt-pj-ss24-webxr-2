@@ -4,7 +4,7 @@ import Backdrop from "../Backdrop";
 import HeartButton from "./HeartButton";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
-import MyImage from "../../utils/MyImage";
+import CacheEnabledImage from "../MyImage";
 
 export interface ChannelListElementProps {
     /**
@@ -64,7 +64,7 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
         <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} hover={{ backgroundColor: colors.hover }}>
             <Container width={80} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} alignItems={"center"} height={90} >
                 <Text color={selected ? colors.accent : colors.primary}>{number.toString()}</Text>
-                <MyImage width={50} src={imageUrl}/>
+                <CacheEnabledImage width={50} src={imageUrl}/>
             </Container>
             <Container paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} width={270}>
                 <Text color={selected ? colors.accent : colors.primary} paddingBottom={10}>{name}</Text>

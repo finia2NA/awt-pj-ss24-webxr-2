@@ -10,18 +10,23 @@ interface RecentChannelsState {
   getIndexByID: (channelID: string) => number | null;
 }
 
+const maxStoredChannels = 10;
+
 const useRecentChannelsStore = create<RecentChannelsState>()(
   persist(
     (set, get) => ({
       recentChannels: [],
       /**
        * Adds a channel to the front of the list of recently watched channels. If the channel is already in the list, it is moved to the front.
+       * If the list exceeds the set number of channels, the oldest channel is removed.
        * @param channelID The ID of the channel to add to the list.
        */
       addRecentChannelToFrontByID: (channelID: string) => set((state) => {
-        return {
-          recentChannels: [channelID, ...state.recentChannels.filter((id) => id !== channelID)],
-        };
+        const updatedChannels = [channelID, ...state.recentChannels.filter((id) => id !== channelID)];
+        while (updatedChannels.length > maxStoredChannels) {
+          updatedChannels.pop();
+        }
+        return { recentChannels: updatedChannels };
       }),
       removeRecentChannelByID: (channelID: string) => set((state) => ({
         recentChannels: state.recentChannels.filter((id) => id !== channelID),

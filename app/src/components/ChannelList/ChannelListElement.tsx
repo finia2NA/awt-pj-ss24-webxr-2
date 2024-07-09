@@ -48,7 +48,7 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
     More complex pointer handling as onClick seems to be too trigger happy which could quickly get annoying
     */
     const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-        setPointerPosition([e.point.x,e.point.y]);
+        setPointerPosition([e.point.x, e.point.y]);
     }
 
     // TODO: These values might need fine tuning
@@ -60,7 +60,7 @@ const ChannelListElement = ({ number, name, description, timeStart, timeEnd, ima
     }
 
     return (
-        <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}>
+        <Backdrop height={110} paddingLeft={0} paddingRight={0} paddingY={0} gap={0} borderRadius={30} width={340} margin={0} marginTop={0} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} hover={{ backgroundColor: colors.hover }}>
             <Container width={80} paddingLeft={10} borderRightWidth={2} borderColor={selected ? colors.accent : colors.primary} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} alignItems={"center"} height={90} >
                 <Text color={selected ? colors.accent : colors.primary}>{number.toString()}</Text>
                 <Image width={50} src={imageUrl}></Image>

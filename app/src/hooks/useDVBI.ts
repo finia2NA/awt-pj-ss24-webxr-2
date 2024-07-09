@@ -3,13 +3,15 @@ import useSettingsStore, { SettingsState } from "./useSettingsStore";
 import DVBI from 'dvbi-lib';
 import { Service } from "dvbi-lib/src/model/services";
 import { alterDateDays, getDateISO } from "../utils/dateHelpers";
-import useServiceStore from "./useDVBICacheStore";
+import { useServiceListCacheStore, useDVBICacheStore } from "./useDVBICacheStore";
 
 export const useDVBI = () => {
   const { dvbiUrl } = useSettingsStore((state) => state) as SettingsState;
   const [dvbi, setDvbi] = useState<DVBI | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  const { getCache, setCache } = useDVBICacheStore(); // Use the DVBICacheStore here
 
   useEffect(() => {
     if (!dvbiUrl) {
@@ -20,9 +22,19 @@ export const useDVBI = () => {
 
     const fetchDVBI = async () => {
       try {
+        const cacheKey = { url: dvbiUrl };
+        const cachedDVBI = getCache(cacheKey);
+
+        if (cachedDVBI) {
+          setDvbi(cachedDVBI);
+          setLoading(false);
+          return;
+        }
+
         const d = DVBI.getInstance();
         await d.init(dvbiUrl);
         setDvbi(d);
+        setCache(cacheKey, d);
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -31,7 +43,7 @@ export const useDVBI = () => {
     };
 
     fetchDVBI();
-  }, [dvbiUrl]);
+  }, [dvbiUrl, getCache, setCache]);
 
   return { dvbi, loading, error };
 };
@@ -48,7 +60,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const { getCache, setCache } = useServiceStore();
+  const { getCache, setCache } = useServiceListCacheStore();
 
   useEffect(() => {
 
@@ -99,7 +111,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         }
 
         setServices(result);
-        setCache(result, key);
+        setCache(key, result);
         setLoading(false);
       } catch (fetchError) {
         setError(fetchError as Error);

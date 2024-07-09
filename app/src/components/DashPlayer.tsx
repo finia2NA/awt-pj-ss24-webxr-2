@@ -31,6 +31,7 @@ interface DashPlayerProps {
 
     // Channel control
     tuneUpDown: (direction: number) => void;
+    toggleChannelList?: () => void;
 
     // Event handling
     onPlaybackError?: (error: dashjs.ErrorEvent) => void;
@@ -38,7 +39,7 @@ interface DashPlayerProps {
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, playing = true, onPlaybackError = () => {} }: DashPlayerProps) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, playing = true, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(true); // State to track if the video is muted
     const playerRef = useRef<InsideVideoRef | null>(null); // Reference to the Dash player instance
@@ -66,10 +67,6 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             }
             setIsMuted(!isMuted); // Toggle the muted state
         }
-    }
-
-    const toggleChannelList = () => {
-        throw new Error('Not implemented');
     }
 
     const toggleCaptions = () => {
@@ -210,7 +207,7 @@ interface InsideVideoProps {
     setIsMuted: (isMuted: boolean) => void;
     onError?: (error: dashjs.ErrorEvent) => void;
 }
-const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => {} }: InsideVideoProps, ref: React.Ref<InsideVideoRef>) => {
+const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => { } }: InsideVideoProps, ref: React.Ref<InsideVideoRef>) => {
     const videoElement = useVideoElement(); // Hook to get the video element
     const videoRef = useRef<HTMLVideoElement | null>(null); // Reference to the HTML video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
@@ -263,7 +260,7 @@ const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => {} }
                 playerRef.current = null;
             }
         };
-    }, [src, videoElement]); // Re-run effect when src or videoElement changes
+    }, [isMuted, onError, setIsMuted, src, videoElement]);
 
     return <></>; // Return an empty fragment as this component does not render anything itself
 });

@@ -22,6 +22,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const list = useRef<ComponentInternals>(null);
 
     const [isPlaying, setIsPlaying] = useState(true);
+    const [showChannelList, setShowChannelList] = useState(true);
     const currentTime = useCurrentTime();
     const colors = useColors();
 
@@ -106,11 +107,15 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         setDashError(true);
     }
 
+    const toggleChannelList = () => {
+        setShowChannelList(prev => !prev);
+    }
+
 
     return (
         <Container flexDirection={"row"} alignContent={"center"}>
             <Container height={"auto"} width={"auto"}>
-                {dashError ? 
+                {dashError ?
                     <Card display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={"red"} >
                         <Text fontSize={30} fontWeight={"medium"}>Error playing channel</Text>
                         <Text fontSize={28} fontWeight={"normal"}>Please select a different channel</Text>
@@ -127,12 +132,15 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         tabsRef={tabsRef}
                         listRef={list}
                         tuneUpDown={handleTuneUpDown}
+                        toggleChannelList={toggleChannelList}
                         onPlaybackError={handleError}
                     />
                 }
             </Container>
             <Container alignSelf={"center"} marginLeft={50} ref={list}>
-                <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
+                {showChannelList &&
+                    <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
+                }
             </Container>
         </Container>
     );

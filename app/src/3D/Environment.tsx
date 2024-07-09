@@ -30,7 +30,7 @@ const Grass = (props: texturedProps) => {
   const grass = useLoader(GLTFLoader, "grass.glb");
   useEffect(() => {
     const grassMaterial = new MeshStandardMaterial({
-      color: new Color(0x91E78B),
+      color: new Color(0x248f3e),
       roughness: 0.7,
       metalness: 0.2,
       envMap: props.texture,
@@ -48,7 +48,7 @@ const Trees = (props: texturedProps) => {
   const trees = useLoader(GLTFLoader, "trees.glb");
   useEffect(() => {
     const treeMaterial = new MeshStandardMaterial({
-      color: new Color(0x2FD033),
+      color: new Color(0x1c7d1e),
       roughness: 0.7,
       metalness: 0.1,
       envMap: props.texture,
@@ -66,7 +66,7 @@ const Wood = (props: texturedProps) => {
   const wood = useLoader(GLTFLoader, "wood.glb");
   useEffect(() => {
     const woodMaterial = new MeshStandardMaterial({
-      color: new Color(0x938A47),
+      color: new Color(0x676132),
       roughness: 0.7,
       metalness: 0.1,
       envMap: props.texture,
@@ -84,10 +84,10 @@ const Water = (props: texturedProps) => {
   const water = useLoader(GLTFLoader, "water.glb");
   useEffect(() => {
     const waterMaterial = new MeshStandardMaterial({
-      color: new Color(0x5FD2E7),
+      color: new Color(0x1f98ad),
       roughness: 0.0,
       metalness: 0.1,
-      opacity: 0.95,
+      opacity: 0.9,
       transparent: true,
       envMap: props.texture,
     });
@@ -135,13 +135,17 @@ const Lighting = (props: dayNightProps) => {
 
   let lightDirection: Vector3;
   let ambientIntensity: number;
+  let directionalIntensity: number;
 
-  if (!props.nightMode) {
-    lightDirection = new Vector3(0, 20, 20);
-    ambientIntensity = 0.5;
-  } else {
+  if (props.nightMode) {
     lightDirection = new Vector3(30, 20, -6);
     ambientIntensity = 0.1;
+    directionalIntensity = 0.6;
+
+  } else {
+    lightDirection = new Vector3(0, 20, 20);
+    ambientIntensity = 2.4;
+    directionalIntensity = 1.8;
   }
 
   const targetObject = new Object3D();
@@ -151,7 +155,7 @@ const Lighting = (props: dayNightProps) => {
       <ambientLight intensity={ambientIntensity} />
       <directionalLight
         position={lightDirection}
-        intensity={0.6}
+        intensity={directionalIntensity}
         color={0xFFFFFF}
         castShadow
         shadow-mapSize-width={4096}
@@ -220,16 +224,6 @@ const Environment = forwardRef(({ immersionLevel, nightMode }: EnvironmentProps,
           </group>
         </group>
       </group>
-
-      {!nightMode &&
-        <>
-          <ambientLight intensity={1} />
-          <pointLight position={[-3, 3, 0]} intensity={4} />
-        </>
-      }
-      {nightMode &&
-        <ambientLight intensity={0.3} />
-      }
 
       {/* I'm using this stuff for color tuning and stuff - R */}
       {/* <axesHelper />

@@ -1,14 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { create } from "zustand";
-import { useServiceList } from "./useDVBI";
 
 export enum Route {
-  HOME = 'home',
-  TV = 'tv',
-  GUIDE = 'guide',
-  SETTINGS = 'settings',
+  HOME = "HOME",
+  TV = "TV",
+  GUIDE = "GUIDE",
+  SETTINGS = "SETTINGS",
 }
-
 
 export interface RoutingStore {
   route: Route;

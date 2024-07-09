@@ -17,7 +17,7 @@ import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
 import { Vector3 } from "three";
 
-import Tabs, { Tab } from "./components/Tabs";
+import Tabs from "./components/Tabs";
 import BottomBar from "./windows/BottomBar";
 import Tv from './views/Tv';
 import Home from './views/Home';
@@ -29,7 +29,7 @@ import useRoutingStore, { Route } from './hooks/useRoutingStore';
 
 import KeyboardUI from "./components/KeyboardUI";
 import useKeyboardStore from './hooks/useKeyboardStore.ts';
-import useSettingsStore, { BiTheme } from "./hooks/useSettingsStore.ts";
+import useSettingsStore, { BiTheme, SettingsState } from "./hooks/useSettingsStore.ts";
 
 
 const sessionOptions = {
@@ -46,22 +46,9 @@ export default function App() {
 
   const { route, setRoute } = useRoutingStore();
   const { biTheme } = useSettingsStore((state) => state) as SettingsState;
-  const [selectedTab, setSelectedTab] = useState(Tab.HOME);
-  const handleTabSelection = (tab: Tab) => {
-    if (tab === Tab.TV) {
-      setRoute(Route.TV);
-      setSelectedTab(Tab.TV);
-    } else if (tab === Tab.GUIDE) {
-      setRoute(Route.GUIDE);
-      setSelectedTab(Tab.GUIDE);
 
-    } else if (tab === Tab.SETTINGS) {
-      setRoute(Route.SETTINGS);
-      setSelectedTab(Tab.SETTINGS);
-    } else {
-      setRoute(Route.HOME);
-      setSelectedTab(Tab.HOME);
-    }
+  const handleTabSelection = (route: Route) => {
+    setRoute(route);
   }
 
   const { visible: keyboardVisible } = useKeyboardStore((state) => state);
@@ -144,6 +131,8 @@ export default function App() {
     });
   };
 
+  console.log(route)
+
   return (
     <div
       style={{
@@ -176,14 +165,14 @@ export default function App() {
                 alignSelf={"center"}
                 ref={tabs}
               >
-                <Tabs setSelectedTab={handleTabSelection} />
+                <Tabs setSelectedRoute={handleTabSelection} selectedRoute={route} />
               </Container>
               <Container flexDirection={"column"} height={"auto"}>
                 <Container height={"auto"}>
-                  {route === Route.HOME && <Home />}
-                  {route === Route.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
-                  {route === Route.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
-                  {route === Route.SETTINGS && <SettingsView />}
+                  {route === "HOME" && <Home />}
+                  {route === "TV" && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "SETTINGS" && <SettingsView />}
                 </Container>
               </Container>
             </Container>
@@ -227,7 +216,7 @@ export default function App() {
           <><ambientLight intensity={1} /><pointLight position={[-3, 3, 0]} intensity={4} /></>
         }
         {biTheme === BiTheme.DARK &&
-        <ambientLight intensity={0.3} />
+          <ambientLight intensity={0.3} />
         }
 
         {/* I'm using this stuff for color tuning and stuff - R */}

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Tabs, { Tab } from './Tabs';
+import Tabs from './Tabs';
 import StoryHelper from '../StoryHelper';
+import { Route } from '../hooks/useRoutingStore';
 
 const meta: Meta<typeof Tabs> = {
   title: 'Windows/Tabs',
@@ -10,9 +11,9 @@ const meta: Meta<typeof Tabs> = {
     layout: 'centered',
   },
   args: {
-    selectedTab: Tab.HOME,
+    selectedRoute: Route.HOME,
     // eslint-disable-next-line no-unused-vars
-    setSelectedTab: (tab: Tab) => { console.log("Selected: " + tab) }
+    setSelectedRoute: (tab: Route) => { console.log("Selected: " + tab) }
   },
 };
 

@@ -1,8 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { Container, ComponentInternals, Text } from "@react-three/uikit";
-import DashPlayer from "../components/DashPlayer";
+import { useState } from 'react';
+import { ComponentInternals } from "@react-three/uikit";
 import { useServiceList } from '../hooks/useDVBI';
-import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
 import GuideWindow from '../components/Guide/GuideWindow';
 import { ProgramSchedule } from '../components/Guide/Guide';

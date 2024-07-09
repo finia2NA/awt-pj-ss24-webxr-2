@@ -4,6 +4,7 @@ import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
 import { useState } from "react";
 import useRoutingStore from "../../hooks/useRoutingStore";
+import MyImage from "../../utils/MyImage";
 
 export interface ScheduleEntry {
     title: string;
@@ -119,7 +120,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
         return timeTexts;
     };
 
-    const GeneratedChannelStrip = ({ programSchedule, active = false, handleClick = () => {} }: { programSchedule: ProgramSchedule, active?: boolean, handleClick?: () => void }) => {
+    const GeneratedChannelStrip = ({ programSchedule, active = false, handleClick = () => { } }: { programSchedule: ProgramSchedule, active?: boolean, handleClick?: () => void }) => {
         const programs: (GuideStripProgramProps & { key: number })[] = [];
         const guideStartTime = getStartTime(schedule);
         let lastEndTime: string = guideStartTime;
@@ -172,7 +173,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                             // FIXME: This is a workaround for the missing onError event in uikit
                             // This is how you would do error handling for an image: onError={() => setImageError(true)}
                             // However, this event simply doesn't exist with uikit currently
-                            <Image width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
+                            <MyImage width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
                             : <Text width={100} color={scheduleEntry.serviceId === tunedChannel ? colors.accent : colors.primary} fontWeight={scheduleEntry.serviceId === tunedChannel ? "semi-bold" : "medium"} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>
                 ))}
@@ -187,7 +188,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 <Container overflow={"visible"} flexDirection={"column"} gap={10}>
                     {schedule.map((scheduleEntry, index) => (
-                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!) }/>
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!)} />
                     ))}
                 </Container>
             </Container>

@@ -23,7 +23,7 @@ const MyImage = (props: ImageProperties) => {
     const textureLoader = new TextureLoader();
 
     // If we did have this image cached, it would be here
-    const hypotheticalCachedSrc = replaceBase(originalSrc, "logos2/");
+    const hypotheticalCachedSrc = replaceBase(originalSrc, "logos/");
 
     const loadTexture = (url: string) => {
       return new Promise<Texture>((resolve, reject) => {
@@ -58,7 +58,7 @@ const MyImage = (props: ImageProperties) => {
   }, [originalSrc]);
 
   return (
-    <Image src={texture}></Image>
+    <Image {...props} src={texture}></Image>
   );
 }
 

@@ -24,7 +24,19 @@ export const Default: Story = {
   render: (args) =>
     <>
       <StoryHelper>
-        <ChannelNumber {...args}/>
+        <ChannelNumber {...args} />
+      </StoryHelper >
+    </>
+};
+
+export const LongNumber: Story = {
+  args: {
+    channel: 123456789,
+  },
+  render: (args) =>
+    <>
+      <StoryHelper>
+        <ChannelNumber {...args} />
       </StoryHelper >
     </>
 };

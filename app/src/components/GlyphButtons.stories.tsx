@@ -37,86 +37,86 @@ export const HomeButtonActive: Story = {
   args: {
     type: ButtonType.Home,
     active: true,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const CaptionsButtonDisabled: Story = {
   args: {
     type: ButtonType.Captions,
     disabled: true,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const ChevronDownButton: Story = {
   args: {
     type: ButtonType.ChevronDown,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const SettingsButton: Story = {
   args: {
     type: ButtonType.Settings,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const HeartButton: Story = {
   args: {
     type: ButtonType.Heart,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const HeartFillButton: Story = {
   args: {
     type: ButtonType.HeartFill,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const ChannelListButton: Story = {
   args: {
     type: ButtonType.ChannelList,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const GuideButton: Story = {
   args: {
     type: ButtonType.Guide,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const SearchButton: Story = {
   args: {
     type: ButtonType.Search,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 
 export const TVButton: Story = {
   args: {
     type: ButtonType.TV,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const VolumeMutedButton: Story = {
   args: {
     type: ButtonType.VolumeMuted,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const Volume0Button: Story = {
   args: {
     type: ButtonType.Volume0,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 
 export const Volume1Button: Story = {
   args: {
     type: ButtonType.Volume1,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };
 
 export const Volume2FillButton: Story = {
   args: {
     type: ButtonType.Volume2,
-  },render: (args) => renderWrapped(args)
+  }, render: (args) => renderWrapped(args)
 };

@@ -1,5 +1,6 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
+import MyImage from "../../utils/MyImage";
 
 interface PlaybackInfoProps {
   imageSrc: string;
@@ -13,7 +14,7 @@ const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
   return (
     <Container backgroundColor={colors.background} backgroundOpacity={colors.backgroundOpacity} width={400} height={62} borderRadius={12} paddingLeft={12} justifyContent={"center"} alignItems={"center"}>
       {/* FIXME: fix CORS */}
-      <Image src={imageSrc} />
+      <MyImage src={imageSrc} />
       <Container flexDirection={"column"}>
         <Text color={colors.primary}>{title}</Text>
         <Text color={colors.primary}>{description}</Text>

@@ -29,6 +29,7 @@ import useRoutingStore, { Route } from './hooks/useRoutingStore';
 
 import KeyboardUI from "./components/KeyboardUI";
 import useKeyboardStore from './hooks/useKeyboardStore.ts';
+import useSettingsStore, { BiTheme } from "./hooks/useSettingsStore.ts";
 
 
 const sessionOptions = {
@@ -41,9 +42,10 @@ export default function App() {
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
 
-  const [ immersionLevel, setImmersionLevel ] = useState(0);
+  const [immersionLevel, setImmersionLevel] = useState(0);
 
   const { route, setRoute } = useRoutingStore();
+  const { biTheme } = useSettingsStore((state) => state) as SettingsState;
   const [selectedTab, setSelectedTab] = useState(Tab.HOME);
   const handleTabSelection = (tab: Tab) => {
     if (tab === Tab.TV) {
@@ -174,7 +176,7 @@ export default function App() {
                 alignSelf={"center"}
                 ref={tabs}
               >
-                <Tabs setSelectedTab={handleTabSelection} /> 
+                <Tabs setSelectedTab={handleTabSelection} />
               </Container>
               <Container flexDirection={"column"} height={"auto"}>
                 <Container height={"auto"}>
@@ -200,13 +202,13 @@ export default function App() {
                   onPointerDown: handlePointerDown,
                   onPointerUp: handlePointerUp,
                   onPointerMove: handlePointerMove
-                
+
                 }}
               />
             </Container>
-            {keyboardVisible && <Container 
+            {keyboardVisible && <Container
               alignSelf={"center"}
-              alignItems={"center"} 
+              alignItems={"center"}
               height={500} width={800}
               marginTop={30}
               transformRotateX={-20}
@@ -215,14 +217,15 @@ export default function App() {
             </Container>}
           </Root>
         </group>
-        <Environment immersionLevel={immersionLevel} nightMode={false} />
+        <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
           <Hands type="pointer" />
           <Controllers type="pointer" />
         </ImmersiveSessionOrigin>
-        <ambientLight intensity={2} />
-        <pointLight position={[-3, 3, 0]} intensity={8} />
+        {biTheme === BiTheme.LIGHT &&
+          <><ambientLight intensity={1} /><pointLight position={[-3, 3, 0]} intensity={4} /></>
+        }
 
         {/* I'm using this stuff for color tuning and stuff - R */}
         {/* <axesHelper />

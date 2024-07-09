@@ -18,7 +18,7 @@ const useRecentChannelsStore = create<RecentChannelsState>()(
       recentChannels: [],
       /**
        * Adds a channel to the front of the list of recently watched channels. If the channel is already in the list, it is moved to the front.
-       * If the list exceeds the set number of channels, the oldest channel is removed.
+       * If the list exceeds the set number of channels, the oldest channels are removed.
        * @param channelID The ID of the channel to add to the list.
        */
       addRecentChannelToFrontByID: (channelID: string) => set((state) => {

@@ -25,10 +25,11 @@ export enum ButtonType {
   Volume1,
   Volume2,
   Play,
-  Pause
+  Pause,
+  Scaling
 }
 
-import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon, Pause, Play } from "@react-three/uikit-lucide";
+import { ChevronDownIcon, Tv2Icon, HomeIcon, CaptionsIcon, SettingsIcon, HeartIcon, ListIcon, LayoutListIcon, SearchIcon, VolumeXIcon, VolumeIcon, Volume1Icon, Volume2Icon, Pause, Play, Scaling } from "@react-three/uikit-lucide";
 
 import { ReactElement } from "react";
 import useColors from "../hooks/useColors";
@@ -50,7 +51,8 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Volume1, <Volume1Icon />],
   [ButtonType.Volume2, <Volume2Icon />],
   [ButtonType.Play, <Play />],
-  [ButtonType.Pause, <Pause />]
+  [ButtonType.Pause, <Pause />],
+  [ButtonType.Scaling, <Scaling />]
 ]);
 
 // eslint-disable-next-line react-refresh/only-export-components

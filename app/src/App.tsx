@@ -120,14 +120,14 @@ export default function App() {
 
     const disCamera = Math.abs(cameraDistance);
     const scaleRot = 20;
-    let rotY = downState.current.rotation.y + (delta.x * scaleRot / disCamera);
+    let rotY = downState.current.rotation.y - (delta.x * scaleRot / disCamera);
     let rotX = downState.current.rotation.x + (delta.y * scaleRot / disCamera);
 
     view.current.setStyle({
       ...view.current.getStyle(),  // Preserve other styles
       ...{
         transformTranslateX: newPosition.x, transformTranslateY: newPosition.y,
-        transformRotateX: rotX, transformRotateY: -rotY
+        transformRotateX: rotX, transformRotateY: rotY
       }
     });
   };

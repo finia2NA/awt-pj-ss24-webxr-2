@@ -3,7 +3,7 @@ import useColors from "../hooks/useColors";
 import useKeyboardStore, { KeyboardListeners } from "../hooks/useKeyboardStore.ts";
 import { Text } from "@react-three/uikit";
 import { ThreeEvent } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 
@@ -16,13 +16,13 @@ interface TextInputProps {
 }
 
 const TextInput = ({ value, placeholder, setValue, onSearch }: TextInputProps) => {
+  const [cachedIsVisible, setCachedIsVisible] = useState(false);
   const colors = useColors();
-  const keyboardProperties = useKeyboardStore((state) => state);
 
   // hiding and showing the keyboard
   const onTextFieldClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    keyboardProperties.toggleVisibility();
+    setCachedIsVisible(prev => !prev);
   };
 
   // Set up event listeners
@@ -38,7 +38,7 @@ const TextInput = ({ value, placeholder, setValue, onSearch }: TextInputProps) =
     };
 
     const onHide = () => {
-      keyboardProperties.setIsVisible(false);
+      setCachedIsVisible(false);
     };
 
     const onSearchLocal = () => {
@@ -57,17 +57,14 @@ const TextInput = ({ value, placeholder, setValue, onSearch }: TextInputProps) =
     // Get store, add listeners
     const store = useKeyboardStore.getState();
     store.addEventListeners(listeners);
-    store.setIsVisible(true);
+    store.setIsVisible(cachedIsVisible);
 
     // Cleanup
     return () => {
       store.removeEventListeners(listeners);
       store.setIsVisible(false);
     };
-  }, [value, setValue, onSearch]);
-  // FIXME: Adding keyboardProperties here causes infinite loop, because adding the listener changes the state, which re-executes the effect, which adds the listener again, etc.
-  // This can be fixed by memoizing the listeners so that they are comparable, then checking if those listeners have changed before adding them again.
-  // Should be done.. later :)
+  }, [value, setValue, onSearch, cachedIsVisible]);
 
   return (
     <>

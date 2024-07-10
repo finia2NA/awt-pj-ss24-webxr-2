@@ -207,7 +207,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 <Container overflow={"visible"} flexDirection={"column"} gap={10}>
                     {schedule.map((scheduleEntry, index) => (
-                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!)} />
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => {setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!); setRoute(Route.TV)}} />
                     ))}
                 </Container>
             </Container>

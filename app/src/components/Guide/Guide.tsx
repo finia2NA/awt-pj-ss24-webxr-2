@@ -3,8 +3,9 @@ import GuideStrip from "./GuideStrip";
 import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
 import { useState } from "react";
-import useRoutingStore from "../../hooks/useRoutingStore";
+import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import CacheEnabledImage from "../MyImage";
+import { ThreeEvent } from "@react-three/fiber";
 
 export interface ScheduleEntry {
     title: string;
@@ -159,6 +160,24 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
             </>
         )
     }
+    const [pointerPosition, setPointerPosition] = useState<[number, number]>([0, 0]);
+    const { route, setRoute } = useRoutingStore();
+
+    /*
+    More complex pointer handling as onClick seems to be too trigger happy which could quickly get annoying
+    */
+    const handlePointerDown = (e: ThreeEvent<PointerEvent>, id: string) => {
+        setPointerPosition([e.point.x, e.point.y]);
+    }
+
+    // TODO: These values might need fine tuning
+    // Or maybe even put this into a generic function that could be used in other components?
+    const handlePointerUp = (e: ThreeEvent<PointerEvent>, id: string) => {
+        if (Math.abs(pointerPosition[0] - e.point.x) < 0.05 && Math.abs(pointerPosition[1] - e.point.y) < 0.05) {
+            setTunedChannel(id);
+            setRoute(Route.TV);
+        }
+    }
 
     return (
         <Container display={"flex"} flexDirection={"row"} gap={20} overflow={"scroll"} >
@@ -173,8 +192,8 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                             // FIXME: This is a workaround for the missing onError event in uikit
                             // This is how you would do error handling for an image: onError={() => setImageError(true)}
                             // However, this event simply doesn't exist with uikit currently
-                            <CacheEnabledImage width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} />
-                            : <Text width={100} color={scheduleEntry.serviceId === tunedChannel ? colors.accent : colors.primary} fontWeight={scheduleEntry.serviceId === tunedChannel ? "semi-bold" : "medium"} textAlign={"center"}>{scheduleEntry.fallbackText || "No name available"}</Text>}
+                            <CacheEnabledImage width={100} src={scheduleEntry.imageUrl} flexGrow={0} flexShrink={0} onPointerDown={(e) => handlePointerDown(e, scheduleEntry.serviceId!)} onPointerUp={(e) => handlePointerUp(e, scheduleEntry.serviceId!)}/>
+                            : <Text width={100} color={scheduleEntry.serviceId === tunedChannel ? colors.accent : colors.primary} fontWeight={scheduleEntry.serviceId === tunedChannel ? "semi-bold" : "medium"} textAlign={"center"} onPointerDown={(e) => handlePointerDown(e, scheduleEntry.serviceId!)} onPointerUp={(e) => handlePointerUp(e, scheduleEntry.serviceId!)}>{scheduleEntry.fallbackText || "No name available"}</Text>}
                     </Container>
                 ))}
             </Container>
@@ -188,7 +207,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 </Container>
                 <Container overflow={"visible"} flexDirection={"column"} gap={10}>
                     {schedule.map((scheduleEntry, index) => (
-                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!)} />
+                        <GeneratedChannelStrip programSchedule={scheduleEntry} key={index} active={tunedChannel === scheduleEntry.serviceId} handleClick={() => {setTunedChannel(scheduleEntry.serviceId ? scheduleEntry.serviceId : tunedChannel!); setRoute(Route.TV)}} />
                     ))}
                 </Container>
             </Container>

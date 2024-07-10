@@ -26,7 +26,7 @@ const Tabs = ({ selectedRoute, setSelectedRoute }: TabSelectorProps) => {
 
   // Todo: Specify the height
   return (
-    <TabBar defaultValue={Route.HOME} value={currentValue} height={230} positionType={"absolute"} positionTop={-120} positionLeft={-80}
+    <TabBar defaultValue={Route.HOME} value={currentValue} height={230} positionType={"absolute"} positionTop={-120} positionLeft={-80} zIndexOffset={10}
       onValueChange={(newValue) =>
         setSelectedRoute(Route[newValue as keyof typeof Route])}
     >

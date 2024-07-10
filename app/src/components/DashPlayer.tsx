@@ -11,6 +11,7 @@ import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
 import { isXIntersection } from "@coconut-xr/xinteraction";
+import { Scaling } from '@react-three/uikit-lucide';
 
 
 interface DashPlayerProps {
@@ -178,7 +179,8 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 </Container>
             </Container>
             <Container
-                backgroundColor={"red"}
+                backgroundColor={"white"}
+                backgroundOpacity={0.4}
                 height={25} width={25}
                 alignSelf={"flex-end"}
                 marginTop={-25}
@@ -187,7 +189,9 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerDown={handleResizePointerDown}
                 onPointerUp={handlePointerUp}
                 onPointerMove={handleResizePointerMove}
-            />
+            >
+                <Scaling />
+                </Container>
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
                 <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>

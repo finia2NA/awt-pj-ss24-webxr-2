@@ -120,3 +120,9 @@ export const Volume2FillButton: Story = {
     type: ButtonType.Volume2,
   }, render: (args) => renderWrapped(args)
 };
+
+export const ScaleButton: Story = {
+  args: {
+    type: ButtonType.Scaling,
+  }, render: (args) => renderWrapped(args)
+};

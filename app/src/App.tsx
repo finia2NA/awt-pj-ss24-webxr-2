@@ -164,18 +164,17 @@ export default function App() {
                 marginRight={50}
                 alignSelf={"center"}
                 ref={tabs}
+                marginTop={keyboardVisible ? -223 : 0}
               >
                 <Tabs setSelectedRoute={handleTabSelection} selectedRoute={route} />
               </Container>
-              <Container flexDirection={"column"} height={"auto"}>
+              <Container flexDirection={"column"} height={"auto"} alignItems={"center"}>
                 <Container height={"auto"}>
                   {route === "HOME" && <Home />}
                   {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
                   {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                   {route === "SETTINGS" && <SettingsView />}
                 </Container>
-              </Container>
-            </Container>
             <Container
               ref={bar}
               alignSelf={"center"}
@@ -199,12 +198,13 @@ export default function App() {
             {keyboardVisible && <Container
               alignSelf={"center"}
               alignItems={"center"}
-              height={500} width={800}
               marginTop={30}
               transformRotateX={-20}
             >
               <KeyboardUI />
             </Container>}
+            </Container>
+            </Container>
           </Root>
         </group>
         <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />

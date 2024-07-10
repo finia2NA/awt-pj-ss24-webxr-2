@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CacheEnabledImage from './MyImage';
+import CacheEnabledImage from './CacheEnabledImage';
 import StoryHelper from '../StoryHelper';
 
 const meta: Meta<typeof CacheEnabledImage> = {

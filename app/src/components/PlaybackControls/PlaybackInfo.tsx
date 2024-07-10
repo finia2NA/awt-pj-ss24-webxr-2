@@ -1,6 +1,6 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
-import CacheEnabledImage from "../MyImage";
+import CacheEnabledImage from "../CacheEnabledImage";
 
 interface PlaybackInfoProps {
   imageSrc?: string;

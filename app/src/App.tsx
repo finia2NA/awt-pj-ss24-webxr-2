@@ -55,6 +55,7 @@ export default function App() {
   const { visible: keyboardVisible } = useKeyboardStore((state) => state);
 
   const view = useRef<ComponentInternals>(null);
+  const bar = useRef<ComponentInternals>(null);
   const handle = useRef<ComponentInternals>(null);
   const tabs = useRef<ComponentInternals>(null);
   const downState = useRef<{
@@ -169,13 +170,14 @@ export default function App() {
               <Container flexDirection={"column"} height={"auto"}>
                 <Container height={"auto"}>
                   {route === "HOME" && <Home />}
-                  {route === "TV" && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
                   {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                   {route === "SETTINGS" && <SettingsView />}
                 </Container>
               </Container>
             </Container>
             <Container
+              ref={bar}
               alignSelf={"center"}
               alignItems={"center"}
               height={25}

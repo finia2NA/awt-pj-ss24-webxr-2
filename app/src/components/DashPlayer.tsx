@@ -1,5 +1,6 @@
 import {
     Container,
+    Image,
     Video as VideoImpl,
     useVideoElement as useVideoElement,
     ComponentInternals
@@ -11,7 +12,6 @@ import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
 import { isXIntersection } from "@coconut-xr/xinteraction";
-import { Scaling } from '@react-three/uikit-lucide';
 
 
 interface DashPlayerProps {
@@ -178,20 +178,18 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                     </VideoImpl>
                 </Container>
             </Container>
-            <Container
-                backgroundColor={"white"}
-                backgroundOpacity={0.4}
-                height={25} width={25}
+            <Image
+                src={"src/assets/resize_chevron.png"}
+                height={20} width={20}
                 alignSelf={"flex-end"}
-                marginTop={-25}
+                marginTop={-15}
+                marginRight={-5}
                 zIndexOffset={1}
                 ref={resize}
                 onPointerDown={handleResizePointerDown}
                 onPointerUp={handlePointerUp}
                 onPointerMove={handleResizePointerMove}
-            >
-                <Scaling />
-                </Container>
+            />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
                 <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>

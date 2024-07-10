@@ -4,7 +4,7 @@ import useColors from "../../hooks/useColors";
 import { GuideStripProgramProps } from "./GuideStripProgram";
 import { useState } from "react";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
-import CacheEnabledImage from "../MyImage";
+import CacheEnabledImage from "../CacheEnabledImage";
 import { ThreeEvent } from "@react-three/fiber";
 
 export interface ScheduleEntry {

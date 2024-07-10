@@ -4,7 +4,7 @@ import Backdrop from "../Backdrop";
 import HeartButton from "./HeartButton";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
-import CacheEnabledImage from "../MyImage";
+import CacheEnabledImage from "../CacheEnabledImage";
 
 export interface ChannelListElementProps {
     /**

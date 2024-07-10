@@ -6,7 +6,7 @@ import { formatTime } from "../../utils/dateHelpers";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
-import CacheEnabledImage from "../MyImage";
+import CacheEnabledImage from "../CacheEnabledImage";
 
 export interface HomeRecommendationProps {
     /**

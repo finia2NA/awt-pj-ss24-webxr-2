@@ -55,6 +55,7 @@ export default function App() {
   const { visible: keyboardVisible } = useKeyboardStore((state) => state);
 
   const view = useRef<ComponentInternals>(null);
+  const bar = useRef<ComponentInternals>(null);
   const handle = useRef<ComponentInternals>(null);
   const tabs = useRef<ComponentInternals>(null);
   const downState = useRef<{
@@ -120,14 +121,14 @@ export default function App() {
 
     const disCamera = Math.abs(cameraDistance);
     const scaleRot = 20;
-    let rotY = downState.current.rotation.y + (delta.x * scaleRot / disCamera);
+    let rotY = downState.current.rotation.y - (delta.x * scaleRot / disCamera);
     let rotX = downState.current.rotation.x + (delta.y * scaleRot / disCamera);
 
     view.current.setStyle({
       ...view.current.getStyle(),  // Preserve other styles
       ...{
         transformTranslateX: newPosition.x, transformTranslateY: newPosition.y,
-        transformRotateX: rotX, transformRotateY: -rotY
+        transformRotateX: rotX, transformRotateY: rotY
       }
     });
   };
@@ -163,19 +164,19 @@ export default function App() {
                 marginRight={50}
                 alignSelf={"center"}
                 ref={tabs}
+                marginTop={keyboardVisible ? -223 : 0}
               >
                 <Tabs setSelectedRoute={handleTabSelection} selectedRoute={route} />
               </Container>
-              <Container flexDirection={"column"} height={"auto"}>
+              <Container flexDirection={"column"} height={"auto"} alignItems={"center"}>
                 <Container height={"auto"}>
                   {route === "HOME" && <Home />}
-                  {route === "TV" && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
                   {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                   {route === "SETTINGS" && <SettingsView />}
                 </Container>
-              </Container>
-            </Container>
             <Container
+              ref={bar}
               alignSelf={"center"}
               alignItems={"center"}
               height={25}
@@ -197,12 +198,13 @@ export default function App() {
             {keyboardVisible && <Container
               alignSelf={"center"}
               alignItems={"center"}
-              height={500} width={800}
               marginTop={30}
               transformRotateX={-20}
             >
               <KeyboardUI />
             </Container>}
+            </Container>
+            </Container>
           </Root>
         </group>
         <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />

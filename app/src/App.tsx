@@ -150,7 +150,7 @@ export default function App() {
           <Root
             ref={view}
             sizeX={20} sizeY={3}
-            transformTranslateX={route === Route.TV ? 175 : 0}
+            transformTranslateX={route === Route.TV ? 210 : 0}
             flexDirection="column"
             borderRadius={6}
             pixelSize={0.008}
@@ -180,7 +180,7 @@ export default function App() {
               alignSelf={"center"}
               alignItems={"center"}
               height={25}
-              marginLeft={route === Route.TV ? -300 : 0}
+              marginLeft={route === Route.TV ? -400 : 0}
             >
               <BottomBar
                 environmentControls={true}

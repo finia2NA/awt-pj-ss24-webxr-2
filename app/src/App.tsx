@@ -210,8 +210,8 @@ export default function App() {
         <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
-          <Hands type="pointer" />
-          <Controllers type="pointer" />
+          <Hands type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
+          <Controllers type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
         </ImmersiveSessionOrigin>
 
         <color attach="background" args={["#bfbebe"]} />

@@ -10,30 +10,38 @@ import { HomeRecommendationProps, homeRecommPropsFromService } from "../componen
 import { Service } from "dvbi-lib/src/model/services.ts";
 import { search } from "fast-fuzzy";
 
-
+// Interface for the props passed to the HomeWindow component
 interface HomeWindowProps {
-  loading?: boolean;
-  error?: Error | null;
-  hearted: HomeRecommendationProps[];
-  recent: HomeRecommendationProps[];
-  services: Service[];
+  loading?: boolean; // Indicates if the data is loading
+  error?: Error | null; // Holds any error that might occur
+  hearted: HomeRecommendationProps[]; // List of hearted channels
+  recent: HomeRecommendationProps[]; // List of recently watched channels
+  services: Service[]; // List of services available for search
 }
 
+/**
+ * HomeWindow component renders the home screen of the application.
+ * It displays loading, error, hearted channels, recently watched channels, 
+ * and search results based on the current state.
+ */
 const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowProps) => {
 
-  const [searchString, setSearchString] = useState("")
+  // State for the search string input by the user
+  const [searchString, setSearchString] = useState("");
+  // Hook to toggle the visibility of the on-screen keyboard
   const { toggleVisibility: toggleKeyboard } = useKeyboardStore();
+  // Hook to get the current time string
   const timeString = useCurrentTime();
 
+  // Memoized search results to optimize performance
   const searchResults = useMemo(() => {
-
     if (!searchString) return [];
 
+    // Perform fuzzy search on services based on the search string
     const searchResultChannels = search(searchString, services, { keySelector: (service) => service.serviceName }).slice(0, 20); // Only load the first 20 to not run into performance problems for the first letter
     const searchResultHomeRecs = searchResultChannels.map(service => {
-      return homeRecommPropsFromService(service)
-    }
-    );
+      return homeRecommPropsFromService(service);
+    });
     return searchResultHomeRecs;
   }, [searchString, services])
 
@@ -57,11 +65,10 @@ const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowPro
             :
             <Text>{timeString}</Text>
           }
-          {/* <Text>{timeString}</Text> */}
         </Container>
       </Container>
 
-      {/*Error Layout */}
+      {/* Error Layout */}
       {error &&
         <Container margin={100} justifyContent={"center"}>
           <Text fontSize={20}> Error: {error.message}</Text>

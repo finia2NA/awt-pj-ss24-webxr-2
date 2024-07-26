@@ -2,6 +2,11 @@ import { ComponentInternals, Container, ContainerProperties, DefaultProperties }
 import { ReactNode, RefAttributes, forwardRef } from 'react'
 import useColors from '../../hooks/useColors'
 
+/**
+ * Calculates arbitrary sizes for the button based on a multiplier derived from the provided size.
+ * @param {number} size - The base size to calculate the dimensions.
+ * @returns {object} An object containing calculated height, padding, borderRadius, fontSize, and iconSize.
+ */
 function getAribtrarySize(size: number) {
   const multiplier = size / 44
   return {
@@ -13,6 +18,7 @@ function getAribtrarySize(size: number) {
   }
 }
 
+// Predefined sizes for the button
 const sizes = {
   xs: {
     iconSize: 12,
@@ -53,6 +59,9 @@ const sizes = {
 
 type Variant = 'pill' | 'rect' | 'icon'
 
+/**
+ * ButtonProperties defines the properties that can be passed to the Button component.
+ */
 export type ButtonProperties = ContainerProperties & {
   size?: keyof typeof sizes | number
   variant?: Variant
@@ -61,6 +70,13 @@ export type ButtonProperties = ContainerProperties & {
   disabled?: boolean
 }
 
+/**
+ * Button component using forwardRef to pass refs to the DOM element.
+ * 
+ * @param {ButtonProperties & RefAttributes<ComponentInternals>} props - The properties for the Button component.
+ * @param {React.Ref<ComponentInternals>} ref - The ref to be forwarded to the underlying DOM element.
+ * @returns {ReactNode} The rendered Button component.
+ */
 export const Button: (props: ButtonProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ children, size = 'md', variant = 'rect', platter, selected, disabled, ...props }, ref) => {
     const colors = useColors();

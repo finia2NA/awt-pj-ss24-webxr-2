@@ -2,14 +2,26 @@ import { ComponentInternals, Container, ContainerProperties, DefaultProperties }
 import { ReactNode, RefAttributes, createContext, forwardRef, useContext } from 'react'
 import useColors from '../../hooks/useColors'
 
+// Define the types for the list
 type Type = 'plain' | 'inset'
 
+// Create a context for the list type with a default value of 'plain'
 const ListContext = createContext<Type>('plain')
 
+// Define the properties for the List component
 type ListProperties = ContainerProperties & {
   type?: Type
 }
 
+/**
+ * List Component
+ * 
+ * A container that organizes its children in a vertical list. The appearance of the list 
+ * can be customized using the `type` property which determines the styling.
+ * 
+ * @param {ListProperties & RefAttributes<ComponentInternals>} props - The properties for the List component.
+ * @returns {ReactNode} The rendered List component.
+ */
 export const List: (props: ListProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ type = 'plain', ...props }, ref) => {
     return (
@@ -20,6 +32,7 @@ export const List: (props: ListProperties & RefAttributes<ComponentInternals>) =
   },
 )
 
+// Define the properties for the ListItem component
 export type ListItemProperties = ContainerProperties & {
   subtitle?: ReactNode
   selected?: boolean
@@ -29,6 +42,15 @@ export type ListItemProperties = ContainerProperties & {
   isLast?: boolean
 }
 
+/**
+ * ListItem Component
+ * 
+ * Represents an item in the List. It can contain leading and trailing accessories, a subtitle, 
+ * and can be styled based on selection and position within the list.
+ * 
+ * @param {ListItemProperties & RefAttributes<ComponentInternals>} props - The properties for the ListItem component.
+ * @returns {ReactNode} The rendered ListItem component.
+ */
 export const ListItem: (props: ListItemProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ children, subtitle, selected, leadingAccessory, trailingAccessory, isFirst, isLast, ...props }, ref) => {
     const colors = useColors();

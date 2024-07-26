@@ -16,6 +16,8 @@
  * We want to avoid prop drilling, so we use a global store to manage the current route and tuned channel.
  * The app listens to this and displays the correct screen.
  * The TV view gets the tuned channel from this.
+ * 
+ * When writing any component, you can use this hook to get/control the current route and tuned channel.
  */
 
 /* eslint-disable no-unused-vars */

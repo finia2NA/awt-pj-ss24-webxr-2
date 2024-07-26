@@ -1,6 +1,12 @@
+/*
+  * This file contains the 3D Environment component, a 3D scene with lighting.
+  * It includes the ground, trees, water, sky, and lighting.
+  * The Environment component is used in top level of the App.
+*/
+
 import { forwardRef, useEffect, useRef } from 'react';
 import { useLoader } from "@react-three/fiber";
-import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide, Euler, Object3DEventMap, Group } from "three";
+import { Material, Object3D, Vector3, MeshStandardMaterial, Color, Texture, TextureLoader, DoubleSide, Object3DEventMap, Group } from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 interface EnvironmentProps {
@@ -16,7 +22,14 @@ interface texturedProps {
   texture: Texture;
 }
 
+/**
+ * Applies a material to all meshes in the scene.
+ *
+ * @param scene - The scene containing the meshes.
+ * @param material - The material to apply to the meshes.
+ */
 function applyMaterialToMeshes(scene: Object3D, material: Material) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   scene.traverse((child: any) => {
     if (child.isMesh) {
       child.material = material;
@@ -26,6 +39,11 @@ function applyMaterialToMeshes(scene: Object3D, material: Material) {
   });
 }
 
+/**
+ * Renders the grass of the scene. Uses the texture as an environment map for the physical material.
+ * @param props.texture - The environment map texture to be used in the material.
+ * @returns The rendered grass object.
+ */
 const Grass = (props: texturedProps) => {
   const grass = useLoader(GLTFLoader, "grass.glb");
   useEffect(() => {
@@ -44,6 +62,12 @@ const Grass = (props: texturedProps) => {
   );
 }
 
+/**
+ * Renders the trees. Uses the texture as an environment map for the physical material.
+ * @param props - The props for the Trees component.
+ * @param props.texture - The environment map texture to be used in the material.
+ * @returns The rendered Trees component.
+ */
 const Trees = (props: texturedProps) => {
   const trees = useLoader(GLTFLoader, "trees.glb");
   useEffect(() => {
@@ -62,6 +86,12 @@ const Trees = (props: texturedProps) => {
   );
 }
 
+/**
+ * Renders the wood objects in the scene. Uses the texture as an environment map for the physical material.
+ * @param props - The props for the Wood component.
+ * @param props.texture - The environment map texture to be used in the material.
+ * @returns The rendered Wood component.
+ */
 const Wood = (props: texturedProps) => {
   const wood = useLoader(GLTFLoader, "wood.glb");
   useEffect(() => {
@@ -80,6 +110,12 @@ const Wood = (props: texturedProps) => {
   );
 }
 
+/**
+ * Renders the water in the scene. Uses the texture as an environment map for the physical material.
+ * @param props - The props for the Water component.
+ * @param props.texture - The environment map texture to be used in the material.
+ * @returns The rendered Water component.
+ */
 const Water = (props: texturedProps) => {
   const water = useLoader(GLTFLoader, "water.glb");
   useEffect(() => {
@@ -100,6 +136,12 @@ const Water = (props: texturedProps) => {
   );
 }
 
+/**
+ * Renders the sail in the scene. Uses the texture as an environment map for the physical material.
+ * @param props - The props for the Sail component.
+ * @param props.texture - The environment map texture to be used in the material.
+ * @returns The rendered Sail component.
+ */
 const Sail = (props: texturedProps) => {
   const sail = useLoader(GLTFLoader, "sail.glb");
   useEffect(() => {
@@ -119,10 +161,13 @@ const Sail = (props: texturedProps) => {
   );
 }
 
-
-
+/**
+ * Renders the sky sphere of the scene.
+ * @param props - The props for the SkySphere component.
+ * @param props.texture - The texture to be used for the sky.
+ * @returns The rendered SkySphere component.
+ */
 const SkySphere = (props: texturedProps) => {
-
   return (
     <mesh position={[0, 10, 0]} rotation={[0, 2.4, 0]}>
       <sphereGeometry args={[100, 32, 32]} />
@@ -131,8 +176,13 @@ const SkySphere = (props: texturedProps) => {
   );
 }
 
+/**
+ * Renders the lighting for the scene.
+ * @param props - The props for the Lighting component.
+ * @param props.nightMode - Determines if the scene is in night mode.
+ * @returns The rendered Lighting component.
+ */
 const Lighting = (props: dayNightProps) => {
-
   let lightDirection: Vector3;
   let ambientIntensity: number;
   let directionalIntensity: number;
@@ -141,7 +191,6 @@ const Lighting = (props: dayNightProps) => {
     lightDirection = new Vector3(30, 20, -6);
     ambientIntensity = 0.1;
     directionalIntensity = 0.6;
-
   } else {
     lightDirection = new Vector3(0, 20, 20);
     ambientIntensity = 2.4;
@@ -179,8 +228,7 @@ const Lighting = (props: dayNightProps) => {
  * The @param nightMode prop controls the day/night mode.
  */
 const Environment = forwardRef(({ immersionLevel, nightMode }: EnvironmentProps, ref: React.Ref<Group<Object3DEventMap>>) => {
-
-
+  // Get correct env texture based on bitheme
   const envPath = nightMode ? 'nightenv.png' : 'dayenv.png';
   const envTexture = useLoader(TextureLoader, envPath);
 
@@ -197,6 +245,7 @@ const Environment = forwardRef(({ immersionLevel, nightMode }: EnvironmentProps,
   }, []);
 
   useEffect(() => {
+    // Set the group's rotation to simulate the camera's previous rotation
     if (rotationRef.current) {
       // Rotate the pivot point
       const theRef = rotationRef.current as Object3D;
@@ -233,7 +282,6 @@ const Environment = forwardRef(({ immersionLevel, nightMode }: EnvironmentProps,
         </mesh> */}
       {/* <gridHelper /> */}
     </>
-
   );
 });
 

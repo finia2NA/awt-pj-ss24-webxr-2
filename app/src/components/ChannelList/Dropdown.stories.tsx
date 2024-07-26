@@ -24,8 +24,8 @@ export const Default: Story = {
         return (
             <>
                 <StoryHelper>
-                    <Dropdown 
-                        {...args} 
+                    <Dropdown
+                        {...args}
                         activeIndex={activeIndex}
                         onSelectItem={setActiveIndex}
                     />

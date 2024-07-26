@@ -3,13 +3,27 @@ import { Check } from '@react-three/uikit-lucide'
 import { ReactNode, RefAttributes, forwardRef, useState } from 'react'
 import useColors from '../../hooks/useColors'
 
+/**
+ * CheckboxProperties defines the properties that can be passed to the Checkbox component.
+ */
 type CheckboxProperties = ContainerProperties & {
   selected?: boolean
   defaultSelected?: boolean
   disabled?: boolean
+  /**
+   * Callback function called when the selected state changes.
+   * @param {boolean} value - The new selected state.
+   */
   onSelectedChange?(value: boolean): void
 }
 
+/**
+ * Checkbox component using forwardRef to pass refs to the DOM element.
+ * 
+ * @param {CheckboxProperties & RefAttributes<ComponentInternals>} props - The properties for the Checkbox component.
+ * @param {React.Ref<ComponentInternals>} ref - The ref to be forwarded to the underlying DOM element.
+ * @returns {ReactNode} The rendered Checkbox component.
+ */
 export const Checkbox: (props: CheckboxProperties & RefAttributes<ComponentInternals>) => ReactNode = forwardRef(
   ({ selected, disabled = false, defaultSelected, onSelectedChange, ...props }, ref) => {
 

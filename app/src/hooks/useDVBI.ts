@@ -1,3 +1,7 @@
+/**
+ * This file contains the hooks that link our app to the dvbi library.
+ */
+
 import { useState, useEffect } from "react";
 import useSettingsStore, { SettingsState } from "./useSettingsStore";
 import DVBI from 'dvbi-lib';
@@ -5,13 +9,19 @@ import { Service } from "dvbi-lib/src/model/services";
 import { alterDateDays, getDateISO } from "../utils/dateHelpers";
 import { useServiceListCacheStore, useDVBICacheStore } from "./useDVBICacheStore";
 
+/**
+ * Custom hook to fetch and manage DVBI instance.
+ * When possible, uses cached DVBI instance.
+ * 
+ * @returns {object} - Returns DVBI instance, loading state, and error state.
+ */
 export const useDVBI = () => {
   const { dvbiUrl } = useSettingsStore((state) => state) as SettingsState;
   const [dvbi, setDvbi] = useState<DVBI | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  const { getCache, setCache } = useDVBICacheStore(); // Use the DVBICacheStore here
+  const { getCache, setCache } = useDVBICacheStore();
 
   useEffect(() => {
     if (!dvbiUrl) {
@@ -48,6 +58,16 @@ export const useDVBI = () => {
   return { dvbi, loading, error };
 };
 
+/**
+ * Custom hook to fetch and manage the list of services.
+ * When possible, uses cached service list.
+ * 
+ * @param {boolean} includeIncomplete - Flag to include incomplete services.
+ * @param {boolean} includeGuide - Flag to include guide information.
+ * @param {Date} [guideStart] - Start date for the guide.
+ * @param {Date} [guideEnd] - End date for the guide.
+ * @returns {object} - Returns list of services, loading state, and error state.
+ */
 export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart?: Date, guideEnd?: Date) => {
   if (!guideStart || !guideEnd) {
     const date = new Date("2022-09-10");
@@ -63,7 +83,6 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
   const { getCache, setCache } = useServiceListCacheStore();
 
   useEffect(() => {
-
     const key = { includeIncomplete, includeGuide, guideStart, guideEnd };
 
     setLoading(true);
@@ -97,7 +116,6 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         }
 
         const allChannels = dvbi.services;
-
         const filtered = allChannels.filter((channel) => {
           return channel.dashStreamAvailable && channel.contentGuideAvailable;
         });
@@ -105,10 +123,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
         const result = includeIncomplete ? filtered : allChannels;
 
         if (includeGuide) {
-          // Create an array of promises for each channel's getContentGuide call
           const promises = result.map(channel => channel.getContentGuide(guideStart, guideEnd));
-
-          // Wait for all promises to resolve
           await Promise.all(promises);
         }
 
@@ -128,7 +143,14 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
   return { services, loading, error };
 };
 
-
+/**
+ * Custom hook to fetch and manage a single service by ID.
+ * Note that this is NOT CACHED (Since it is not used anywhere anyway. Could be added if needed).
+ * 
+ * @param {string} id - The ID of the service.
+ * @param {boolean} [includeGuide=false] - Flag to include guide information.
+ * @returns {object} - Returns the service, loading state, and error state.
+ */
 export const useService = (id: string, includeGuide: boolean = false) => {
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
 
@@ -181,4 +203,3 @@ export const useService = (id: string, includeGuide: boolean = false) => {
 
   return { service, loading, error };
 };
-

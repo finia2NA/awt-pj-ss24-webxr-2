@@ -7,19 +7,19 @@ import useKeyboardStore from "../hooks/useKeyboardStore.ts";
 import useCurrentTime from "../hooks/useCurrentTime.ts";
 import HomeSection from "../components/Home/HomeSection.tsx";
 import { HomeRecommendationProps, homeRecommPropsFromService } from "../components/Home/HomeRecommendation.tsx";
-import { XIcon } from "@react-three/uikit-lucide";
 import { Service } from "dvbi-lib/src/model/services.ts";
 import { search } from "fast-fuzzy";
 
 
 interface HomeWindowProps {
   loading?: boolean;
+  error?: Error | null;
   hearted: HomeRecommendationProps[];
   recent: HomeRecommendationProps[];
   services: Service[];
 }
 
-const HomeWindow = ({ loading, hearted, recent, services }: HomeWindowProps) => {
+const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowProps) => {
 
   const [searchString, setSearchString] = useState("")
   const { toggleVisibility: toggleKeyboard } = useKeyboardStore();
@@ -38,7 +38,8 @@ const HomeWindow = ({ loading, hearted, recent, services }: HomeWindowProps) => 
   }, [searchString, services])
 
   return (
-    <Card alignSelf={"flex-start"} paddingY={14} paddingX={10} flexDirection={"column"} gap={20} width={600} height={380}>
+    <Card alignSelf={"flex-start"} paddingY={14} paddingX={10} flexDirection={"column"} gap={20} width={600} height={380}
+      backgroundColor={error ? "red" : undefined}>
       {/* Top Layout */}
       <Container justifyContent={"space-between"} marginX={10}>
         {/* Searching */}
@@ -60,16 +61,22 @@ const HomeWindow = ({ loading, hearted, recent, services }: HomeWindowProps) => 
         </Container>
       </Container>
 
+      {/*Error Layout */}
+      {error &&
+        <Container margin={100} justifyContent={"center"}>
+          <Text fontSize={20}> Error: {error.message}</Text>
+        </Container >
+      }
+
       {/* Loading Layout */}
-      {loading &&
+      {!error && loading &&
         <Container margin={100} justifyContent={"center"}>
           <Text fontSize={20}> Loading...</Text>
         </Container >
       }
 
       {/* Content Layout */}
-      {
-        !loading && !searchString &&
+      {!error && !loading && !searchString &&
         <Container marginY={10} marginX={20} flexDirection={"column"} gap={20}>
           <HomeSection title="Your Favorite Channels" channels={hearted} altText="Heart Channels to display them here" />
           <HomeSection title="Recently watched channels" channels={recent} altText="Watch Channels to display them here" />
@@ -77,8 +84,7 @@ const HomeWindow = ({ loading, hearted, recent, services }: HomeWindowProps) => 
       }
 
       {/* Search Layout */}
-      {
-        !loading && searchString &&
+      {!error && !loading && searchString &&
         <Container marginY={10} marginX={20} flexDirection={"column"} gap={20}>
           <HomeSection title="Search Results" channels={searchResults} altText="Try to adjust your search" />
         </Container>

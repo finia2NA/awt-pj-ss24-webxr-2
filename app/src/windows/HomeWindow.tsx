@@ -50,7 +50,7 @@ const HomeWindow = ({ loading, hearted, recent, services }: HomeWindowProps) => 
         <Container alignItems={"center"} flexDirection={"row"} gap={10}>
           {searchString ?
             <>
-              <XIcon onClick={() => setSearchString("")} />
+              <GlyphButton type={ButtonType.Cross} onClick={() => setSearchString("")} />
               <Text>{timeString}</Text>
             </>
             :

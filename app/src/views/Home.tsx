@@ -14,7 +14,6 @@ export default function Home() {
     const recentList = recentChannels.map(serviceID => services.find(service => service.serviceID === serviceID))
 
     const transformedHearted = heartedList.map(service => {
-        // debugger;
         return homeRecommPropsFromService(service)
     });
     const transformedRecent = recentList.map(service => {
@@ -31,6 +30,7 @@ export default function Home() {
             loading={loading}
             hearted={transformedHearted}
             recent={transformedRecent}
+            services={services}
         ></HomeWindow>
     );
 }

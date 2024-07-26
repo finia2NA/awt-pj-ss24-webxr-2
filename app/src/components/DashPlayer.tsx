@@ -1,5 +1,6 @@
 import {
     Container,
+    Image,
     Video as VideoImpl,
     useVideoElement as useVideoElement,
     ComponentInternals
@@ -20,6 +21,7 @@ interface DashPlayerProps {
     channelTitle: string;
     channelDescription: string;
     channelNumber: number;
+    channelImageSrc?: string;
 
     // Internal
     width: number;
@@ -28,11 +30,18 @@ interface DashPlayerProps {
     tabsRef: React.RefObject<ComponentInternals>;
     listRef: React.RefObject<ComponentInternals>;
     playing?: boolean;
+
+    // Channel control
+    tuneUpDown: (direction: number) => void;
+    toggleChannelList?: () => void;
+
+    // Event handling
+    onPlaybackError?: (error: dashjs.ErrorEvent) => void;
 }
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, width, viewRef, handleRef, tabsRef, listRef, playing = true }: DashPlayerProps) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, playing = true, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(true); // State to track if the video is muted
     const playerRef = useRef<InsideVideoRef | null>(null); // Reference to the Dash player instance
@@ -60,10 +69,6 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             }
             setIsMuted(!isMuted); // Toggle the muted state
         }
-    }
-
-    const toggleChannelList = () => {
-        throw new Error('Not implemented');
     }
 
     const toggleCaptions = () => {
@@ -146,18 +151,20 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
 
         viewRef.current.setStyle({
             ...viewRef.current.getStyle(),  // Preserve other styles
-            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
+            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: 1 }
         });
 
         let deltaY = (controls.current.size.v[1] - (controls.current.size.v[1] * 1 / newScale.y)) / 2;
+        let listDeltaX = (listRef.current.size.v[0] - (listRef.current.size.v[0] * 1 / newScale.x)) / 2;
+        let tabsDeltaX = (tabsRef.current.size.v[0] - (tabsRef.current.size.v[0] * 1 / newScale.x)) / 2;
         // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
 
         // preserve size of other components
-        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        tabsRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
-        listRef.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 / newScale.z });
+        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        tabsRef.current.setStyle({ transformTranslateX: tabsDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        listRef.current.setStyle({ transformTranslateX: -listDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
     };
 
     return (
@@ -166,16 +173,17 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     <VideoImpl borderRadius={6}>
                         <Container>
-                            <InsideVideo src={src} ref={playerRef} isMuted={isMuted} setIsMuted={setIsMuted}/>
+                            <InsideVideo src={src} ref={playerRef} isMuted={isMuted} setIsMuted={setIsMuted} onError={onPlaybackError} />
                         </Container>
                     </VideoImpl>
                 </Container>
             </Container>
-            <Container
-                backgroundColor={"red"}
-                height={25} width={25}
+            <Image
+                src={"src/assets/resize_chevron.png"}
+                height={20} width={20}
                 alignSelf={"flex-end"}
-                marginTop={-25}
+                marginTop={-15}
+                marginRight={-5}
                 zIndexOffset={1}
                 ref={resize}
                 onPointerDown={handleResizePointerDown}
@@ -183,7 +191,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={""} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute}/>
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>
         </Container>
     );
@@ -200,8 +208,9 @@ interface InsideVideoProps {
     src: string;
     isMuted: boolean;
     setIsMuted: (isMuted: boolean) => void;
+    onError?: (error: dashjs.ErrorEvent) => void;
 }
-export const InsideVideo = forwardRef(({ src, isMuted, setIsMuted }: InsideVideoProps, ref: React.Ref<InsideVideoRef>) => {
+const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => { } }: InsideVideoProps, ref: React.Ref<InsideVideoRef>) => {
     const videoElement = useVideoElement(); // Hook to get the video element
     const videoRef = useRef<HTMLVideoElement | null>(null); // Reference to the HTML video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
@@ -229,6 +238,7 @@ export const InsideVideo = forwardRef(({ src, isMuted, setIsMuted }: InsideVideo
             playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
             playerRef.current.setMute(isMuted); // Mute the video
+
             playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, function () {
                 console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
                 if (playerRef.current && videoRef.current) {
@@ -237,6 +247,15 @@ export const InsideVideo = forwardRef(({ src, isMuted, setIsMuted }: InsideVideo
                     playerRef.current.initialize(videoRef.current, src, true);
                 }
             });
+
+            // Add event listener for when there is an error. PLAYBACK_ERROR doesn't work here with a 404 apparently
+            // Important to note: It tries four times to load the video before giving up and throwing an error
+            // Error codes from testing (didn't find any documentation on this):
+            // 25: Not Found (404)
+            playerRef.current.on(dashjs.MediaPlayer.events.ERROR, function (e) {
+                console.error('A playback error occurred', e);
+                onError(e);
+            });
         }
         return () => {
             if (playerRef.current) {
@@ -244,7 +263,7 @@ export const InsideVideo = forwardRef(({ src, isMuted, setIsMuted }: InsideVideo
                 playerRef.current = null;
             }
         };
-    }, [src, videoElement]); // Re-run effect when src or videoElement changes
+    }, [isMuted, onError, setIsMuted, src, videoElement]);
 
     return <></>; // Return an empty fragment as this component does not render anything itself
 });

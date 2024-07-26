@@ -22,6 +22,7 @@
     "@react-three/uikit-lucide": "^0.3.12",
     "dashjs": "^4.7.4",
     "dvbi-lib": "file:../lib",
+    "fast-fuzzy": "^1.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.165.0"

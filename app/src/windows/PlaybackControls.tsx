@@ -1,38 +1,63 @@
+/* eslint-disable no-unused-vars */
 import { Container } from "@react-three/uikit";
 import ChannelNumber from "../components/PlaybackControls/ChannelNumber";
 import PlaybackInfo from "../components/PlaybackControls/PlaybackInfo";
 import { Card } from "../components/apfel/card";
 import GlyphButton, { ButtonType } from "../components/GlyphButtons";
 
-
+/**
+ * PlaybackControlsProps defines the properties for the PlaybackControls component.
+ */
 export interface PlaybackControlsProps {
   // Info
-  channelImageSrc: string;
-  channelTitle: string;
-  channelDescription: string;
+  channelImageSrc?: string; // Source URL for the channel image.
+  channelTitle: string; // Title of the channel.
+  channelDescription: string; // Description of the channel.
 
   // Channel control
-  channel: number;
-  // eslint-disable-next-line no-unused-vars
-  setChannel?: (channel: number) => void;
+  channel: number; // Current channel number.
+  setChannel?: (channel: number) => void; // Function to set the current channel.
 
   // Play/Pause control
-  isPlaying: boolean;
-  togglePlayPause?: () => void;
+  isPlaying: boolean; // Indicates if the playback is currently playing.
+  togglePlayPause?: () => void; // Function to toggle play/pause state.
 
-  isMuted?: boolean;
-  toggleMute?: () => void;
+  isMuted?: boolean; // Indicates if the playback is currently muted.
+  toggleMute?: () => void; // Function to toggle mute state.
 
   // Toggle channel list
-  toggleChannelList?: () => void;
+  toggleChannelList?: () => void; // Function to toggle the visibility of the channel list.
 
-  // captions
-  captionsAvailable?: boolean;
-  toggleCaptions?: () => void;
+  // Captions
+  captionsAvailable?: boolean; // Indicates if captions are available.
+  toggleCaptions?: () => void; // Function to toggle captions.
 
+  // Tuning
+  tuneUpDown?: (direction: number) => void; // Function to tune up or down the channel.
 }
 
-const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelList, captionsAvailable, toggleCaptions, channelImageSrc, channelTitle, channelDescription, isPlaying, toggleMute, isMuted }: PlaybackControlsProps) => {
+/**
+ * PlaybackControls component renders the UI controls for playback, including channel number,
+ * playback info, play/pause button, channel list toggle, captions toggle, and volume control.
+ * 
+ * @param {PlaybackControlsProps} props - The properties for the PlaybackControls component.
+ * @returns {JSX.Element} The rendered PlaybackControls component.
+ */
+const PlaybackControls = ({
+  channel,
+  tuneUpDown,
+  togglePlayPause,
+  toggleChannelList,
+  captionsAvailable,
+  toggleCaptions,
+  channelImageSrc,
+  channelTitle,
+  channelDescription,
+  isPlaying,
+  toggleMute,
+  isMuted
+}: PlaybackControlsProps): JSX.Element => {
+
   return (
     <Card
       height={80}
@@ -40,20 +65,19 @@ const PlaybackControls = ({ channel, setChannel, togglePlayPause, toggleChannelL
       alignItems={"center"}
       paddingX={22}
       gap={10}
-      alignSelf={"flex-start"}>
-
-      <ChannelNumber channel={channel} setChannel={setChannel ? setChannel : () => { }} />
+      alignSelf={"flex-start"}
+    >
+      <ChannelNumber channel={channel} tuneUpDown={tuneUpDown} />
       <PlaybackInfo imageSrc={channelImageSrc} title={channelTitle} description={channelDescription} />
 
       <Container gapColumn={8}>
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
         {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />}
-        <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume2} onClick={toggleMute}/>
+        <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume2} onClick={toggleMute} />
       </Container>
-
     </Card>
-  )
+  );
 }
 
 export default PlaybackControls;

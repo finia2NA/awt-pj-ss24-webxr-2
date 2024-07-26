@@ -2,51 +2,44 @@ import { TabBar, TabBarItem } from './apfel/tab-bar'
 import { Text } from '@react-three/uikit'
 
 import { HomeIcon, SettingsIcon, Tv2Icon, LayoutListIcon } from '@react-three/uikit-lucide';
-
-/* eslint-disable no-unused-vars */
-// eslint-disable-next-line react-refresh/only-export-components
-export enum Tab {
-  HOME,
-  TV,
-  GUIDE,
-  SETTINGS,
-}
+import { Route } from '../hooks/useRoutingStore';
 
 export interface TabSelectorProps {
-  selectedTab: Tab;
-  setSelectedTab: (tab: Tab) => void;
+  selectedRoute: Route;
+  // eslint-disable-next-line no-unused-vars
+  setSelectedRoute: (route: Route) => void;
 }
 
 
-const Tabs = ({ selectedTab, setSelectedTab }: TabSelectorProps) => {
+const Tabs = ({ selectedRoute, setSelectedRoute }: TabSelectorProps) => {
 
   let currentValue;
-  if (selectedTab === Tab.HOME) {
-    currentValue = 'Home';
-  } else if (selectedTab === Tab.TV) {
+  if (selectedRoute === Route.HOME) {
+    currentValue = 'HOME';
+  } else if (selectedRoute === Route.TV) {
     currentValue = 'TV';
-  } else if (selectedTab === Tab.GUIDE) {
-    currentValue = 'Guide';
-  } else if (selectedTab === Tab.SETTINGS) {
-    currentValue = 'Settings';
+  } else if (selectedRoute === Route.GUIDE) {
+    currentValue = 'GUIDE';
+  } else if (selectedRoute === Route.SETTINGS) {
+    currentValue = 'SETTINGS';
   }
 
   // Todo: Specify the height
   return (
-    <TabBar defaultValue='HOME' value={currentValue} height={230}
+    <TabBar defaultValue={Route.HOME} value={currentValue} height={230} positionType={"absolute"} positionTop={-120} positionLeft={-80} zIndexOffset={10}
       onValueChange={(newValue) =>
-        setSelectedTab(Tab[newValue as keyof typeof Tab])}
+        setSelectedRoute(Route[newValue as keyof typeof Route])}
     >
-      <TabBarItem value='HOME' icon={<HomeIcon />}>
+      <TabBarItem value={Route.HOME} icon={<HomeIcon />}>
         <Text>Home</Text>
       </TabBarItem>
-      <TabBarItem value='TV' icon={<Tv2Icon />}>
+      <TabBarItem value={Route.TV} icon={<Tv2Icon />}>
         <Text>TV</Text>
       </TabBarItem>
-      <TabBarItem value='GUIDE' icon={<LayoutListIcon />}>
+      <TabBarItem value={Route.GUIDE} icon={<LayoutListIcon />}>
         <Text>Guide</Text>
       </TabBarItem>
-      <TabBarItem value='SETTINGS' icon={<SettingsIcon />}>
+      <TabBarItem value={Route.SETTINGS} icon={<SettingsIcon />}>
         <Text>Settings</Text>
       </TabBarItem>
     </TabBar>

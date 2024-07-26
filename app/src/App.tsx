@@ -17,11 +17,20 @@ import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
 import { Vector3 } from "three";
 
-import Tabs, { Tab } from "./components/Tabs";
+import Tabs from "./components/Tabs";
 import BottomBar from "./windows/BottomBar";
 import Tv from './views/Tv';
 import Home from './views/Home';
 import GuideView from "./views/GuideView";
+import SettingsView from "./views/SettingsView";
+
+import Environment from "./3D/Environment";
+import useRoutingStore, { Route } from './hooks/useRoutingStore';
+
+import KeyboardUI from "./components/KeyboardUI";
+import useKeyboardStore from './hooks/useKeyboardStore.ts';
+import useSettingsStore, { BiTheme, SettingsState } from "./hooks/useSettingsStore.ts";
+
 
 
 const sessionOptions = {
@@ -29,19 +38,31 @@ const sessionOptions = {
 };
 
 export default function App() {
-
-  const [selectedTab, setSelectedTab] = useState(Tab.TV);
+  const cameraDistance = -3;
 
   const enterAR = useEnterXR("immersive-ar", sessionOptions);
   const enterVR = useEnterXR("immersive-vr", sessionOptions);
 
+  const [immersionLevel, setImmersionLevel] = useState(0);
+
+  const { route, setRoute } = useRoutingStore();
+  const { biTheme } = useSettingsStore((state) => state) as SettingsState;
+
+  const handleTabSelection = (route: Route) => {
+    setRoute(route);
+  }
+
+  const { visible: keyboardVisible } = useKeyboardStore((state) => state);
+
   const view = useRef<ComponentInternals>(null);
+  const bar = useRef<ComponentInternals>(null);
   const handle = useRef<ComponentInternals>(null);
   const tabs = useRef<ComponentInternals>(null);
   const downState = useRef<{
     pointerId: number;
     point: Vector3;
     position: Vector3;
+    rotation: Vector3;
   }>();
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -59,10 +80,17 @@ export default function App() {
 
       let pos = new Vector3(x, y, z);
 
+      let rotX = view.current.getComputedProperty("transformRotateX") || 0;
+      let rotY = view.current.getComputedProperty("transformRotateY") || 0;
+      let rotZ = view.current.getComputedProperty("transformRotateZ") || 0;
+
+      let rot = new Vector3(rotX, rotY, rotZ);
+
       downState.current = {
         pointerId: e.pointerId,
         point: e.point,
-        position: pos
+        position: pos,
+        rotation: rot
       };
     }
   };
@@ -87,30 +115,23 @@ export default function App() {
 
     const scale = 90; // Adjust this value as needed
 
-    let delta = e.point.sub(downState.current.point.clone())
+    let delta = e.point.sub(downState.current.point.clone());
     let scaledDelta = new Vector3(delta.x * scale, -delta.y * scale, delta.z * scale);
     let newPosition = downState.current.position.clone().add(scaledDelta);
 
+    const disCamera = Math.abs(cameraDistance);
+    const scaleRot = 20;
+    let rotY = downState.current.rotation.y - (delta.x * scaleRot / disCamera);
+    let rotX = downState.current.rotation.x + (delta.y * scaleRot / disCamera);
+
     view.current.setStyle({
       ...view.current.getStyle(),  // Preserve other styles
-      ...{ transformTranslateX: newPosition.x, transformTranslateY: newPosition.y, transformTranslateZ: newPosition.z }
+      ...{
+        transformTranslateX: newPosition.x, transformTranslateY: newPosition.y,
+        transformRotateX: rotX, transformRotateY: rotY
+      }
     });
   };
-
-  const shrinkTabsMargin = () => {
-    if (tabs.current != null) {
-      const tabsWidth = tabs.current.size.v[0];
-      const currentMargin = tabs.current.getComputedProperty("marginRight") || 0;
-      const newMargin = currentMargin - tabsWidth;
-      tabs.current.setStyle({ marginRight: newMargin });
-    }
-  };
-
-  const enlargeTabsMargin = () => {
-    if (tabs.current != null) {
-      tabs.current.setStyle({ marginRight: 50 });
-    }
-  }
 
   return (
     <div
@@ -125,8 +146,15 @@ export default function App() {
       <button onClick={enterVR}>Enter VR</button>
       <XRCanvas>
         {/* <OrbitControls /> */}
-        <group position={[0, 2, -3]}>
-          <Root ref={view} sizeX={20} sizeY={3} flexDirection="column" borderRadius={6} pixelSize={0.008}>
+        <group position={[0, 2, cameraDistance]}>
+          <Root
+            ref={view}
+            sizeX={20} sizeY={3}
+            transformTranslateX={route === Route.TV ? 210 : 0}
+            flexDirection="column"
+            borderRadius={6}
+            pixelSize={0.008}
+          >
             <Container
               flexDirection="row"
               height={"auto"}
@@ -136,39 +164,57 @@ export default function App() {
                 marginRight={50}
                 alignSelf={"center"}
                 ref={tabs}
-                onPointerOver={shrinkTabsMargin}
-                onPointerOut={enlargeTabsMargin}
+                marginTop={keyboardVisible ? -223 : 0}
               >
-                <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
+                <Tabs setSelectedRoute={handleTabSelection} selectedRoute={route} />
               </Container>
-              <Container flexDirection={"column"} height={"auto"}>
+              <Container flexDirection={"column"} height={"auto"} alignItems={"center"}>
                 <Container height={"auto"}>
-                  {selectedTab === Tab.HOME && <Home />}
-                  {selectedTab === Tab.TV && <Tv viewRef={view} handleRef={handle} tabsRef={tabs} />}
-                  {selectedTab === Tab.GUIDE && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "HOME" && <Home />}
+                  {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
+                  {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
+                  {route === "SETTINGS" && <SettingsView />}
                 </Container>
-              </Container>
-            </Container>
-            <Container 
+            <Container
+              ref={bar}
               alignSelf={"center"}
               alignItems={"center"}
               height={25}
-              marginLeft={selectedTab == Tab.TV ? -100 : 0}
-              
-              ref={handle}
-              onPointerDown={handlePointerDown}
-              onPointerUp={handlePointerUp}
-              onPointerMove={handlePointerMove}
+              marginLeft={route === Route.TV ? -400 : 0}
             >
-              <BottomBar />
+              <BottomBar
+                environmentControls={true}
+                setEnvironmentValue={setImmersionLevel}
+                environmentValue={immersionLevel}
+                handleReference={handle}
+                dragHandlers={{
+                  onPointerDown: handlePointerDown,
+                  onPointerUp: handlePointerUp,
+                  onPointerMove: handlePointerMove
+
+                }}
+              />
+            </Container>
+            {keyboardVisible && <Container
+              alignSelf={"center"}
+              alignItems={"center"}
+              marginTop={30}
+              transformRotateX={-20}
+            >
+              <KeyboardUI />
+            </Container>}
+            </Container>
             </Container>
           </Root>
         </group>
+        <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />
         <NonImmersiveCamera position={[0, 1.5, 4]} />
         <ImmersiveSessionOrigin position={[0, 0, 4]}>
-          <Hands type="pointer" />
-          <Controllers type="pointer" />
+          <Hands type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
+          <Controllers type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
         </ImmersiveSessionOrigin>
+
+        <color attach="background" args={["#bfbebe"]} />
       </XRCanvas>
     </div>
   );

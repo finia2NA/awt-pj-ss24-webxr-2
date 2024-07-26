@@ -41,15 +41,18 @@ const ChannelNumber = ({ channel, tuneUpDown }: ChannelNumberProps) => {
         justifyContent={"space-evenly"}
         alignItems={"center"}>
 
-        <Button size={20} variant="icon">
-          <Svg src={triangleicon} color={colors.primary} onClick={(e) => handler(e, 1)} />
-        </Button>
+        {/* I'm putting the onClicks on containers bc somehow they don't always register when they're on the actual buttons */}
+        <Container onClick={(e) => handler(e, 1)}>
+          <Button size={20} variant="icon">
+            <Svg src={triangleicon} color={colors.primary} />
+          </Button>
+        </Container>
         <Container backgroundColor={colors.primary} height={2} width={22} />
-        <Button size={20} variant="icon">
-          <Svg src={triangleicon} color={colors.primary} onClick={(e) => handler(e, -1)} transformRotateZ={180} />
-        </Button>
-
-
+        <Container onClick={(e) => handler(e, -1)}>
+          <Button size={20} variant="icon">
+            <Svg src={triangleicon} color={colors.primary} transformRotateZ={180} />
+          </Button>
+        </Container>
       </Container>
     </Container>
   )

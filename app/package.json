@@ -20,6 +20,7 @@
     "@react-three/postprocessing": "^2.16.2",
     "@react-three/uikit": "^0.3.12",
     "@react-three/uikit-lucide": "^0.3.12",
+    "@react-three/xr": "^6.0.0",
     "dashjs": "^4.7.4",
     "dvbi-lib": "file:../lib",
     "fast-fuzzy": "^1.12.0",

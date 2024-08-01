@@ -1,18 +1,10 @@
-import {
-  XRCanvas,
-  Hands,
-  Controllers
-} from "@coconut-xr/natuerlich/defaults";
-import {
-  useEnterXR,
-  NonImmersiveCamera,
-  ImmersiveSessionOrigin
-} from "@coconut-xr/natuerlich/react";
+import { DefaultXRController, XR, XROrigin, createXRStore } from '@react-three/xr';
+const store = createXRStore();
+
 import { isXIntersection } from "@coconut-xr/xinteraction";
 
 import { useState, useRef } from 'react';
-import { ThreeEvent } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
 import { Vector3 } from "three";
@@ -39,9 +31,6 @@ const sessionOptions = {
 
 export default function App() {
   const cameraDistance = -3;
-
-  const enterAR = useEnterXR("immersive-ar", sessionOptions);
-  const enterVR = useEnterXR("immersive-vr", sessionOptions);
 
   const [immersionLevel, setImmersionLevel] = useState(0);
 
@@ -142,9 +131,10 @@ export default function App() {
         flexDirection: "column"
       }}
     >
-      <button onClick={enterAR}>Enter AR</button>
-      <button onClick={enterVR}>Enter VR</button>
-      <XRCanvas>
+      <button onClick={() => store.enterAR()}>Enter AR</button>
+      <button onClick={() => store.enterVR()}>Enter VR</button>
+      <Canvas>
+      <XR store={store}>
         {/* <OrbitControls /> */}
         <group position={[0, 2, cameraDistance]}>
           <Root
@@ -208,14 +198,12 @@ export default function App() {
           </Root>
         </group>
         <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />
-        <NonImmersiveCamera position={[0, 1.5, 4]} />
-        <ImmersiveSessionOrigin position={[0, 0, 4]}>
-          <Hands type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
-          <Controllers type="pointer" rayColor={"white"} raySize={0.01} cursorVisible={true} cursorSize={0.1} cursorOpacity={1} cursorColor={"blue"} />
-        </ImmersiveSessionOrigin>
-
+        <XROrigin position={[0, 0, 4]}>
+          {/*<DefaultXRController />  This can enable us to have custom pointer options, TODO. Currently causes errors */}
+        </XROrigin>
         <color attach="background" args={["#bfbebe"]} />
-      </XRCanvas>
+      </XR>
+      </Canvas>
     </div>
   );
 }

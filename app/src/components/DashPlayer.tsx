@@ -38,8 +38,6 @@ interface DashPlayerProps {
     onPlaybackError?: (error: dashjs.ErrorEvent) => void;
 }
 
-// Here we should also define the props properly
-// Currently, this is somewhat badly typed
 const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
@@ -184,6 +182,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
     const videoElement = useVideoElement(); // Hook to get the video element
     const videoRef = useRef<HTMLVideoElement | null>(null); // Reference to the HTML video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
+    const expectVolumeChange = useRef(false);
 
     // Effect that initializes the Dash player
     // This effect will run when the component is mounted or when src changes
@@ -194,7 +193,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
             playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
             playerRef.current.setMute(isMuted); // Mute the video if asked to do so
-            
+
             console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
 
             playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, function () {
@@ -214,6 +213,11 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
                 console.error('A playback error occurred', e);
                 onError(e);
             });
+
+            // Try to remedy the fact that the player sometimes unmutes itself
+            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_VOLUME_CHANGED, function (e) {
+                handleVolumeChange(e);
+            });
         }
 
         // Cleanup function
@@ -226,9 +230,38 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
         };
     }, [src]);
 
+    /**
+     * Function to handle volume change event from DASH
+     * Is only needed to prevent the player from randomly unmuting itself. Sometimes it still does though
+     * It isn't clear why this is happening, as it apparently isn't re-rendering
+     */
+    function handleVolumeChange(e: dashjs.Event) {
+        console.log('Volume changed', e, 'expecting volume change:', expectVolumeChange.current, "isMuted:", isMuted);
+        if (expectVolumeChange.current) {
+            console.log("Expected volume change");
+            expectVolumeChange.current = false;
+        } else {
+            console.log("Unexpected volume change");
+            expectVolumeChange.current = false;
+            if (playerRef.current) {
+                console.log("Setting mute after unexpected volume change to ", isMuted);
+                playerRef.current.setMute(isMuted);
+                
+                // Also make sure that the playing state is set correctly, just in case
+                if (isPlaying) {
+                    playerRef.current.play();
+                } else {
+                    playerRef.current.pause();
+                }
+            }
+        }
+    }
+
     useEffect(() => {
+        console.log("Is Muted: ", isMuted);
         if (playerRef.current) {
             playerRef.current.setMute(isMuted); // Mute or unmute the video based on the isMuted state
+            expectVolumeChange.current = true; // Set the expectVolumeChange to true
             // Update the video playback based on the isPlaying state
             // just to make sure the video is in the correct state
             if (isPlaying) {

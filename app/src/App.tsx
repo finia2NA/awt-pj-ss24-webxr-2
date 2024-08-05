@@ -1,5 +1,6 @@
 import { DefaultXRController, XR, XROrigin, createXRStore } from '@react-three/xr';
-const store = createXRStore();
+const rayOptions = {rayPointer: {cursorModel: {color: "blue", opacity: 1, size: 0.2}, rayModel: {opacity: 0.7, maxLength: 5}}};
+const store = createXRStore({ controller: rayOptions, hand: rayOptions});
 
 import { isXIntersection } from "@coconut-xr/xinteraction";
 
@@ -53,6 +54,7 @@ export default function App() {
     position: Vector3;
     rotation: Vector3;
   }>();
+  
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     if (

@@ -50,7 +50,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
     };
 
     const toggleMute = () => {
-        setIsMuted(!isMuted); // Toggle the muted state
+        setIsMuted(curr => !curr); // Toggle the muted state
     };
 
     const video = useRef<ComponentInternals>(null);

@@ -57,11 +57,12 @@ export default function App() {
   
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    console.log("Pointer down")
     if (
       view.current != null &&
-      downState.current == null &&
-      isXIntersection(e)
+      downState.current == null
     ) {
+      console.log("Also here");
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
@@ -98,8 +99,7 @@ export default function App() {
       handle.current == null ||
       view.current == null ||
       downState.current == null ||
-      e.pointerId != downState.current.pointerId ||
-      !isXIntersection(e)
+      e.pointerId != downState.current.pointerId
     ) {
       return;
     }

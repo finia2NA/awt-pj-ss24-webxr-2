@@ -21,7 +21,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const { addRecentChannelToFrontByID } = useRecentChannelsStore();
     const list = useRef<ComponentInternals>(null);
 
-    const [isPlaying, setIsPlaying] = useState(true);
     const [showChannelList, setShowChannelList] = useState(true);
     const currentTime = useCurrentTime();
     const colors = useColors();
@@ -127,7 +126,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                         channelNumber={activeChannel ? activeChannel.number : 0}
                         width={900}
                         channelImageSrc={activeChannel?.imageUrl || undefined}
-                        playing={isPlaying}
                         viewRef={viewRef}
                         handleRef={handleRef}
                         tabsRef={tabsRef}

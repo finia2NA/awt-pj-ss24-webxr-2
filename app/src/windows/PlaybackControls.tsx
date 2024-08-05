@@ -49,7 +49,6 @@ const PlaybackControls = ({
   togglePlayPause,
   toggleChannelList,
   captionsAvailable,
-  toggleCaptions,
   channelImageSrc,
   channelTitle,
   channelDescription,
@@ -73,7 +72,7 @@ const PlaybackControls = ({
       <Container gapColumn={8}>
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
-        {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={toggleCaptions} />}
+        {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={() => {console.log("Toggling captions is not yet implemented")}} />}
         <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume2} onClick={toggleMute} />
       </Container>
     </Card>

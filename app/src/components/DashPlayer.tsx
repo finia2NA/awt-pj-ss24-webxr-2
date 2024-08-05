@@ -29,7 +29,6 @@ interface DashPlayerProps {
     handleRef: React.RefObject<ComponentInternals>;
     tabsRef: React.RefObject<ComponentInternals>;
     listRef: React.RefObject<ComponentInternals>;
-    playing?: boolean;
 
     // Channel control
     tuneUpDown: (direction: number) => void;
@@ -41,43 +40,20 @@ interface DashPlayerProps {
 
 // Here we should also define the props properly
 // Currently, this is somewhat badly typed
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, playing = true, onPlaybackError = () => { } }: DashPlayerProps) => {
+const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
-    const [isMuted, setIsMuted] = useState(true); // State to track if the video is muted
-    const playerRef = useRef<InsideVideoRef | null>(null); // Reference to the Dash player instance
+    const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
 
     // This should then be done based on state changes
     // so playing should be a state in the parent component
     // and we react to changes in the state using useEffect
     const togglePlayPause = () => {
-        if (playerRef.current) {
-            if (isPlaying) {
-                playerRef.current.pause(); // Pause the video if it's currently playing
-            } else {
-                playerRef.current.play(); // Play the video if it's currently paused
-            }
-            setIsPlaying(!isPlaying); // Toggle the playing state
-        }
+        setIsPlaying(!isPlaying); // Toggle the playing state
     };
 
     const toggleMute = () => {
-        if (playerRef.current) {
-            if (isMuted) {
-                playerRef.current.unmute(); // Unmute the video if it's currently muted
-            } else {
-                playerRef.current.mute(); // Mute the video if it's currently unmuted
-            }
-            setIsMuted(!isMuted); // Toggle the muted state
-        }
-    }
-
-    const toggleCaptions = () => {
-        throw new Error('Not implemented');
-    }
-
-    useEffect(() => {
-        playing ? playerRef.current?.play() : playerRef.current?.pause();
-    }, [playing]);
+        setIsMuted(!isMuted); // Toggle the muted state
+    };
 
     const video = useRef<ComponentInternals>(null);
     const controls = useRef<ComponentInternals>(null);
@@ -173,7 +149,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     <VideoImpl borderRadius={6}>
                         <Container>
-                            <InsideVideo src={src} ref={playerRef} isMuted={isMuted} setIsMuted={setIsMuted} onError={onPlaybackError} />
+                            <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} />
                         </Container>
                     </VideoImpl>
                 </Container>
@@ -191,53 +167,35 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} toggleCaptions={toggleCaptions} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
             </Container>
         </Container>
     );
 });
 
-interface InsideVideoRef {
-    play: () => void;
-    pause: () => void;
-    mute: () => void;
-    unmute: () => void;
-}
-
 interface InsideVideoProps {
     src: string;
     isMuted: boolean;
+    isPlaying: boolean;
     setIsMuted: (isMuted: boolean) => void;
     onError?: (error: dashjs.ErrorEvent) => void;
 }
-const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => { } }: InsideVideoProps, ref: React.Ref<InsideVideoRef>) => {
+const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } }: InsideVideoProps) => {
     const videoElement = useVideoElement(); // Hook to get the video element
     const videoRef = useRef<HTMLVideoElement | null>(null); // Reference to the HTML video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
 
-    useImperativeHandle(ref, () => ({
-        play: () => {
-            playerRef.current?.play(); // Expose play method to the parent component
-        },
-        pause: () => {
-            playerRef.current?.pause(); // Expose pause method to the parent component
-        },
-        mute: () => {
-            playerRef.current?.setMute(true); // Expose mute method to the parent component
-            setIsMuted(true); // Update the isMuted state
-        },
-        unmute: () => {
-            playerRef.current?.setMute(false); // Expose unmute method to the parent component
-            setIsMuted(false); // Update the isMuted state
-        }
-    }));
-
+    // Effect that initializes the Dash player
+    // This effect will run when the component is mounted or when src changes
+    // It considers isMuted and isPlaying states
     useEffect(() => {
         videoRef.current = videoElement;
         if (videoRef.current) {
             playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
             playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
-            playerRef.current.setMute(isMuted); // Mute the video
+            playerRef.current.setMute(isMuted); // Mute the video if asked to do so
+            
+            console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
 
             playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, function () {
                 console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
@@ -257,15 +215,44 @@ const InsideVideo = forwardRef(({ src, isMuted, setIsMuted, onError = () => { } 
                 onError(e);
             });
         }
+
+        // Cleanup function
+        // This will be called when the component is unmounted and destroys the player instance
         return () => {
             if (playerRef.current) {
-                playerRef.current.destroy(); // Destroy the Dash player instance
+                playerRef.current.destroy();
                 playerRef.current = null;
             }
         };
-    }, [isMuted, onError, setIsMuted, src, videoElement]);
+    }, [src]);
+
+    useEffect(() => {
+        if (playerRef.current) {
+            playerRef.current.setMute(isMuted); // Mute or unmute the video based on the isMuted state
+            // Update the video playback based on the isPlaying state
+            // just to make sure the video is in the correct state
+            if (isPlaying) {
+                playerRef.current.play(); // Play the video if the isPlaying state is true
+            } else {
+                playerRef.current.pause(); // Pause the video if the isPlaying state is false
+            }
+        }
+    }, [isMuted]);
+
+    useEffect(() => {
+        if (playerRef.current) {
+            isPlaying ? playerRef.current.play() : playerRef.current.pause(); // Play or pause the video based on the isPlaying state
+            // Update the video mute state based on the isMuted state
+            // just to make sure because this can be a side effect
+            if (isMuted) {
+                playerRef.current.setMute(true); // Mute the video if the isMuted state is true
+            } else {
+                playerRef.current.setMute(false); // Unmute the video if the isMuted state is false
+            }
+        }
+    }, [isPlaying]);
 
     return <></>; // Return an empty fragment as this component does not render anything itself
-});
+};
 
 export default DashPlayer;

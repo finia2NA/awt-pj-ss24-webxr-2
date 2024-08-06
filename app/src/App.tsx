@@ -135,7 +135,7 @@ export default function App() {
     >
       <button onClick={() => store.enterAR()}>Enter AR</button>
       <button onClick={() => store.enterVR()}>Enter VR</button>
-      <Canvas>
+      <Canvas gl={{ localClippingEnabled: true }}>
       <XR store={store}>
         {/* <OrbitControls /> */}
         <group position={[0, 2, cameraDistance]}>

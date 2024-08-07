@@ -1,11 +1,11 @@
-import { DefaultXRController, XR, XROrigin, createXRStore } from '@react-three/xr';
+import { XR, XROrigin, createXRStore, useXRControllerState } from '@react-three/xr';
 const rayOptions = { rayPointer: { cursorModel: { color: "blue", opacity: 1, size: 0.2 }, rayModel: { opacity: 0.7, maxLength: 5 } } };
 const store = createXRStore({ controller: rayOptions, hand: rayOptions });
 
 import { isXIntersection } from "@coconut-xr/xinteraction";
 
-import { useState, useRef, useEffect } from 'react';
-import { Canvas, ThreeEvent } from "@react-three/fiber";
+import { useState, useRef, useEffect, forwardRef } from 'react';
+import { Canvas, GroupProps, ThreeEvent, useFrame } from "@react-three/fiber";
 import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
 import { Group as ThreeGroup, Mesh, Vector3 } from "three";
@@ -52,51 +52,22 @@ export default function App() {
   const downState = useRef<{
     pointerId: number;
     point: Vector3;
-    position: Vector3;
-    rotation: Vector3;
   }>();
+  const movedParent = useRef<ThreeGroup>();
+  const moveDistanceOffset = useRef(new Vector3(0, 0, 0));
 
-  const [pixelRatio, setPixelRatio] = useState(window.devicePixelRatio * 1.2);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setPixelRatio(window.devicePixelRatio * 1.2);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
-    console.log("Pointer down")
     if (
       view.current != null &&
       downState.current == null
     ) {
-      console.log("Also here");
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX") || 0;
-      let y = view.current.getComputedProperty("transformTranslateY") || 0;
-      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
-
-      let pos = new Vector3(x, y, z);
-
-      let rotX = view.current.getComputedProperty("transformRotateX") || 0;
-      let rotY = view.current.getComputedProperty("transformRotateY") || 0;
-      let rotZ = view.current.getComputedProperty("transformRotateZ") || 0;
-
-      let rot = new Vector3(rotX, rotY, rotZ);
-
       downState.current = {
         pointerId: e.pointerId,
-        point: e.point,
-        position: pos,
-        rotation: rot
+        point: e.point
       };
     }
   };
@@ -106,6 +77,7 @@ export default function App() {
       return;
     }
     downState.current = undefined;
+    moveDistanceOffset.current.set(0, 0, 0);
   };
 
   const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
@@ -114,45 +86,39 @@ export default function App() {
       view.current == null ||
       downState.current == null ||
       e.pointerId != downState.current.pointerId
-      e.pointerId != downState.current.pointerId
     ) {
       return;
     }
-
-    const scale = 90; // Adjust this value as needed
-    const target = e.target;
-    
-    if (!isMesh(target)) {
-      return;
+    if (movedParent.current) {
+      movedParent.current.position.copy(e.point.add(moveDistanceOffset.current));
+      movedParent.current.setRotationFromQuaternion(e.pointer.intersection.pointerQuaternion);
     }
-    const mesh: Mesh = target;
-    mesh.position.copy(e.point);
-    mesh.position.set(e.point.x, e.point.y, e.point.z);
-    console.log("Mesh: ", e.target);
-    console.log("E: ", e);
-    let currentMesh: Mesh = mesh;
-    currentMesh.traverseAncestors((parent) => {
-      console.log("Parent: ", parent);
-      if (isGroup(parent)) {
-        // TODO: This doesn't work, vectors are weird
-        // let point  = e.point;
-        //point = e.point.add(new Vector3(0, 0, -1).applyQuaternion(e.pointer.intersection).multiplyScalar(cameraDistance));
-        parent.position.copy(e.point);
-        parent.setRotationFromQuaternion(e.pointer.intersection.pointerQuaternion);
-        return;
-      }
-    });
-    
+
 
   };
 
-  function isMesh(obj: unknown): obj is Mesh {
-    return obj instanceof Mesh;
-  }
-
-  function isGroup(obj: unknown): obj is ThreeGroup {
-    return obj instanceof ThreeGroup;
-  }
+  const Locomotion = (props: any) => {
+    const controller = useXRControllerState('right')
+    const ref = useRef<ThreeGroup>(null)
+    useFrame((_, delta) => {
+      if (ref.current == null || controller == null) {
+        return
+      }
+      const thumstickState = controller.gamepad['xr-standard-thumbstick']
+      if (thumstickState == null) {
+        return
+      }
+      if (!downState.current || !movedParent.current) {
+        return;
+      }
+      const moveAmount = (thumstickState.yAxis ?? 0) * delta * 10;
+      const direction = new Vector3();
+      controller.object?.getWorldDirection(direction);
+      direction.multiplyScalar(moveAmount);
+      moveDistanceOffset.current.add(direction);
+    })
+    return <XROrigin ref={ref} {...props} />
+  };
 
   return (
     <div
@@ -168,7 +134,7 @@ export default function App() {
       <Canvas>
         <XR store={store}>
           {/* <OrbitControls /> */}
-          <group position={[0, 2, cameraDistance]}>
+          <group position={[0, 2, cameraDistance]} ref={movedParent}>
             <Root
               ref={view}
               sizeX={20} sizeY={3}
@@ -230,9 +196,7 @@ export default function App() {
             </Root>
           </group>
           <Environment immersionLevel={immersionLevel} nightMode={biTheme === BiTheme.DARK} />
-          <XROrigin position={[0, 0, 4]}>
-            {/*<DefaultXRController />  This can enable us to have custom pointer options, TODO. Currently causes errors */}
-          </XROrigin>
+          <Locomotion position={[0, 0, 4]} />
           <color attach="background" args={["#bfbebe"]} />
         </XR>
       </Canvas>

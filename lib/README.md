@@ -1,10 +1,7 @@
 # DVBIlib
 *A library allowing for retrieval and parsing of DVBI service descriptions*
 
-- The name can be changed if for example libDVBI is deemed to sound nicer :)
-
 ## Getting Started
-The project was created following [this](https://www.tsmean.com/articles/how-to-write-a-typescript-library/) tutorial.  
 
 To get started:
 - Install the dependencies with `npm i`.
@@ -16,8 +13,29 @@ You can:
 - Expose functions you want to be exported from the module by exporting them from the `index.ts` file
 - Write tests for parts of the application using jest, using the file extention ".test.ts". Run these tests using `npm test`.
 
+### Using the library in a project
+First you need to include the library in the dependencies of your `package.json`. In our case (for the app in the parent directory) this looked like this: `"dvbi-lib": "file:../lib",`.
+Initiliazing the library is easy:
+```ts
+import DVBI from 'dvbi-lib';
+const dvbi = DVBI.getInstance();
+await dvbi.init(dvbiUrl);
+```
 
-## Principle of Operation for the Library
+Then you can simply use the library, e.g.:
+```ts
+const allChannels = dvbi.services;
+allChannels.forEach( (channel) => {
+  if (channel.dashStreamAvailable) {
+    console.log("Service ID: ", channel.serviceID, ", Service Name: ", channel.serviceName, ", DASH Streams: ", channel.dashStreams, ", Logo: ", logoUrl);
+  }
+}
+```
+
+For more examples refer to our application, especially `useDVBI` inside `app/src/hooks`.
+
+
+## Principle of operation for the library
 - The main Interface of the libary is the `DVBI` singleton class.
   - This class is instantiated using the `getInstance` method.
   - On instantiation, the class is actually empty. Call the `init` method to fill it with data.
@@ -27,15 +45,15 @@ You can:
 
 
 
-## Structure of the Data
+## Raw structure of the data
+This part isn't necessary to understand how to use the library but still interesting if you want to understand how it works and how to maintain it in the future.
 Refer to [A177r6_Service-Discovery-and-Programme-Metadata-for-DVB-I_Draft_TS-103-770-v121_February-2024](https://dvb.org/wp-content/uploads/2023/07/A177r6_Service-Discovery-and-Programme-Metadata-for-DVB-I_Draft_TS-103-770-v121_February-2024.pdf) for the structure of our data.
-<!-- TODO: change link to 2020 version -->
 
 We do the request to our end-point, get back an xml, which a parser than puts into a json. The data we get back here is not perfect yet. Especially, there seems to be a lot of instances where we have a structure like this:  
 ![](images/ex1.png)  
 where a property contains an object that iself just contains a list/a string and nothing else. We probably want to flatten the hierachy there.
 
-### Have-Struktur:
+### Structure returned:
 - Data
   - ServiceList: ServiceList
     - Name: string
@@ -93,5 +111,3 @@ where a property contains an object that iself just contains a list/a string and
         - DVBTDeliveryParameters: *Monoobject*
           - ... (Not important for us)
 
-
-Note: I marked objects that only have 1 property and thus should be flattened *Monoobject*

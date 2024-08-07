@@ -60,10 +60,10 @@ const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowPro
           {searchString ?
             <>
               <GlyphButton type={ButtonType.Cross} onClick={() => setSearchString("")} />
-              <Text>{timeString}</Text>
+              <Text fontSize={20} fontWeight={"medium"}>{timeString}</Text>
             </>
             :
-            <Text>{timeString}</Text>
+            <Text fontSize={20} fontWeight={"medium"}>{timeString}</Text>
           }
         </Container>
       </Container>

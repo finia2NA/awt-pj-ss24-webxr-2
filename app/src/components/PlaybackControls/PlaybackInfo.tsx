@@ -26,9 +26,9 @@ const PlaybackInfo = ({ imageSrc, title, description }: PlaybackInfoProps) => {
           <CacheEnabledImage src={imageSrc} width={50} />
         </Container>
       }
-      <Container flexDirection={"column"} justifyContent={"center"} marginRight={"auto"}>
-        <Text color={colors.primary}>{title}</Text>
-        <Text color={colors.primary}>{description}</Text>
+      <Container flexDirection={"column"} justifyContent={"center"} marginRight={"auto"} marginLeft={10}>
+        <Text color={colors.primary} fontSize={18} fontWeight={"semi-bold"}>{title}</Text>
+        <Text color={colors.primary} fontSize={16} fontWeight={"medium"}>{description}</Text>
       </Container>
     </Container>
   )

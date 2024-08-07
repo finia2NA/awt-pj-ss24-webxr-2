@@ -49,7 +49,7 @@ const ButtonGroup = ({ title, options, roundTop, roundBottom, selected, onClick 
               }
               onClick={() => onClick({ index: options.indexOf(option), option: option })}
             >
-              <Text color={colors.primary} >{option}</Text>
+              <Text fontWeight={"medium"} fontSize={15} color={colors.primary} >{option}</Text>
             </Button>
           </Container>
         ))}

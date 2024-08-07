@@ -70,7 +70,7 @@ const SettingsWindow = () => {
           justifyContent={"center"}
           gap={6}
         >
-          <Text fontSize={12} fontWeight={'light'}>2024 by Group 2. MIT License.</Text>
+          <Text fontSize={13} fontWeight={'medium'}>2024 by Group 2. MIT License.</Text>
 
           <Button
             variant="pill"
@@ -80,7 +80,7 @@ const SettingsWindow = () => {
             paddingX={14}
             onClick={onGoToGithub}
           >
-            <Text fontSize={12} fontWeight={"light"}>
+            <Text fontSize={13} fontWeight={"medium"}>
               See the Code
             </Text>
           </Button>

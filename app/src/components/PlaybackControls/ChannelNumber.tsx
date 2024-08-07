@@ -30,7 +30,7 @@ const ChannelNumber = ({ channel, tuneUpDown }: ChannelNumberProps) => {
       justifyContent={"space-between"}
       gap={8}>
 
-      <Text color={colors.primary}>{channel.toString()}</Text>
+      <Text color={colors.primary} fontSize={18} fontWeight={"semi-bold"}>{channel.toString()}</Text>
 
       <Container
         flexDirection={"column"}

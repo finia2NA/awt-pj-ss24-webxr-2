@@ -4,7 +4,7 @@ const store = createXRStore({ controller: rayOptions, hand: rayOptions });
 
 import { isXIntersection } from "@coconut-xr/xinteraction";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
@@ -56,12 +56,27 @@ export default function App() {
     rotation: Vector3;
   }>();
 
+  const [pixelRatio, setPixelRatio] = useState(window.devicePixelRatio * 1.2);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPixelRatio(window.devicePixelRatio * 1.2);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    console.log("Pointer down")
     if (
       view.current != null &&
       downState.current == null
     ) {
+      console.log("Also here");
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
@@ -98,6 +113,7 @@ export default function App() {
       handle.current == null ||
       view.current == null ||
       downState.current == null ||
+      e.pointerId != downState.current.pointerId
       e.pointerId != downState.current.pointerId
     ) {
       return;

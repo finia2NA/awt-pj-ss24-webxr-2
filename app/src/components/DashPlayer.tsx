@@ -7,11 +7,10 @@ import {
 } from '@react-three/uikit';
 import dashjs from 'dashjs';
 import { MediaPlayerClass } from 'dashjs';
-import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
-import { isXIntersection } from "@coconut-xr/xinteraction";
 
 
 interface DashPlayerProps {
@@ -66,8 +65,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
         if (
             resize.current != null &&
             viewRef.current != null &&
-            downState.current == null &&
-            isXIntersection(e)
+            downState.current == null
         ) {
             e.stopPropagation();
             (e.target as HTMLElement).setPointerCapture(e.pointerId);
@@ -103,8 +101,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             tabsRef.current == null ||
             listRef.current == null ||
             downState.current == null ||
-            e.pointerId != downState.current.pointerId ||
-            !isXIntersection(e)
+            e.pointerId != downState.current.pointerId
         ) {
             return;
         }
@@ -146,9 +143,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             <Container flexDirection={"column"} width={width} height={"auto"} alignSelf={"center"}>
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     <VideoImpl borderRadius={6}>
-                        <Container>
-                            <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} />
-                        </Container>
+                        <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} />
                     </VideoImpl>
                 </Container>
             </Container>
@@ -180,7 +175,6 @@ interface InsideVideoProps {
 }
 const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } }: InsideVideoProps) => {
     const videoElement = useVideoElement(); // Hook to get the video element
-    const videoRef = useRef<HTMLVideoElement | null>(null); // Reference to the HTML video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
     const expectVolumeChange = useRef(false);
 
@@ -188,37 +182,34 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
     // This effect will run when the component is mounted or when src changes
     // It considers isMuted and isPlaying states
     useEffect(() => {
-        videoRef.current = videoElement;
-        if (videoRef.current) {
-            playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
-            playerRef.current.initialize(videoRef.current, src, true); // Initialize the Dash player with the video source
-            playerRef.current.setMute(isMuted); // Mute the video if asked to do so
+        playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
+        playerRef.current.initialize(videoElement, src, true); // Initialize the Dash player with the video source
+        playerRef.current.setMute(isMuted); // Mute the video if asked to do so
 
-            console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
+        console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
 
-            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, function () {
-                console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-                if (playerRef.current && videoRef.current) {
-                    playerRef.current.setMute(true);
-                    setIsMuted(true);
-                    playerRef.current.initialize(videoRef.current, src, true);
-                }
-            });
+        playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+            console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+            if (playerRef.current && videoElement) {
+                playerRef.current.setMute(true);
+                setIsMuted(true);
+                playerRef.current.initialize(videoElement, src, true);
+            }
+        });
 
-            // Add event listener for when there is an error. PLAYBACK_ERROR doesn't work here with a 404 apparently
-            // Important to note: It tries four times to load the video before giving up and throwing an error
-            // Error codes from testing (didn't find any documentation on this):
-            // 25: Not Found (404)
-            playerRef.current.on(dashjs.MediaPlayer.events.ERROR, function (e) {
-                console.error('A playback error occurred', e);
-                onError(e);
-            });
+        // Add event listener for when there is an error. PLAYBACK_ERROR doesn't work here with a 404 apparently
+        // Important to note: It tries four times to load the video before giving up and throwing an error
+        // Error codes from testing (didn't find any documentation on this):
+        // 25: Not Found (404)
+        playerRef.current.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+            console.error('A playback error occurred', e);
+            onError(e);
+        });
 
-            // Try to remedy the fact that the player sometimes unmutes itself
-            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_VOLUME_CHANGED, function (e) {
-                handleVolumeChange(e);
-            });
-        }
+        // Try to remedy the fact that the player sometimes unmutes itself
+        playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_VOLUME_CHANGED, (e) => {
+            handleVolumeChange(e);
+        });
 
         // Cleanup function
         // This will be called when the component is unmounted and destroys the player instance
@@ -246,7 +237,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
             if (playerRef.current) {
                 console.log("Setting mute after unexpected volume change to ", isMuted);
                 playerRef.current.setMute(isMuted);
-                
+
                 // Also make sure that the playing state is set correctly, just in case
                 if (isPlaying) {
                     playerRef.current.play();

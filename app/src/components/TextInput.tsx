@@ -70,7 +70,7 @@ const TextInput = ({ value, placeholder, setValue, onSearch }: TextInputProps) =
     <>
       {/* <Input color={colors.foreground} defaultValue="Type here..." /> */}
       <Container onClick={onTextFieldClick} padding={12} flexDirection={"column"}>
-        <Text color={value ? colors.primary : colors.secondary}>{value ? value : placeholder}</Text>
+        <Text color={value ? colors.primary : colors.secondary} fontSize={16} fontWeight={"medium"}>{value ? value : placeholder}</Text>
         <Container height={2} backgroundColor={colors.primary} marginTop={-2} />
       </Container>
     </>

@@ -7,6 +7,7 @@ import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
 import CacheEnabledImage from "../CacheEnabledImage";
+import { truncateText } from "../../utils/textHelpers";
 
 export interface HomeRecommendationProps {
     /**
@@ -112,11 +113,11 @@ const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl, s
                 <CacheEnabledImage width={45} src={imageUrl}></CacheEnabledImage>
             </Container>
             <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90}>
-                <Text color={colors.primary} paddingBottom={10}>{name}</Text>
-                <Text color={colors.primary}>
-                  {description.length > 22 ? `${description.substring(0, 22)}...` : description}
+                <Text color={colors.primary} paddingBottom={10} fontWeight={"semi-bold"} fontSize={16}>{name}</Text>
+                <Text color={colors.primary} fontWeight={"medium"}>
+                  {truncateText(description, 22)}
                 </Text>
-                <Text color={colors.primary}>{timeStart + " - " + timeEnd}</Text>
+                <Text color={colors.primary} fontWeight={"medium"}>{timeStart + " - " + timeEnd}</Text>
             </Container>
         </Backdrop>
     );

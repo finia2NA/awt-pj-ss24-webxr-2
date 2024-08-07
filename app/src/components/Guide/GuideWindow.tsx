@@ -57,23 +57,23 @@ const GuideWindow = ({ time, regions, width, defaultZoomLevel, date, setDate = (
                         <Text fontWeight={"bold"} fontSize={20}>TV Guide for: </Text>
                         <Dropdown activeIndex={activeIndex} items={regions} onSelectItem={(index) => setActiveIndex(index)} />
                         <Container display={"flex"} flexDirection={"row"} alignItems={"baseline"}>
-                            <Button onClick={() => { !buttonsDisabled() ? setZoomLevel(zoomLevel - 0.1 > 0 ? zoomLevel - 0.1 : 0) : console.log("disabled") }} disabled={buttonsDisabled()}>
+                            <Button variant={"pill"} onClick={() => { !buttonsDisabled() ? setZoomLevel(zoomLevel - 0.1 > 0 ? zoomLevel - 0.1 : 0) : console.log("disabled") }} disabled={buttonsDisabled()}>
                                 <Text fontSize={20} fontWeight={"bold"}>-</Text>
                             </Button>
-                            <Text>Zoom: {Math.floor(zoomLevel * 100).toString()}%</Text>
-                            <Button onClick={() => { !buttonsDisabled() ? setZoomLevel(zoomLevel + 0.1 < 10 ? zoomLevel + 0.1 : 10) : console.log("disabled") }} disabled={buttonsDisabled()}>
+                            <Text fontWeight={"medium"}>Zoom: {Math.floor(zoomLevel * 100).toString()}%</Text>
+                            <Button variant={"pill"} onClick={() => { !buttonsDisabled() ? setZoomLevel(zoomLevel + 0.1 < 10 ? zoomLevel + 0.1 : 10) : console.log("disabled") }} disabled={buttonsDisabled()}>
                                 <Text fontSize={20} fontWeight={"bold"}>+</Text>
                             </Button>
-                            <Button onClick={() => { (!buttonsDisabled() && !dateReached) ? setDate(alterDateDays(date, -1)) : console.log("disabled") }} disabled={!(!buttonsDisabled() && !dateReached)}>
+                            <Button variant={"pill"} onClick={() => { (!buttonsDisabled() && !dateReached) ? setDate(alterDateDays(date, -1)) : console.log("disabled") }} disabled={!(!buttonsDisabled() && !dateReached)}>
                                 <ChevronLeftIcon />
                             </Button>
-                            <Text>{getDateISO(date)}</Text>
-                            <Button onClick={() => { !buttonsDisabled() ? setDate(alterDateDays(date, 1)) : console.log("disabled") }} disabled={buttonsDisabled()}>
+                            <Text fontWeight={"medium"} paddingX={10}>{getDateISO(date)}</Text>
+                            <Button variant={"pill"} onClick={() => { !buttonsDisabled() ? setDate(alterDateDays(date, 1)) : console.log("disabled") }} disabled={buttonsDisabled()}>
                                 <ChevronRightIcon />
                             </Button>
                         </Container>
                     </Container>
-                    <Text>{time}</Text>
+                    <Text fontSize={20} fontWeight={"medium"}>{time}</Text>
                 </Container>
                 {guideDisplay()}
             </Container>

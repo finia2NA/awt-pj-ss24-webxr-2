@@ -180,7 +180,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
     }
 
     return (
-        <Container display={"flex"} flexDirection={"row"} gap={20} overflow={"scroll"} >
+        <Container display={"flex"} flexDirection={"row"} gap={20} overflow={"scroll"} scrollbarWidth={8} scrollbarBorderRadius={4} scrollbarColor={colors.scrollbar} scrollbarOpacity={1}>
             {/** Channels displayed by their logo */}
             <Container display={"flex"} flexDirection={"column"} alignItems={"center"} gap={10} flexGrow={0} flexShrink={0}>
                 {/** Empty top row to match the time header of the actual schedule */}
@@ -202,7 +202,7 @@ const Guide = ({ schedule, overrideStartTime, zoomLevel = 1 }: GuideProps) => {
                 {/** Time display */}
                 <Container height={20}>
                     {timeTitles().map((time, index) => (
-                        <Text key={index} color={colors.primary} positionType={"absolute"} positionLeft={index * 120 * zoomLevel + getTimeDifferenceInMinutes(getStartTime(schedule), timeTitles()[0] || getStartTime(schedule)) * 4} textAlign={"center"} transformTranslateX={"-50%"}>{time}</Text>
+                        <Text fontWeight={"medium"} key={index} color={colors.primary} positionType={"absolute"} positionLeft={index * 120 * zoomLevel + getTimeDifferenceInMinutes(getStartTime(schedule), timeTitles()[0] || getStartTime(schedule)) * 4} textAlign={"center"} transformTranslateX={"-50%"}>{time}</Text>
                     ))}
                 </Container>
                 <Container overflow={"visible"} flexDirection={"column"} gap={10}>

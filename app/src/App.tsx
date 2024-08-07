@@ -4,7 +4,7 @@ const store = createXRStore({ controller: rayOptions, hand: rayOptions});
 
 import { isXIntersection } from "@coconut-xr/xinteraction";
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Canvas, ThreeEvent } from "@react-three/fiber";
 import { Root, Container, ComponentInternals } from "@react-three/uikit";
 
@@ -54,6 +54,19 @@ export default function App() {
     position: Vector3;
     rotation: Vector3;
   }>();
+
+  const [pixelRatio, setPixelRatio] = useState(window.devicePixelRatio * 1.2);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPixelRatio(window.devicePixelRatio * 1.2);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
   
 
   const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -135,7 +148,7 @@ export default function App() {
     >
       <button onClick={() => store.enterAR()}>Enter AR</button>
       <button onClick={() => store.enterVR()}>Enter VR</button>
-      <Canvas gl={{ localClippingEnabled: true }}>
+      <Canvas >
       <XR store={store}>
         {/* <OrbitControls /> */}
         <group position={[0, 2, cameraDistance]}>

@@ -16,6 +16,13 @@ A project that aims to bring television over the internet to the XR world using 
 ## Technologies
 The project is built using the following technologies:
 
+Both the library and the app use [TypeScript](https://github.com/microsoft/TypeScript). The library has quite a minimal tech stack and only uses a small amount of additional dependencies.
+
+The app, however, uses a more complex tech stack that includes:
+- [Vite](https://github.com/vitejs/vite) + [React](https://github.com/facebook/react)
+- [three.js](https://github.com/mrdoob/three.js/)
+- [@react-three/xr](https://github.com/pmndrs/xr)
+- [uikit](https://github.com/pmndrs/uikit)
 
 ## Repository Structure
 This repository is subdivided into the sub-projects of the DVB-I library (`lib/`) and the xr app (`app/`). Find instructions on how to run and use the sub-projects in the respective READMEs.
@@ -41,7 +48,8 @@ API_URL=<URL to the DVB-I service list>
 5. Run `npm run dev` to start the development server
 6. Open your browser and navigate to `https://localhost:3000` and accept the self-signed certificate
 7. You should now see the app running locally. If you don't see anything, check the console for errors.
-8. **Important:** The default *[Immersive Web Emulator](https://github.com/meta-quest/immersive-web-emulator/)* **isn't supported**! However, a default emulator is provided. Click on the "Enter VR" or "Enter AR" button to enter the respective mode. If this isn't working, try to activate the emulator manually using `Cmd/Ctrl + Option/Alt + E` and then enter the VR/AR mode again.
+8. You can test the app just using the mouse without entering a virtual environment but also in VR/AR using either a compatible headset or an emulator.
+9. **Important:** The default *[Immersive Web Emulator](https://github.com/meta-quest/immersive-web-emulator/)* **isn't supported**! However, a default emulator is provided. Click on the "Enter VR" or "Enter AR" button to enter the respective mode. If this isn't working, try to activate the emulator manually using `Cmd/Ctrl + Option/Alt + E` and then enter the VR/AR mode again. While this should work also on non-localhost deployments, from our testing it seems that the emulator is not always working as expected. On `localhost` it should work fine.
 The emulator contains many features and is subject to change, so we will not give details for its usage here. Features supported include pressing buttons (and holding them at certain points), using the thumbsticks, using the mouse to control the controllers including the camera and moving around the scene, and more. See the relevant [GitHub Issue](https://github.com/pmndrs/xr/issues/319).
 
 These instructions are for running the app locally and creating a development server. This supports hot-reloading and can be immediately used to test changes. For deployment, please refer to the `app/` README.

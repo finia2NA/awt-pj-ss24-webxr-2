@@ -2,6 +2,18 @@
 
 This is the XR-DVBI WebXR app that utilizes the library to enable a virtual TV watching experience in WebXR. The app allows users to browse a DVB-I service list and watch live TV channels in a WebXR environment.
 
+## Table of Contents
+- [XR-DVBI WebXR App](#xr-dvbi-webxr-app)
+  - [Table of Contents](#table-of-contents)
+  - [Running the app](#running-the-app)
+    - [Running the app locally](#running-the-app-locally)
+      - [Prerequisites](#prerequisites)
+      - [Installation and Running Locally](#installation-and-running-locally)
+    - [Deploying the app](#deploying-the-app)
+      - [Prerequisites](#prerequisites-1)
+      - [Building the app](#building-the-app)
+  - [Notes about features](#notes-about-features)
+
 ## Running the app
 These instructions include both running the app locally and deploying it to a server.
 

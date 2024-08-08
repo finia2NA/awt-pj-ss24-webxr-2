@@ -4,7 +4,7 @@ import { Button } from "../components/apfel/button";
 import { Card } from "../components/apfel/card";
 import { Container, Text } from "@react-three/uikit";
 import useColors from "../hooks/useColors";
-import useSettingsStore, { BiTheme, SettingsState } from "../hooks/useSettingsStore";
+import useSettingsStore, { BiTheme, MovementMode, SettingsState } from "../hooks/useSettingsStore";
 
 /**
  * The SettingsWindow component renders the settings interface for the application.
@@ -13,7 +13,7 @@ import useSettingsStore, { BiTheme, SettingsState } from "../hooks/useSettingsSt
 const SettingsWindow = () => {
 
   const colors = useColors();
-  const { biTheme, setBiTheme } = useSettingsStore((state) => state) as SettingsState;
+  const { biTheme, setBiTheme, movementMode, setMovementMode } = useSettingsStore((state) => state) as SettingsState;
 
   /**
    * Handles the change of theme color.
@@ -21,6 +21,10 @@ const SettingsWindow = () => {
    */
   const onColorChange = ({ index, option }: OnBGClickProps) => {
     setBiTheme(option as BiTheme);
+  }
+
+  const onMovementModeChange = ({ index, option }: OnBGClickProps) => {
+    setMovementMode(option as MovementMode);
   }
 
   /**
@@ -56,6 +60,14 @@ const SettingsWindow = () => {
           options={[BiTheme.LIGHT, BiTheme.DARK]}
           selected={biTheme}
           onClick={onColorChange}
+        />
+
+        <ButtonGroup
+          roundTop
+          title="Window Movement"
+          options={[MovementMode.CURSOR_BASED, MovementMode.CONTROLLER_BASED]}
+          selected={movementMode}
+          onClick={onMovementModeChange}
         />
 
         <ButtonGroup

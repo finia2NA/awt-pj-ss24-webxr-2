@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Container } from "@react-three/uikit";
+import { Container, Text } from "@react-three/uikit";
 import ChannelNumber from "../components/PlaybackControls/ChannelNumber";
 import PlaybackInfo from "../components/PlaybackControls/PlaybackInfo";
 import { Card } from "../components/apfel/card";
@@ -22,8 +22,12 @@ export interface PlaybackControlsProps {
   isPlaying: boolean; // Indicates if the playback is currently playing.
   togglePlayPause?: () => void; // Function to toggle play/pause state.
 
+  // Volume control
   isMuted?: boolean; // Indicates if the playback is currently muted.
   toggleMute?: () => void; // Function to toggle mute state.
+  volumeUp?: () => void; // Function to increase the volume.
+  volumeDown?: () => void; // Function to decrease the volume.
+  currentVolume?: number; // Current volume level.
 
   // Toggle channel list
   toggleChannelList?: () => void; // Function to toggle the visibility of the channel list.
@@ -34,6 +38,7 @@ export interface PlaybackControlsProps {
 
   // Tuning
   tuneUpDown?: (direction: number) => void; // Function to tune up or down the channel.
+
 }
 
 /**
@@ -54,7 +59,10 @@ const PlaybackControls = ({
   channelDescription,
   isPlaying,
   toggleMute,
-  isMuted
+  isMuted,
+  volumeDown,
+  volumeUp,
+  currentVolume
 }: PlaybackControlsProps): JSX.Element => {
 
   return (
@@ -73,7 +81,12 @@ const PlaybackControls = ({
         <GlyphButton type={isPlaying ? ButtonType.Pause : ButtonType.Play} onClick={togglePlayPause} />
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
         {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={() => {console.log("Toggling captions is not yet implemented")}} />}
-        <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume2} onClick={toggleMute} />
+        <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume1} onClick={toggleMute} />
+        <GlyphButton type={ButtonType.Volume0} onClick={() => {if (!isMuted) { volumeDown ? volumeDown() : console.log("Disabled") }}} disabled={isMuted}/>
+        <Text fontSize={20} fontWeight={"medium"}>
+          {currentVolume ? `${Math.round(currentVolume)}%` : ""}
+        </Text>
+        <GlyphButton type={ButtonType.Volume2} onClick={() => {if (!isMuted) { volumeUp ? volumeUp() : console.log("Disabled") }}} disabled={isMuted} />
       </Container>
     </Card>
   );

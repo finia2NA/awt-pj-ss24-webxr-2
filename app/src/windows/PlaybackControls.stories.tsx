@@ -19,6 +19,7 @@ const meta: Meta<typeof PlaybackControls> = {
     channelTitle: 'Das Erste',
     channelDescription: 'Surfreportage',
     captionsAvailable: true,
+    currentVolume: 50,
   },
 };
 

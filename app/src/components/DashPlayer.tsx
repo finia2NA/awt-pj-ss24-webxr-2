@@ -40,6 +40,7 @@ interface DashPlayerProps {
 const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }: DashPlayerProps) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
+    const [volume, setVolume] = useState(1); // State to track the volume of the video
 
     // This should then be done based on state changes
     // so playing should be a state in the parent component
@@ -51,6 +52,14 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
     const toggleMute = () => {
         setIsMuted(curr => !curr); // Toggle the muted state
     };
+
+    const volumeDown = () => {
+        setVolume(curr => Math.max(0, curr - 0.1)); // Decrease the volume by 10%
+    }
+
+    const volumeUp = () => {
+        setVolume(curr => Math.min(1, curr + 0.1)); // Increase the volume by 10%
+    }
 
     const video = useRef<ComponentInternals>(null);
     const controls = useRef<ComponentInternals>(null);
@@ -143,7 +152,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             <Container flexDirection={"column"} width={width} height={"auto"} alignSelf={"center"}>
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     <VideoImpl borderRadius={6}>
-                        <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} />
+                        <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} volume={volume}/>
                     </VideoImpl>
                 </Container>
             </Container>
@@ -160,7 +169,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
                 onPointerMove={handleResizePointerMove}
             />
             <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
-                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} />
+                <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} currentVolume={volume * 100} volumeDown={volumeDown} volumeUp={volumeUp}/>
             </Container>
         </Container>
     );
@@ -170,10 +179,11 @@ interface InsideVideoProps {
     src: string;
     isMuted: boolean;
     isPlaying: boolean;
+    volume: number;
     setIsMuted: (isMuted: boolean) => void;
     onError?: (error: dashjs.ErrorEvent) => void;
 }
-const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } }: InsideVideoProps) => {
+const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = () => { } }: InsideVideoProps) => {
     const videoElement = useVideoElement(); // Hook to get the video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
     const expectVolumeChange = useRef(false);
@@ -184,6 +194,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
     useEffect(() => {
         playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
         playerRef.current.initialize(videoElement, src, true); // Initialize the Dash player with the video source
+        playerRef.current.setVolume(volume); // Set the volume of the video
         playerRef.current.setMute(isMuted); // Mute the video if asked to do so
 
         console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
@@ -236,6 +247,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
             expectVolumeChange.current = false;
             if (playerRef.current) {
                 console.log("Setting mute after unexpected volume change to ", isMuted);
+                expectVolumeChange.current = true;
                 playerRef.current.setMute(isMuted);
 
                 // Also make sure that the playing state is set correctly, just in case
@@ -249,10 +261,9 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
     }
 
     useEffect(() => {
-        console.log("Is Muted: ", isMuted);
         if (playerRef.current) {
-            playerRef.current.setMute(isMuted); // Mute or unmute the video based on the isMuted state
             expectVolumeChange.current = true; // Set the expectVolumeChange to true
+            playerRef.current.setMute(isMuted); // Mute or unmute the video based on the isMuted state
             // Update the video playback based on the isPlaying state
             // just to make sure the video is in the correct state
             if (isPlaying) {
@@ -272,9 +283,17 @@ const InsideVideo = ({ src, isMuted, isPlaying, setIsMuted, onError = () => { } 
                 playerRef.current.setMute(true); // Mute the video if the isMuted state is true
             } else {
                 playerRef.current.setMute(false); // Unmute the video if the isMuted state is false
+                playerRef.current.setVolume(volume); // Set the volume of the video if it is not muted
             }
         }
     }, [isPlaying]);
+
+    useEffect(() => {
+        if (playerRef.current) {
+            expectVolumeChange.current = true; // Set the expectVolumeChange to true
+            playerRef.current.setVolume(volume); // Set the volume of the video
+        }
+    }, [volume]);
 
     return <></>; // Return an empty fragment as this component does not render anything itself
 };

@@ -1,6 +1,15 @@
 # DVBIlib
 *A library allowing for retrieval and parsing of DVBI service descriptions*
 
+## Table of Contents
+- [DVBIlib](#dvbilib)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Using the library in a project](#using-the-library-in-a-project)
+  - [Principle of operation for the library](#principle-of-operation-for-the-library)
+  - [Raw structure of the data](#raw-structure-of-the-data)
+    - [Structure returned](#structure-returned)
+
 ## Getting Started
 
 To get started:
@@ -53,7 +62,7 @@ We do the request to our end-point, get back an xml, which a parser than puts in
 ![](images/ex1.png)  
 where a property contains an object that iself just contains a list/a string and nothing else. We probably want to flatten the hierachy there.
 
-### Structure returned:
+### Structure returned
 - Data
   - ServiceList: ServiceList
     - Name: string

@@ -25,9 +25,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
     const currentTime = useCurrentTime();
     const colors = useColors();
 
-    // Note to F: I set those dates as default when no date is given now, so no more need to pass them here. (I did this so we always use the same dates) - R
     const { services, loading, error } = useServiceList(true, true);
-    //const { services, loading, error } = useServiceList(true, true, new Date("2022-09-10T13:10:00Z"), new Date("2022-09-10T22:10:00Z"));
     const [dashError, setDashError] = useState(false);
 
     if (loading) {
@@ -58,7 +56,6 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             timeEnd: "xx:xx",
         }
 
-        // debugger;
         service.contentGuide?.programDescriptions.forEach((program) => {
             if (formatTime(program.start) <= currentTime && currentTime < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000))) {
                 programInfos.description = program.title;

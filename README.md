@@ -65,11 +65,11 @@ In each view the main window can be moved using the bottom bar of the window. Fu
 
 
 ### Demo Screenshots
+**Home View:**
 ![Home View](screenshots/HomeFinal.png)
-The Home View
+**TV View:**
 ![TV View](screenshots/TVFinal.png)
-The TV View
+**Guide View:**
 ![Guide View](screenshots/GuideFinal.png)
-The Guide View
+**Settings View:**
 ![Settings View](screenshots/SettingsFinal.png)
-The Settings View

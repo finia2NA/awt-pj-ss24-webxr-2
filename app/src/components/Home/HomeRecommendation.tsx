@@ -37,44 +37,35 @@ export interface HomeRecommendationProps {
     serviceID: string;
 }
 
-export const homeRecommPropsFromService = (service: Service): HomeRecommendationProps => {
+export const homeRecommPropsFromService = (service: Service, time?: string): HomeRecommendationProps => {
     const guideLoaded = service.contentGuide !== undefined;
-    let description = "";
-    let timeStart = "";
-    let timeEnd = "";
     let imageUrl = "";
 
-    // finding out what's there...
-    const descriptionAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.title !== undefined;
-    const startTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.start !== undefined;
-    const endTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.durationMinutes !== undefined;
-    const imageUrlAvailable = guideLoaded && service.logoUrl !== undefined;
+    const programInfos = {
+        description: "No Title Available",
+        timeStart: "xx:xx",
+        timeEnd: "xx:xx",
+    }
 
-    if (descriptionAvailable) {
-        description = service.contentGuide?.programDescriptions[0]?.title || "";
-    }
-    if (startTimeAvailable) {
-        const startTime = service.contentGuide?.programDescriptions[0]?.start;
-        if (startTime) {
-            timeStart = formatTime(startTime);
+    service.contentGuide?.programDescriptions.forEach((program) => {
+        if (time && (formatTime(program.start) <= time && time < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000)))) {
+            programInfos.description = program.title;
+            programInfos.timeStart = formatTime(program.start);
+            programInfos.timeEnd = formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000));
         }
-    }
-    if (startTimeAvailable && endTimeAvailable) {
-        const programDescription = service.contentGuide?.programDescriptions[0];
-        if (programDescription) {
-            const endTime = new Date(programDescription.start.getTime() + programDescription.durationMinutes * 60000);
-            timeEnd = formatTime(endTime);
-        }
-    }
+    });
+
+    // Check if the image URL is available and set it if it is
+    const imageUrlAvailable = guideLoaded && service.logoUrl !== undefined;
     if (imageUrlAvailable) {
         imageUrl = service.logoUrl;
     }
 
     return {
         name: service.serviceName,
-        description: description,
-        timeStart: timeStart,
-        timeEnd: timeEnd,
+        description: programInfos.description,
+        timeStart: programInfos.timeStart,
+        timeEnd: programInfos.timeEnd,
         imageUrl: imageUrl,
         serviceID: service.serviceID
     };

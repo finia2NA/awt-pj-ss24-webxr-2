@@ -3,6 +3,7 @@ import useRecentChannelsStore from "../hooks/useRecentChannelsStore";
 import { useServiceList } from "../hooks/useDVBI";
 import HomeWindow from "../windows/HomeWindow";
 import { homeRecommPropsFromService } from "../components/Home/HomeRecommendation";
+import useCurrentTime from "../hooks/useCurrentTime";
 
 /**
  * Home Component
@@ -13,6 +14,7 @@ import { homeRecommPropsFromService } from "../components/Home/HomeRecommendatio
  * @returns {JSX.Element} The HomeWindow component populated with necessary data.
  */
 export default function Home() {
+    const currentTime = useCurrentTime();
     // Retrieve the hearted channels from the state
     const { heartedChannels } = useHeartedChannelsStore(state => state);
 
@@ -30,7 +32,7 @@ export default function Home() {
 
     // Transform the hearted services to the required props for HomeWindow
     const transformedHearted = heartedList.map(service => {
-        return homeRecommPropsFromService(service);
+        return homeRecommPropsFromService(service, currentTime);
     });
 
     // Transform the recent services to the required props for HomeWindow, filtering out any null values
@@ -38,7 +40,7 @@ export default function Home() {
         if (!service) {
             return null;
         } else {
-            return homeRecommPropsFromService(service);
+            return homeRecommPropsFromService(service, currentTime);
         }
     }).filter((service) => service !== null);
 

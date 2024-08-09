@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "cd ../lib && npm install && cd ../app && vite",
+    "devnolib": "vite",
     "build": " cd ../lib && npm i && cd ../app && vite build",
     "pages-build": "vite build --base=/awt-pj-ss24-webxr-2/",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

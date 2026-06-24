@@ -27,7 +27,3 @@ dist-ssr
 storybook-static
 
 .vite
-
-
-# secret
-src/assets/secret.ts

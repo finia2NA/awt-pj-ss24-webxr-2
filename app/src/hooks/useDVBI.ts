@@ -110,7 +110,7 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
 
         const allChannels = dvbi.services;
         const filtered = allChannels.filter((channel) => {
-          return channel.dashStreamAvailable && channel.contentGuideAvailable;
+          return channel.dashStreamAvailable || channel.hlsStreamAvailable;
         });
 
         const result = includeIncomplete ? filtered : allChannels;

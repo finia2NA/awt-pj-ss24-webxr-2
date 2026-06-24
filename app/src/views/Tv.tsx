@@ -8,6 +8,7 @@ import useRoutingStore from '../hooks/useRoutingStore';
 import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
 import { Card } from '../components/apfel/card';
 import useColors from '../hooks/useColors';
+import { Service } from '../lib/model/services';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
@@ -48,7 +49,12 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         return (`${hours}:${minutes}`);
     }
 
-    const channels = services.map((service) => {
+    function getPreferredStream(service: Service) {
+        return service.hlsStreams[0] ?? service.dashStreams[0];
+    }
+
+    const channels = services.filter(getPreferredStream).map((service) => {
+        const stream = getPreferredStream(service);
         const programInfos = {
             description: "No Title Available",
             timeStart: "xx:xx",
@@ -71,7 +77,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             timeStart: programInfos.timeStart,
             timeEnd: programInfos.timeEnd,
             imageUrl: service.logoUrl,
-            src: service.dashStreams[0].manifestUrl,
+            src: stream.manifestUrl,
         }
     });
 
@@ -80,7 +86,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const handleChannelClick = (channelNumber: number, channelId: string) => {
         const service = services.find((service) => service.lcns[0].service?.serviceID === channelId);
-        if (service && service.dashStreams[0]) {
+        if (service && getPreferredStream(service)) {
             activeChannel = channels.find(channel => channel.id === channelId);
             setDashError(false);
             setTunedChannel(channelId);

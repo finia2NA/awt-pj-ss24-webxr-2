@@ -7,6 +7,7 @@ import {
 } from '@react-three/uikit';
 import dashjs from 'dashjs';
 import { MediaPlayerClass } from 'dashjs';
+import Hls from 'hls.js';
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
@@ -40,7 +41,7 @@ interface DashPlayerProps {
     toggleChannelList?: () => void;
 
     // Event handling
-    onPlaybackError?: (error: dashjs.ErrorEvent) => void;
+    onPlaybackError?: (error: unknown) => void;
 }
 
 const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
@@ -192,12 +193,35 @@ interface InsideVideoProps {
     isPlaying: boolean;
     volume: number;
     setIsMuted: (isMuted: boolean) => void;
-    onError?: (error: dashjs.ErrorEvent) => void;
+    onError?: (error: unknown) => void;
 }
 const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = () => { } }: InsideVideoProps) => {
     const videoElement = useVideoElement(); // Hook to get the video element
     const playerRef = useRef<MediaPlayerClass | null>(null); // Reference to the Dash player instance
+    const hlsRef = useRef<Hls | null>(null);
     const expectVolumeChange = useRef(false);
+    const isHlsSource = src.includes(".m3u8");
+
+    const playVideo = () => {
+        videoElement?.play().catch((error) => {
+            if (error.name === "AbortError") {
+                return;
+            }
+
+            console.log('Playback did not start due to auto play restrictions. Muting audio and retrying', error);
+            if (!videoElement) {
+                return;
+            }
+
+            videoElement.muted = true;
+            setIsMuted(true);
+            videoElement.play().catch((retryError) => {
+                if (retryError.name !== "AbortError") {
+                    onError(retryError);
+                }
+            });
+        });
+    };
 
     // Effect that initializes the Dash player
     // This effect will run when the component is mounted or when src changes
@@ -207,43 +231,79 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
             return;
         }
 
-        playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
-        playerRef.current.initialize(videoElement, src, true); // Initialize the Dash player with the video source
-        playerRef.current.setVolume(volume); // Set the volume of the video
-        playerRef.current.setMute(isMuted); // Mute the video if asked to do so
+        videoElement.volume = volume;
+        videoElement.muted = isMuted;
 
-        console.log(playerRef.current); // Debug logging to be able to call functions on the DASH Player
-
-        playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
-            console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
-            if (playerRef.current && videoElement) {
-                playerRef.current.setMute(true);
-                setIsMuted(true);
-                playerRef.current.initialize(videoElement, src, true);
+        if (isHlsSource) {
+            if (Hls.isSupported()) {
+                hlsRef.current = new Hls();
+                hlsRef.current.loadSource(src);
+                hlsRef.current.attachMedia(videoElement);
+                hlsRef.current.on(Hls.Events.MANIFEST_PARSED, () => {
+                    if (isPlaying) {
+                        playVideo();
+                    }
+                });
+                hlsRef.current.on(Hls.Events.ERROR, (_event, data) => {
+                    console.error('An HLS playback error occurred', data);
+                    if (data.fatal) {
+                        onError(data);
+                    }
+                });
+            } else if (videoElement.canPlayType("application/vnd.apple.mpegurl")) {
+                videoElement.src = src;
+                videoElement.addEventListener("loadedmetadata", () => {
+                    if (isPlaying) {
+                        playVideo();
+                    }
+                }, { once: true });
+            } else {
+                onError(new Error("HLS playback is not supported in this browser"));
+                return;
             }
-        });
+        } else {
+            playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
+            playerRef.current.initialize(videoElement, src, true); // Initialize the Dash player with the video source
+            playerRef.current.setVolume(volume); // Set the volume of the video
+            playerRef.current.setMute(isMuted); // Mute the video if asked to do so
 
-        // Add event listener for when there is an error. PLAYBACK_ERROR doesn't work here with a 404 apparently
-        // Important to note: It tries four times to load the video before giving up and throwing an error
-        // Error codes from testing (didn't find any documentation on this):
-        // 25: Not Found (404)
-        playerRef.current.on(dashjs.MediaPlayer.events.ERROR, (e) => {
-            console.error('A playback error occurred', e);
-            onError(e);
-        });
+            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_NOT_ALLOWED, () => {
+                console.log('Playback did not start due to auto play restrictions. Muting audio and reloading');
+                if (playerRef.current && videoElement) {
+                    playerRef.current.setMute(true);
+                    setIsMuted(true);
+                    playerRef.current.initialize(videoElement, src, true);
+                }
+            });
 
-        // Try to remedy the fact that the player sometimes unmutes itself
-        playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_VOLUME_CHANGED, (e) => {
-            handleVolumeChange(e);
-        });
+            // Add event listener for when there is an error. PLAYBACK_ERROR doesn't work here with a 404 apparently
+            // Important to note: It tries four times to load the video before giving up and throwing an error
+            // Error codes from testing (didn't find any documentation on this):
+            // 25: Not Found (404)
+            playerRef.current.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+                console.error('A playback error occurred', e);
+                onError(e);
+            });
+
+            // Try to remedy the fact that the player sometimes unmutes itself
+            playerRef.current.on(dashjs.MediaPlayer.events.PLAYBACK_VOLUME_CHANGED, (e) => {
+                handleVolumeChange(e);
+            });
+        }
 
         // Cleanup function
         // This will be called when the component is unmounted and destroys the player instance
         return () => {
+            if (hlsRef.current) {
+                hlsRef.current.destroy();
+                hlsRef.current = null;
+            }
             if (playerRef.current) {
                 playerRef.current.destroy();
                 playerRef.current = null;
             }
+            videoElement.removeAttribute("src");
+            videoElement.load();
         };
     }, [src]);
 
@@ -286,6 +346,9 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
             } else {
                 playerRef.current.pause(); // Pause the video if the isPlaying state is false
             }
+        } else if (videoElement) {
+            videoElement.muted = isMuted;
+            isPlaying ? videoElement.play().catch(onError) : videoElement.pause();
         }
     }, [isMuted]);
 
@@ -300,6 +363,12 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
                 playerRef.current.setMute(false); // Unmute the video if the isMuted state is false
                 playerRef.current.setVolume(volume); // Set the volume of the video if it is not muted
             }
+        } else if (videoElement) {
+            isPlaying ? videoElement.play().catch(onError) : videoElement.pause();
+            videoElement.muted = isMuted;
+            if (!isMuted) {
+                videoElement.volume = volume;
+            }
         }
     }, [isPlaying]);
 
@@ -307,6 +376,8 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
         if (playerRef.current) {
             expectVolumeChange.current = true; // Set the expectVolumeChange to true
             playerRef.current.setVolume(volume); // Set the volume of the video
+        } else if (videoElement) {
+            videoElement.volume = volume;
         }
     }, [volume]);
 

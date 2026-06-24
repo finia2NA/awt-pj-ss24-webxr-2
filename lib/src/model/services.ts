@@ -33,13 +33,25 @@ class DASHStream {
   public manifestUrl: string;
 
   constructor(dashRawData) {
-    this.priority = dashRawData["@_priority"];
+    this.priority = Number(dashRawData["@_priority"]);
     this.manifestUrl = getUri(dashRawData.DASHDeliveryParameters.UriBasedLocation);
   }
 }
 
+class HLSStream {
+  public priority: number;
+  public manifestUrl: string;
+
+  constructor(hlsRawData) {
+    this.priority = Number(hlsRawData["@_priority"]);
+    const deliveryParameters = hlsRawData.OtherDeliveryParameters;
+    const location = getNamespacedValue(deliveryParameters, "UriBasedLocation");
+    this.manifestUrl = getUri(location);
+  }
+}
+
 function getNamespacedValue(data, key: string) {
-  return data?.[key] ?? data?.[`tva:${key}`] ?? data?.[`dvbi-types:${key}`];
+  return data?.[key] ?? data?.[`tva:${key}`] ?? data?.[`dvbi-types:${key}`] ?? data?.[`hls:${key}`];
 }
 
 function getUri(data): string {
@@ -60,6 +72,8 @@ class Service {
 
   public dashStreamAvailable: boolean = false;
   public dashStreams: DASHStream[] = [];
+  public hlsStreamAvailable: boolean = false;
+  public hlsStreams: HLSStream[] = [];
 
   public logoUrl: string;
 
@@ -107,6 +121,11 @@ class Service {
     const serviceInstancesData = castToArray(rawServiceData.ServiceInstance);
 
     const dashRawDataList = serviceInstancesData.filter(instance => instance.DASHDeliveryParameters != null);
+    const hlsRawDataList = serviceInstancesData.filter(instance => {
+      const otherDeliveryParameters = instance.OtherDeliveryParameters;
+      const location = getNamespacedValue(otherDeliveryParameters, "UriBasedLocation");
+      return otherDeliveryParameters?.["@_extensionName"] === "vnd.apple.mpegurl" && getUri(location);
+    });
 
     if (dashRawDataList.length > 0) {
       this.dashStreamAvailable = true;
@@ -114,6 +133,14 @@ class Service {
         this.dashStreams.push(new DASHStream(dashRawData));
       }
       this.dashStreams.sort((a, b) => a.priority - b.priority);
+    }
+
+    if (hlsRawDataList.length > 0) {
+      this.hlsStreamAvailable = true;
+      for (let hlsRawData of hlsRawDataList) {
+        this.hlsStreams.push(new HLSStream(hlsRawData));
+      }
+      this.hlsStreams.sort((a, b) => a.priority - b.priority);
     }
   }
 
@@ -132,4 +159,4 @@ class Service {
   }
 }
 
-export { Service, getServices, DASHStream };
+export { Service, getServices, DASHStream, HLSStream };

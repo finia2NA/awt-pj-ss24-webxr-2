@@ -11,17 +11,9 @@ import { MediaPlayerClass } from 'dashjs';
 import Hls from 'hls.js';
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import PlaybackControls from '../windows/PlaybackControls';
-import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
 import { Card } from './apfel/card';
 import useColors from '../hooks/useColors';
-
-const getNumberProperty = (value: unknown, fallback = 1) =>
-    typeof value === "number" ? value : fallback;
-
-const getComponentSize = (component: ComponentInternals) =>
-    ((component.size as any).v ?? [0, 0]) as [number, number];
-
 
 interface DashPlayerProps {
 
@@ -37,10 +29,10 @@ interface DashPlayerProps {
 
     // Internal
     width: number;
+    minWidth: number;
+    maxWidth: number;
+    onResize: React.Dispatch<React.SetStateAction<number>>;
     viewRef: React.RefObject<ComponentInternals>;
-    handleRef: React.RefObject<ComponentInternals>;
-    tabsRef: React.RefObject<ComponentInternals>;
-    listRef: React.RefObject<ComponentInternals>;
 
     // Channel control
     tuneUpDown: (direction: number) => void;
@@ -50,7 +42,7 @@ interface DashPlayerProps {
     onPlaybackError?: (error: unknown) => void;
 }
 
-const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, statusTitle, statusDescription, statusBackgroundColor, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
+const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, statusTitle, statusDescription, statusBackgroundColor, width, minWidth, maxWidth, onResize, viewRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
     const [volume, setVolume] = useState(1); // State to track the volume of the video
@@ -75,13 +67,11 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
         setVolume(curr => Math.min(1, curr + 0.1)); // Increase the volume by 10%
     }
 
-    const video = useRef<ComponentInternals>(null);
-    const controls = useRef<ComponentInternals>(null);
     const resize = useRef<ComponentInternals>(null);
     const downState = useRef<{
         pointerId: number;
-        point: Vector3;
-        scale: Vector3;
+        clientX: number;
+        width: number;
     }>();
 
     const handleResizePointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -93,16 +83,10 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
             e.stopPropagation();
             (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-            let x = getNumberProperty(viewRef.current.getComputedProperty("transformScaleX"));
-            let y = getNumberProperty(viewRef.current.getComputedProperty("transformScaleY"));
-            let z = getNumberProperty(viewRef.current.getComputedProperty("transformScaleZ"));
-
-            let scale = new Vector3(x, y, z);
-
             downState.current = {
                 pointerId: e.pointerId,
-                point: e.point,
-                scale: scale
+                clientX: e.nativeEvent.clientX,
+                width
             };
         }
     };
@@ -116,57 +100,17 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
 
     const handleResizePointerMove = (e: ThreeEvent<PointerEvent>) => {
         if (
-            handleRef.current == null ||
             resize.current == null ||
             viewRef.current == null ||
-            video.current == null ||
-            controls.current == null ||
-            tabsRef.current == null ||
-            listRef.current == null ||
             downState.current == null ||
             e.pointerId != downState.current.pointerId
         ) {
             return;
         }
 
-        const videoSize = getComponentSize(video.current);
-        const viewSize = getComponentSize(viewRef.current);
-        const controlsSize = getComponentSize(controls.current);
-        const listSize = getComponentSize(listRef.current);
-        const tabsSize = getComponentSize(tabsRef.current);
-        const ratio = videoSize[0] / videoSize[1];
-        if (!Number.isFinite(ratio) || ratio <= 0) {
-            return;
-        }
-
-        let delta = downState.current.point.clone().sub(e.point)
-
-        let scaledDelta = new Vector3(-delta.x, delta.y, delta.z);
-        let newScale = downState.current.scale.clone().add(scaledDelta);
-        newScale.y = newScale.x / 2 * ratio;
-
-        // enforce min/max size
-        const newSizeX = newScale.x * viewSize[0];
-        if ((newSizeX < 2000) || (newSizeX > 3500)) {
-            return;
-        }
-
-        viewRef.current.setStyle({
-            ...viewRef.current.getStyle(),  // Preserve other styles
-            ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: 1 }
-        });
-
-        let deltaY = (controlsSize[1] - (controlsSize[1] * 1 / newScale.y)) / 2;
-        let listDeltaX = (listSize[0] - (listSize[0] * 1 / newScale.x)) / 2;
-        let tabsDeltaX = (tabsSize[0] - (tabsSize[0] * 1 / newScale.x)) / 2;
-        // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
-
-        // preserve size of other components
-        handleRef.current.setStyle({ transformTranslateY: -deltaY, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
-        resize.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
-        controls.current.setStyle({ transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
-        tabsRef.current.setStyle({ transformTranslateX: tabsDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
-        listRef.current.setStyle({ transformTranslateX: -listDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
+        const dragDelta = e.nativeEvent.clientX - downState.current.clientX;
+        const newWidth = Math.min(maxWidth, Math.max(minWidth, downState.current.width + dragDelta));
+        onResize(newWidth);
     };
 
     const renderVideoSurface = () => {
@@ -197,7 +141,7 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
     return (
         <Container flexDirection={"column"} alignContent={"center"}>
             <Container flexDirection={"column"} width={width} height={"auto"} alignSelf={"center"}>
-                <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
+                <Container width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
                     {renderVideoSurface()}
                 </Container>
             </Container>
@@ -213,7 +157,7 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
                 onPointerUp={handlePointerUp}
                 onPointerMove={handleResizePointerMove}
             />
-            <Container alignSelf={"center"} height={"auto"} marginTop={-20} ref={controls}>
+            <Container alignSelf={"center"} height={"auto"} marginTop={-20}>
                 <PlaybackControls channel={channelNumber} setChannel={() => { }} channelImageSrc={channelImageSrc} channelTitle={channelTitle} channelDescription={channelDescription} togglePlayPause={togglePlayPause} isPlaying={isPlaying} toggleChannelList={toggleChannelList} isMuted={isMuted} toggleMute={toggleMute} tuneUpDown={tuneUpDown} currentVolume={volume * 100} volumeDown={volumeDown} volumeUp={volumeUp}/>
             </Container>
         </Container>

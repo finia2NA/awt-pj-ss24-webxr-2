@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
@@ -12,8 +12,6 @@ import { Service } from '../lib/model/services';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
-    handleRef: React.RefObject<ComponentInternals>;
-    tabsRef: React.RefObject<ComponentInternals>;
 }
 
 interface TvPanelMessageProps {
@@ -24,6 +22,8 @@ interface TvPanelMessageProps {
 }
 
 const INITIAL_PLAYER_WIDTH = 900;
+const MIN_PLAYER_WIDTH = 650;
+const MAX_PLAYER_WIDTH = 1400;
 
 function TvPanelMessage({ title, description, width, backgroundColor }: TvPanelMessageProps) {
     const colors = useColors();
@@ -44,12 +44,12 @@ function TvPanelMessage({ title, description, width, backgroundColor }: TvPanelM
     );
 }
 
-export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
+export default function Tv({ viewRef }: TvProps) {
     const { tunedChannel, setTunedChannel } = useRoutingStore();
     const { addRecentChannelToFrontByID } = useRecentChannelsStore();
-    const list = useRef<ComponentInternals>(null);
 
     const [showChannelList, setShowChannelList] = useState(true);
+    const [playerWidth, setPlayerWidth] = useState(INITIAL_PLAYER_WIDTH);
     const currentTime = useCurrentTime();
 
     const { services, loading, error } = useServiceList(true, true);
@@ -126,11 +126,11 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const renderPanel = () => {
         if (loading) {
-            return <TvPanelMessage title={"Loading channels..."} description={"Fetching the DVB-I service list"} width={INITIAL_PLAYER_WIDTH} />;
+            return <TvPanelMessage title={"Loading channels..."} description={"Fetching the DVB-I service list"} width={playerWidth} />;
         }
 
         if (error) {
-            return <TvPanelMessage title={"Error loading channels"} description={"Please check the DVB-I service list URL"} width={INITIAL_PLAYER_WIDTH} backgroundColor={"red"} />;
+            return <TvPanelMessage title={"Error loading channels"} description={"Please check the DVB-I service list URL"} width={playerWidth} backgroundColor={"red"} />;
         }
 
         if (dashError) {
@@ -143,12 +143,12 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                     channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
                     channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
                     channelNumber={activeChannel ? activeChannel.number : 0}
-                    width={INITIAL_PLAYER_WIDTH}
+                    width={playerWidth}
+                    minWidth={MIN_PLAYER_WIDTH}
+                    maxWidth={MAX_PLAYER_WIDTH}
+                    onResize={setPlayerWidth}
                     channelImageSrc={activeChannel?.imageUrl || undefined}
                     viewRef={viewRef}
-                    handleRef={handleRef}
-                    tabsRef={tabsRef}
-                    listRef={list}
                     tuneUpDown={handleTuneUpDown}
                     toggleChannelList={toggleChannelList}
                     onPlaybackError={handleError}
@@ -162,12 +162,12 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
                 channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
                 channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
                 channelNumber={activeChannel ? activeChannel.number : 0}
-                width={INITIAL_PLAYER_WIDTH}
+                width={playerWidth}
+                minWidth={MIN_PLAYER_WIDTH}
+                maxWidth={MAX_PLAYER_WIDTH}
+                onResize={setPlayerWidth}
                 channelImageSrc={activeChannel?.imageUrl || undefined}
                 viewRef={viewRef}
-                handleRef={handleRef}
-                tabsRef={tabsRef}
-                listRef={list}
                 tuneUpDown={handleTuneUpDown}
                 toggleChannelList={toggleChannelList}
                 onPlaybackError={handleError}
@@ -180,7 +180,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             <Container height={"auto"} width={"auto"}>
                 {renderPanel()}
             </Container>
-            <Container alignSelf={"center"} marginLeft={50} ref={list}>
+            <Container alignSelf={"center"} marginLeft={50}>
                 {showChannelList && !loading && !error &&
                     <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
                 }

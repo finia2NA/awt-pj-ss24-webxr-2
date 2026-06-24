@@ -237,7 +237,7 @@ export default function App() {
                 <Container flexDirection={"column"} height={"auto"} alignItems={"center"}>
                   <Container height={"auto"}>
                     {route === "HOME" && <Home />}
-                    {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
+                    {route === "TV" && <Tv viewRef={view} />}
                     {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                     {route === "SETTINGS" && <SettingsView />}
                   </Container>

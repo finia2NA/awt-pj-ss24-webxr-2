@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
-import DVBIUrl from '../assets/secret';
+import DVBIUrl from '../assets/dvbiConstants';
 
 /**
  * Enum representing the available BiTheme options.
@@ -20,6 +20,11 @@ export enum TriTheme {
   SYSTEM = 'System',
 }
 
+export enum MovementMode {
+  CONTROLLER_BASED = 'Controller Based',
+  CURSOR_BASED = 'Cursor Based',
+}
+
 /**
  * Interface representing the state and actions for the settings store.
  */
@@ -30,6 +35,9 @@ export interface SettingsState {
 
   dvbiUrl: string | null;
   setDvbiUrl: (dvbiUrl: string) => void;
+
+  movementMode: MovementMode;
+  setMovementMode: (movementMode: MovementMode) => void;
 }
 
 /**
@@ -68,6 +76,17 @@ export const useSettingsStore = create(
        * @param dvbiUrl - The new URL to set.
        */
       setDvbiUrl: (dvbiUrl: string) => set({ dvbiUrl }),
+
+      /**
+       * The current movement mode setting.
+       */
+      movementMode: MovementMode.CURSOR_BASED,
+
+      /**
+       * Sets the MovementMode to the provided value.
+       * @param movementMode - The new movement mode to set.
+       */
+      setMovementMode: (movementMode: MovementMode) => set({ movementMode }),
     }),
     {
       name: 'settings-storage', // Name of the item in the storage (must be unique)

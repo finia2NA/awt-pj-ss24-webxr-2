@@ -15,7 +15,7 @@ const HomeSection = ({ title, channels, altText }: HomeSectionProps) => {
     const colors = useColors();
     return (
         <Container display={"flex"} flexDirection={"column"} gapRow={8} >
-            <Text color={colors.primary} fontSize={13} fontWeight={"medium"}>{title}</Text>
+            <Text color={colors.primary} fontSize={15} fontWeight={"semi-bold"}>{title}</Text>
             <Container display={"flex"} gap={10} flexDirection={"row"} overflow={"scroll"} height={100}>
                 {channels.length > 0 &&
                     channels.map((channel, index) => (
@@ -24,8 +24,8 @@ const HomeSection = ({ title, channels, altText }: HomeSectionProps) => {
                 }
                 {channels.length === 0 &&
                     <Container flexDirection={"column"}>
-                        <Text fontSize={14} color={colors.primary}>No Data Available.</Text>
-                        <Text fontSize={14} color={colors.primary}>{altText}</Text>
+                        <Text fontSize={16} fontWeight={"medium"} color={colors.primary}>No Data Available.</Text>
+                        <Text fontSize={16} fontWeight={"medium"} color={colors.primary}>{altText}</Text>
                     </Container>
                 }
             </Container>

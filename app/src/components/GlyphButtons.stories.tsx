@@ -19,7 +19,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderWrapped = (args: any) => {
   return (
     <StoryHelper>

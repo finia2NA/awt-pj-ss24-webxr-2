@@ -57,7 +57,6 @@ const buttonIcons = new Map<ButtonType, ReactElement>([
   [ButtonType.Cross, <XIcon />]
 ]);
 
-// eslint-disable-next-line react-refresh/only-export-components
 /**
  * Props for the GlyphButton component.
  */

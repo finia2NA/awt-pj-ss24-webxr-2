@@ -4,9 +4,8 @@
 
 import { useState, useEffect } from "react";
 import useSettingsStore, { SettingsState } from "./useSettingsStore";
-import DVBI from 'dvbi-lib';
-import { Service } from "dvbi-lib/src/model/services";
-import { alterDateDays, getDateISO } from "../utils/dateHelpers";
+import DVBI from '../lib';
+import { Service } from "../lib/model/services";
 import { useServiceListCacheStore, useDVBICacheStore } from "./useDVBICacheStore";
 
 /**
@@ -69,12 +68,6 @@ export const useDVBI = () => {
  * @returns {object} - Returns list of services, loading state, and error state.
  */
 export const useServiceList = (includeIncomplete = false, includeGuide = false, guideStart?: Date, guideEnd?: Date) => {
-  if (!guideStart || !guideEnd) {
-    const date = new Date("2022-09-10");
-    guideStart = new Date(getDateISO(alterDateDays(date, -1)) + "T22:00:00Z");
-    guideEnd = new Date(getDateISO(date) + "T21:59:59Z");
-  }
-
   const { dvbi, loading: dvbiLoading, error: dvbiError } = useDVBI();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
@@ -117,14 +110,20 @@ export const useServiceList = (includeIncomplete = false, includeGuide = false, 
 
         const allChannels = dvbi.services;
         const filtered = allChannels.filter((channel) => {
-          return channel.dashStreamAvailable && channel.contentGuideAvailable;
+          return channel.dashStreamAvailable || channel.hlsStreamAvailable;
         });
 
         const result = includeIncomplete ? filtered : allChannels;
 
         if (includeGuide) {
-          const promises = result.map(channel => channel.getContentGuide(guideStart, guideEnd));
-          await Promise.all(promises);
+          await Promise.allSettled(
+            result
+              .filter(channel => channel.contentGuideAvailable)
+              .map(channel => guideStart && guideEnd
+                ? channel.getContentGuide(guideStart, guideEnd)
+                : channel.getContentGuide()
+              )
+          );
         }
 
         setServices(result);

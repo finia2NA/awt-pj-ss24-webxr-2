@@ -43,7 +43,7 @@ const Dropdown = ({ activeIndex, items, onSelectItem }: DropdownProps) => {
                     {items.map((item, index) => (
                         <Container key={index} display={"flex"} flexDirection={"column"} justifyContent={"center"} gapRow={20} paddingTop={20} onClick={() => handleSelect(index)} cursor={"pointer"}>
                             <Container maxWidth={280} minWidth={180} width={"auto"}>
-                                <Text color={activeIndex == index ? colors.accentForeground : colors.primary} hover={{ color: colors.accentForeground }}>{item.length > 20 ? `${item.slice(0, 30)}...` : item}</Text>
+                                <Text color={activeIndex == index ? colors.accentForeground : colors.primary} fontSize={16} fontWeight={"medium"} hover={{ color: colors.accentForeground }}>{item.length > 20 ? `${item.slice(0, 30)}...` : item}</Text>
                             </Container>
                             <Container borderColor={colors.primary} borderWidth={0} borderBottomWidth={1.5} maxWidth={280} minWidth={180} width={"auto"}></Container>
                         </Container>
@@ -56,7 +56,7 @@ const Dropdown = ({ activeIndex, items, onSelectItem }: DropdownProps) => {
     return (
         <>
             <Backdrop borderRadius={20} width={185} display={"flex"} justifyContent={"space-between"} overflow={"hidden"} height={44} onClick={handleClick} cursor={"pointer"}>
-                <Text color={colors.primary} wordBreak={"break-all"} fontSize={14} fontWeight={"medium"}>{items[activeIndex].length > 11 ? `${items[activeIndex].slice(0, 11)}..` : items[activeIndex]}</Text>
+                <Text color={colors.primary} wordBreak={"break-all"} fontSize={14} fontWeight={"bold"}>{items[activeIndex].length > 11 ? `${items[activeIndex].slice(0, 11)}..` : items[activeIndex]}</Text>
                 <ChevronDown transformRotateZ={isOpen ? 180 : 0} margin={0} padding={0} color={colors.primary}></ChevronDown>
             </Backdrop>
             {isOpen && openDropdownMenu()}

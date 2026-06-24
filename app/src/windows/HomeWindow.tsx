@@ -7,7 +7,7 @@ import useKeyboardStore from "../hooks/useKeyboardStore.ts";
 import useCurrentTime from "../hooks/useCurrentTime.ts";
 import HomeSection from "../components/Home/HomeSection.tsx";
 import { HomeRecommendationProps, homeRecommPropsFromService } from "../components/Home/HomeRecommendation.tsx";
-import { Service } from "dvbi-lib/src/model/services.ts";
+import { Service } from "../lib/model/services";
 import { search } from "fast-fuzzy";
 
 // Interface for the props passed to the HomeWindow component
@@ -25,7 +25,6 @@ interface HomeWindowProps {
  * and search results based on the current state.
  */
 const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowProps) => {
-
   // State for the search string input by the user
   const [searchString, setSearchString] = useState("");
   // Hook to toggle the visibility of the on-screen keyboard
@@ -40,7 +39,7 @@ const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowPro
     // Perform fuzzy search on services based on the search string
     const searchResultChannels = search(searchString, services, { keySelector: (service) => service.serviceName }).slice(0, 20); // Only load the first 20 to not run into performance problems for the first letter
     const searchResultHomeRecs = searchResultChannels.map(service => {
-      return homeRecommPropsFromService(service);
+      return homeRecommPropsFromService(service, timeString);
     });
     return searchResultHomeRecs;
   }, [searchString, services])
@@ -60,10 +59,10 @@ const HomeWindow = ({ loading, error, hearted, recent, services }: HomeWindowPro
           {searchString ?
             <>
               <GlyphButton type={ButtonType.Cross} onClick={() => setSearchString("")} />
-              <Text>{timeString}</Text>
+              <Text fontSize={20} fontWeight={"medium"}>{timeString}</Text>
             </>
             :
-            <Text>{timeString}</Text>
+            <Text fontSize={20} fontWeight={"medium"}>{timeString}</Text>
           }
         </Container>
       </Container>

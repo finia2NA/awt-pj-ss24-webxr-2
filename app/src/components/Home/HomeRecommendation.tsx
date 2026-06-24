@@ -1,12 +1,13 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
-import { Service } from "dvbi-lib/src/model/services";
+import { Service } from "../../lib/model/services";
 import { formatTime } from "../../utils/dateHelpers";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import { useState } from "react";
 import { ThreeEvent } from "@react-three/fiber";
 import CacheEnabledImage from "../CacheEnabledImage";
+import { truncateText } from "../../utils/textHelpers";
 
 export interface HomeRecommendationProps {
     /**
@@ -36,44 +37,35 @@ export interface HomeRecommendationProps {
     serviceID: string;
 }
 
-export const homeRecommPropsFromService = (service: Service): HomeRecommendationProps => {
+export const homeRecommPropsFromService = (service: Service, time?: string): HomeRecommendationProps => {
     const guideLoaded = service.contentGuide !== undefined;
-    let description = "";
-    let timeStart = "";
-    let timeEnd = "";
     let imageUrl = "";
 
-    // finding out what's there...
-    const descriptionAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.title !== undefined;
-    const startTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.start !== undefined;
-    const endTimeAvailable = guideLoaded && service.contentGuide?.programDescriptions[0]?.durationMinutes !== undefined;
-    const imageUrlAvailable = guideLoaded && service.logoUrl !== undefined;
+    const programInfos = {
+        description: "No Title Available",
+        timeStart: "xx:xx",
+        timeEnd: "xx:xx",
+    }
 
-    if (descriptionAvailable) {
-        description = service.contentGuide?.programDescriptions[0]?.title || "";
-    }
-    if (startTimeAvailable) {
-        const startTime = service.contentGuide?.programDescriptions[0]?.start;
-        if (startTime) {
-            timeStart = formatTime(startTime);
+    service.contentGuide?.programDescriptions.forEach((program) => {
+        if (time && (formatTime(program.start) <= time && time < formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000)))) {
+            programInfos.description = program.title;
+            programInfos.timeStart = formatTime(program.start);
+            programInfos.timeEnd = formatTime(new Date(new Date(program.start).getTime() + program.durationMinutes * 60000));
         }
-    }
-    if (startTimeAvailable && endTimeAvailable) {
-        const programDescription = service.contentGuide?.programDescriptions[0];
-        if (programDescription) {
-            const endTime = new Date(programDescription.start.getTime() + programDescription.durationMinutes * 60000);
-            timeEnd = formatTime(endTime);
-        }
-    }
+    });
+
+    // Check if the image URL is available and set it if it is
+    const imageUrlAvailable = guideLoaded && service.logoUrl !== undefined;
     if (imageUrlAvailable) {
         imageUrl = service.logoUrl;
     }
 
     return {
         name: service.serviceName,
-        description: description,
-        timeStart: timeStart,
-        timeEnd: timeEnd,
+        description: programInfos.description,
+        timeStart: programInfos.timeStart,
+        timeEnd: programInfos.timeEnd,
         imageUrl: imageUrl,
         serviceID: service.serviceID
     };
@@ -112,11 +104,11 @@ const HomeRecommendation = ({ name, description, timeStart, timeEnd, imageUrl, s
                 <CacheEnabledImage width={45} src={imageUrl}></CacheEnabledImage>
             </Container>
             <Container width={140} paddingLeft={8} display={"flex"} flexDirection={"column"} justifyContent={"space-evenly"} height={90}>
-                <Text color={colors.primary} paddingBottom={10}>{name}</Text>
-                <Text color={colors.primary}>
-                  {description.length > 22 ? `${description.substring(0, 22)}...` : description}
+                <Text color={colors.primary} paddingBottom={10} fontWeight={"semi-bold"} fontSize={16}>{name}</Text>
+                <Text color={colors.primary} fontWeight={"medium"}>
+                  {truncateText(description, 22)}
                 </Text>
-                <Text color={colors.primary}>{timeStart + " - " + timeEnd}</Text>
+                <Text color={colors.primary} fontWeight={"medium"}>{timeStart + " - " + timeEnd}</Text>
             </Container>
         </Backdrop>
     );

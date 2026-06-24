@@ -29,7 +29,7 @@ function getRegions(): RegionContainer {
   return regions;
 }
 
-function flattenRegions(rawRegions): any[] {
+function flattenRegions(rawRegions: any): any[] {
   const result = [];
 
   for (let region of castToArray(rawRegions)) {

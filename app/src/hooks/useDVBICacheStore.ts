@@ -2,7 +2,6 @@
  * This file contains the zustand hooks for caching service lists and DVBI.
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-unused-vars */
 import create from 'zustand';
 

@@ -64,7 +64,7 @@ const KeyboardUI = () => {
           <Container key={i} flexDirection="row" gap={6 * keyboardScale} paddingLeft={paddings[i] * keyboardScale}>
             {row.map((key, j) => (
               <Button key={j} onClick={() => clickHandler(key)} platter variant="pill" width={(widths[i][0] + key.length * widths[i][1]) * keyboardScale} height={40 * keyboardScale} paddingX={10 * keyboardScale}>
-                <Text fontSize={16 * keyboardScale}>{key}</Text>
+                <Text fontSize={20 * keyboardScale} fontWeight={"medium"}>{key}</Text>
               </Button>
             ))}
           </Container>

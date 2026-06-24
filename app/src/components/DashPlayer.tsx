@@ -1,6 +1,7 @@
 import {
     Container,
     Image,
+    Text,
     Video as VideoImpl,
     useVideoElement as useVideoElement,
     ComponentInternals
@@ -12,6 +13,8 @@ import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
+import { Card } from './apfel/card';
+import useColors from '../hooks/useColors';
 
 const getNumberProperty = (value: unknown, fallback = 1) =>
     typeof value === "number" ? value : fallback;
@@ -28,6 +31,9 @@ interface DashPlayerProps {
     channelDescription: string;
     channelNumber: number;
     channelImageSrc?: string;
+    statusTitle?: string;
+    statusDescription?: string;
+    statusBackgroundColor?: string;
 
     // Internal
     width: number;
@@ -44,10 +50,11 @@ interface DashPlayerProps {
     onPlaybackError?: (error: unknown) => void;
 }
 
-const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
+const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, statusTitle, statusDescription, statusBackgroundColor, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
     const [volume, setVolume] = useState(1); // State to track the volume of the video
+    const colors = useColors();
 
     // This should then be done based on state changes
     // so playing should be a state in the parent component
@@ -128,6 +135,9 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
         const listSize = getComponentSize(listRef.current);
         const tabsSize = getComponentSize(tabsRef.current);
         const ratio = videoSize[0] / videoSize[1];
+        if (!Number.isFinite(ratio) || ratio <= 0) {
+            return;
+        }
 
         let delta = downState.current.point.clone().sub(e.point)
 
@@ -159,13 +169,36 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
         listRef.current.setStyle({ transformTranslateX: -listDeltaX, transformScaleX: 1 / newScale.x, transformScaleY: 1 / newScale.y, transformScaleZ: 1 });
     };
 
+    const renderVideoSurface = () => {
+        if (statusTitle) {
+            return (
+                <Card
+                    display={"flex"}
+                    flexDirection={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    height={width * 2 / 3}
+                    width={width}
+                    backgroundColor={statusBackgroundColor ?? colors.background}
+                >
+                    <Text fontSize={30} fontWeight={"medium"} color={colors.primary}>{statusTitle}</Text>
+                    {statusDescription && <Text fontSize={28} fontWeight={"normal"} color={colors.primary}>{statusDescription}</Text>}
+                </Card>
+            );
+        }
+
+        return (
+            <VideoImpl borderRadius={6}>
+                <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} volume={volume}/>
+            </VideoImpl>
+        );
+    };
+
     return (
         <Container flexDirection={"column"} alignContent={"center"}>
             <Container flexDirection={"column"} width={width} height={"auto"} alignSelf={"center"}>
                 <Container ref={video} width={width} display={"flex"} flexDirection={"column"} alignContent={"center"}>
-                    <VideoImpl borderRadius={6}>
-                        <InsideVideo src={src} isMuted={isMuted} isPlaying={isPlaying} setIsMuted={setIsMuted} onError={onPlaybackError} volume={volume}/>
-                    </VideoImpl>
+                    {renderVideoSurface()}
                 </Container>
             </Container>
             <Image

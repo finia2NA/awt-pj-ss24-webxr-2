@@ -186,8 +186,27 @@ export default function App() {
         flexDirection: "column"
       }}
     >
-      <button onClick={() => store.enterAR()}>Enter AR</button>
-      <button onClick={() => store.enterVR()}>Enter VR</button>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: 8,
+          background: "rgba(255, 255, 255, 0.86)",
+          color: "#222",
+          fontFamily: "system-ui, sans-serif",
+          fontSize: 14,
+          lineHeight: 1.35,
+          zIndex: 1
+        }}
+      >
+        <button onClick={() => store.enterAR()}>Enter AR</button>
+        <button onClick={() => store.enterVR()}>Enter VR</button>
+        <span>
+          Note: because publicly available DVB-I data is imperfect and many streams are geoblocked,
+          several channels may not play. Please try a few; channels 53 and 54 are recommended.
+        </span>
+      </div>
       {/* localClippingEnabled is required for images to be able to be cut off, 
       e.g. when being partially visible while scrolling*/}
       <Canvas gl={{ localClippingEnabled: true }}> 

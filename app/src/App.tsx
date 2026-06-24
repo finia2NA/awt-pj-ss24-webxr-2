@@ -22,6 +22,9 @@ import KeyboardUI from "./components/KeyboardUI";
 import useKeyboardStore from './hooks/useKeyboardStore.ts';
 import useSettingsStore, { BiTheme, MovementMode, SettingsState } from "./hooks/useSettingsStore.ts";
 
+const getNumberProperty = (value: unknown, fallback = 0) =>
+  typeof value === "number" ? value : fallback;
+
 
 /**
  * The main application component.
@@ -69,15 +72,15 @@ export default function App() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX") || 0;
-      let y = view.current.getComputedProperty("transformTranslateY") || 0;
-      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
+      let x = getNumberProperty(view.current.getComputedProperty("transformTranslateX"));
+      let y = getNumberProperty(view.current.getComputedProperty("transformTranslateY"));
+      let z = getNumberProperty(view.current.getComputedProperty("transformTranslateZ"));
 
       let pos = new Vector3(x, y, z);
 
-      let rotX = view.current.getComputedProperty("transformRotateX") || 0;
-      let rotY = view.current.getComputedProperty("transformRotateY") || 0;
-      let rotZ = view.current.getComputedProperty("transformRotateZ") || 0;
+      let rotX = getNumberProperty(view.current.getComputedProperty("transformRotateX"));
+      let rotY = getNumberProperty(view.current.getComputedProperty("transformRotateY"));
+      let rotZ = getNumberProperty(view.current.getComputedProperty("transformRotateZ"));
 
       let rot = new Vector3(rotX, rotY, rotZ);
 
@@ -132,7 +135,7 @@ export default function App() {
       });
     } else if (movementMode === MovementMode.CONTROLLER_BASED && groupRef.current) {
       groupRef.current.position.copy(e.point.add(moveDistanceOffset.current));
-      groupRef.current.setRotationFromQuaternion(e.pointer.intersection.pointerQuaternion);
+      groupRef.current.setRotationFromQuaternion((e.pointer as any).intersection.pointerQuaternion);
     }
   };
 

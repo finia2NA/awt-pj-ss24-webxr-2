@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "cd ../lib && npm install && cd ../app && vite",
+    "dev": "vite",
     "devnolib": "vite",
-    "build": " cd ../lib && npm i && cd ../app && vite build",
+    "build": "vite build",
     "pages-build": "vite build --base=/awt-pj-ss24-webxr-2/",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives",
+    "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -20,8 +21,8 @@
     "@react-three/uikit-lucide": "^0.4.0",
     "@react-three/xr": "^6.1.0",
     "dashjs": "^4.7.4",
-    "dvbi-lib": "file:../lib",
     "fast-fuzzy": "^1.12.0",
+    "fast-xml-parser": "^4.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "three": "^0.165.0"

@@ -97,7 +97,7 @@ class Service {
     if (contentGuideMap[this.contentGuideSourceRef]) {
       this.scheduleInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].scheduleInfoEndpoint;
       this.programInfoEndpoint = contentGuideMap[this.contentGuideSourceRef].programInfoEndpoint;
-      if (this.scheduleInfoEndpoint && this.programInfoEndpoint) {
+      if (this.scheduleInfoEndpoint && this.programInfoEndpoint && this.contentGuideServiceRef) {
         this.contentGuideAvailable = true;
       }
     }

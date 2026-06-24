@@ -4,7 +4,6 @@ import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
-import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 import useRoutingStore from '../hooks/useRoutingStore';
 import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
 import { Card } from '../components/apfel/card';

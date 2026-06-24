@@ -12,6 +12,12 @@ import PlaybackControls from '../windows/PlaybackControls';
 import { Vector3 } from 'three';
 import { ThreeEvent } from "@react-three/fiber";
 
+const getNumberProperty = (value: unknown, fallback = 1) =>
+    typeof value === "number" ? value : fallback;
+
+const getComponentSize = (component: ComponentInternals) =>
+    ((component.size as any).v ?? [0, 0]) as [number, number];
+
 
 interface DashPlayerProps {
 
@@ -37,7 +43,7 @@ interface DashPlayerProps {
     onPlaybackError?: (error: dashjs.ErrorEvent) => void;
 }
 
-const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }: DashPlayerProps) => {
+const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, channelDescription, channelNumber, channelImageSrc, width, viewRef, handleRef, tabsRef, listRef, tuneUpDown, toggleChannelList, onPlaybackError = () => { } }, _ref) => {
     const [isPlaying, setIsPlaying] = useState(true); // State to track if the video is playing
     const [isMuted, setIsMuted] = useState(false); // State to track if the video is muted
     const [volume, setVolume] = useState(1); // State to track the volume of the video
@@ -79,9 +85,9 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             e.stopPropagation();
             (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-            let x = viewRef.current.getComputedProperty("transformScaleX") || 1;
-            let y = viewRef.current.getComputedProperty("transformScaleY") || 1;
-            let z = viewRef.current.getComputedProperty("transformScaleZ") || 1;
+            let x = getNumberProperty(viewRef.current.getComputedProperty("transformScaleX"));
+            let y = getNumberProperty(viewRef.current.getComputedProperty("transformScaleY"));
+            let z = getNumberProperty(viewRef.current.getComputedProperty("transformScaleZ"));
 
             let scale = new Vector3(x, y, z);
 
@@ -115,7 +121,12 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             return;
         }
 
-        const ratio = video.current.size.v[0] / video.current.size.v[1];
+        const videoSize = getComponentSize(video.current);
+        const viewSize = getComponentSize(viewRef.current);
+        const controlsSize = getComponentSize(controls.current);
+        const listSize = getComponentSize(listRef.current);
+        const tabsSize = getComponentSize(tabsRef.current);
+        const ratio = videoSize[0] / videoSize[1];
 
         let delta = downState.current.point.clone().sub(e.point)
 
@@ -124,7 +135,7 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
         newScale.y = newScale.x / 2 * ratio;
 
         // enforce min/max size
-        const newSizeX = newScale.x * viewRef.current.size.v[0];
+        const newSizeX = newScale.x * viewSize[0];
         if ((newSizeX < 2000) || (newSizeX > 3500)) {
             return;
         }
@@ -134,9 +145,9 @@ const DashPlayer = forwardRef(({ src, channelTitle, channelDescription, channelN
             ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: 1 }
         });
 
-        let deltaY = (controls.current.size.v[1] - (controls.current.size.v[1] * 1 / newScale.y)) / 2;
-        let listDeltaX = (listRef.current.size.v[0] - (listRef.current.size.v[0] * 1 / newScale.x)) / 2;
-        let tabsDeltaX = (tabsRef.current.size.v[0] - (tabsRef.current.size.v[0] * 1 / newScale.x)) / 2;
+        let deltaY = (controlsSize[1] - (controlsSize[1] * 1 / newScale.y)) / 2;
+        let listDeltaX = (listSize[0] - (listSize[0] * 1 / newScale.x)) / 2;
+        let tabsDeltaX = (tabsSize[0] - (tabsSize[0] * 1 / newScale.x)) / 2;
         // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
 
         // preserve size of other components
@@ -192,6 +203,10 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
     // This effect will run when the component is mounted or when src changes
     // It considers isMuted and isPlaying states
     useEffect(() => {
+        if (!src || !videoElement) {
+            return;
+        }
+
         playerRef.current = dashjs.MediaPlayer().create(); // Create Dash player instance
         playerRef.current.initialize(videoElement, src, true); // Initialize the Dash player with the video source
         playerRef.current.setVolume(volume); // Set the volume of the video

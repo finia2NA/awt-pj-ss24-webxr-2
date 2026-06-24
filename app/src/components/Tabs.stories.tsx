@@ -12,7 +12,6 @@ const meta: Meta<typeof Tabs> = {
   },
   args: {
     selectedRoute: Route.HOME,
-    // eslint-disable-next-line no-unused-vars
     setSelectedRoute: (tab: Route) => { console.log("Selected: " + tab) }
   },
 };

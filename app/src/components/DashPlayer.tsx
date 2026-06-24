@@ -15,6 +15,9 @@ import { ThreeEvent } from "@react-three/fiber";
 import { Card } from './apfel/card';
 import useColors from '../hooks/useColors';
 
+const clampVolume = (value: number) => Math.min(1, Math.max(0, value));
+const VOLUME_STEP = 0.1;
+
 interface DashPlayerProps {
 
     // Info
@@ -60,11 +63,11 @@ const DashPlayer = forwardRef<unknown, DashPlayerProps>(({ src, channelTitle, ch
     };
 
     const volumeDown = () => {
-        setVolume(curr => Math.max(0, curr - 0.1)); // Decrease the volume by 10%
+        setVolume(curr => clampVolume(Math.round((curr - VOLUME_STEP) * 10) / 10)); // Decrease the volume by 10%
     }
 
     const volumeUp = () => {
-        setVolume(curr => Math.min(1, curr + 0.1)); // Increase the volume by 10%
+        setVolume(curr => clampVolume(Math.round((curr + VOLUME_STEP) * 10) / 10)); // Increase the volume by 10%
     }
 
     const resize = useRef<ComponentInternals>(null);

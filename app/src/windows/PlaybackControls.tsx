@@ -64,6 +64,9 @@ const PlaybackControls = ({
   volumeUp,
   currentVolume
 }: PlaybackControlsProps): JSX.Element => {
+  const volumeLabel = currentVolume === undefined
+    ? ""
+    : `${Math.round(Math.min(100, Math.max(0, currentVolume)))}%`;
 
   return (
     <Card
@@ -84,7 +87,7 @@ const PlaybackControls = ({
         <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume1} onClick={toggleMute} />
         <GlyphButton type={ButtonType.Volume0} onClick={() => {if (!isMuted) { volumeDown ? volumeDown() : console.log("Disabled") }}} disabled={isMuted}/>
         <Text fontSize={20} fontWeight={"medium"}>
-          {currentVolume ? `${Math.round(currentVolume)}%` : ""}
+          {volumeLabel}
         </Text>
         <GlyphButton type={ButtonType.Volume2} onClick={() => {if (!isMuted) { volumeUp ? volumeUp() : console.log("Disabled") }}} disabled={isMuted} />
       </Container>

@@ -3,7 +3,7 @@
  * @param data The data to cast.
  * @returns The data as an array.
  */
-function castToArray(data): any[] {
+function castToArray<T>(data: T | T[] | null | undefined): T[] {
     if (data == null) return [];
     return Array.isArray(data) ? data : [data];
 }

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware'
-import DVBIUrl from '../assets/secret';
+import DVBIUrl from '../assets/dvbiConstants';
 
 /**
  * Enum representing the available BiTheme options.

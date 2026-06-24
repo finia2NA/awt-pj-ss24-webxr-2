@@ -1,7 +1,7 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import useColors from "../../hooks/useColors";
 import Backdrop from "../Backdrop";
-import { Service } from "dvbi-lib/src/model/services";
+import { Service } from "../../lib/model/services";
 import { formatTime } from "../../utils/dateHelpers";
 import useRoutingStore, { Route } from "../../hooks/useRoutingStore";
 import { useState } from "react";

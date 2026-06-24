@@ -7,7 +7,7 @@ import useKeyboardStore from "../hooks/useKeyboardStore.ts";
 import useCurrentTime from "../hooks/useCurrentTime.ts";
 import HomeSection from "../components/Home/HomeSection.tsx";
 import { HomeRecommendationProps, homeRecommPropsFromService } from "../components/Home/HomeRecommendation.tsx";
-import { Service } from "dvbi-lib/src/model/services.ts";
+import { Service } from "../lib/model/services";
 import { search } from "fast-fuzzy";
 
 // Interface for the props passed to the HomeWindow component

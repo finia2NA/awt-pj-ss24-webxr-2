@@ -23,22 +23,17 @@ Running the app locally is useful for development and testing purposes. It allow
 - Node.js
 - npm
 - A modern web browser that supports WebXR
-- A DVB-I service list that is hosted on a URL that is reachable for you. Currently no public service list is provided and local files are not supported.
+- A DVB-I service list that is hosted on a URL that is reachable for you. The default list is configured in `app/src/assets/dvbiConstants.ts`.
 
 #### Installation and Running Locally
 1. Clone the repository
 2. Navigate to the `app/` directory
-3. Create a `secret.ts` file in the `app/src/assets` directory (see `app/src/assets/secret.example.ts` as an example) and add the following content:
-```
-const DVBIUrl = "yoururlhere";
-export default DVBIUrl;
-```
-4. Run `npm i` to install the necessary dependencies
-5. Run `npm run dev` to start the development server. This will automatically install the necessary dependencies for the library as well. For more scripts, have a look at the `package.json` file.
-6. Open your browser and navigate to `https://localhost:3000` and accept the self-signed certificate
-7. You should now see the app running locally. If you don't see anything, check the console for errors.
-8. You can test the app just using the mouse without entering a virtual environment but also in VR/AR using either a compatible headset or an emulator.
-9. **Important:** The default *[Immersive Web Emulator](https://github.com/meta-quest/immersive-web-emulator/)* **isn't supported**! However, a default emulator is provided. Click on the "Enter VR" or "Enter AR" button to enter the respective mode. If this isn't working, try to activate the emulator manually using `Cmd/Ctrl + Option/Alt + E` and then enter the VR/AR mode again. While this should work also on non-localhost deployments, from our testing it seems that the emulator is not always working as expected. On `localhost` it should work fine.
+3. Run `npm i` to install the necessary dependencies
+4. Run `npm run dev` to start the development server. For more scripts, have a look at the `package.json` file.
+5. Open your browser and navigate to `https://localhost:3000` and accept the self-signed certificate
+6. You should now see the app running locally. If you don't see anything, check the console for errors.
+7. You can test the app just using the mouse without entering a virtual environment but also in VR/AR using either a compatible headset or an emulator.
+8. **Important:** The default *[Immersive Web Emulator](https://github.com/meta-quest/immersive-web-emulator/)* **isn't supported**! However, a default emulator is provided. Click on the "Enter VR" or "Enter AR" button to enter the respective mode. If this isn't working, try to activate the emulator manually using `Cmd/Ctrl + Option/Alt + E` and then enter the VR/AR mode again. While this should work also on non-localhost deployments, from our testing it seems that the emulator is not always working as expected. On `localhost` it should work fine.
 The emulator contains many features and is subject to change, so we will not give details for its usage here. Features supported include pressing buttons (and holding them at certain points), using the thumbsticks, using the mouse to control the controllers including the camera and moving around the scene, and more. See the relevant [GitHub Issue](https://github.com/pmndrs/xr/issues/319).
 
 ### Deploying the app

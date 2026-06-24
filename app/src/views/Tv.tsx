@@ -1,47 +1,59 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Container, ComponentInternals, Text } from "@react-three/uikit";
 import DashPlayer from "../components/DashPlayer";
 import { useServiceList } from '../hooks/useDVBI';
 import ChannelList from '../components/ChannelList/ChannelList';
 import useCurrentTime from '../hooks/useCurrentTime';
-import { alterDateDays, getDateISO } from '../utils/dateHelpers';
 import useRoutingStore from '../hooks/useRoutingStore';
 import useRecentChannelsStore from '../hooks/useRecentChannelsStore';
 import { Card } from '../components/apfel/card';
 import useColors from '../hooks/useColors';
+import { Service } from '../lib/model/services';
 
 interface TvProps {
     viewRef: React.RefObject<ComponentInternals>;
-    handleRef: React.RefObject<ComponentInternals>;
-    tabsRef: React.RefObject<ComponentInternals>;
 }
 
-export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
+interface TvPanelMessageProps {
+    title: string;
+    description?: string;
+    width: number;
+    backgroundColor?: string;
+}
+
+const INITIAL_PLAYER_WIDTH = 900;
+const MIN_PLAYER_WIDTH = 650;
+const MAX_PLAYER_WIDTH = 1400;
+
+function TvPanelMessage({ title, description, width, backgroundColor }: TvPanelMessageProps) {
+    const colors = useColors();
+
+    return (
+        <Card
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            height={width * 2 / 3}
+            width={width}
+            backgroundColor={backgroundColor ?? colors.background}
+        >
+            <Text fontSize={30} fontWeight={"medium"} color={colors.primary}>{title}</Text>
+            {description && <Text fontSize={28} fontWeight={"normal"} color={colors.primary}>{description}</Text>}
+        </Card>
+    );
+}
+
+export default function Tv({ viewRef }: TvProps) {
     const { tunedChannel, setTunedChannel } = useRoutingStore();
     const { addRecentChannelToFrontByID } = useRecentChannelsStore();
-    const list = useRef<ComponentInternals>(null);
 
     const [showChannelList, setShowChannelList] = useState(true);
+    const [playerWidth, setPlayerWidth] = useState(INITIAL_PLAYER_WIDTH);
     const currentTime = useCurrentTime();
-    const colors = useColors();
 
     const { services, loading, error } = useServiceList(true, true);
     const [dashError, setDashError] = useState(false);
-
-    if (loading) {
-        return (
-            <Card display={"flex"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={colors.background} >
-                <Text fontSize={30} fontWeight={"medium"} color={colors.primary} >Loading...</Text>
-            </Card>
-        )
-    }
-    if (error) {
-        return (
-            <Card display={"flex"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={"red"} >
-                <Text fontSize={30} fontWeight={"medium"} color={colors.primary}>Error loading channels</Text>
-            </Card>
-        )
-    }
 
     function formatTime(date: Date) {
         const hours = String(date.getHours()).padStart(2, '0');
@@ -49,7 +61,12 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         return (`${hours}:${minutes}`);
     }
 
-    const channels = services.map((service) => {
+    function getPreferredStream(service: Service) {
+        return service.hlsStreams[0] ?? service.dashStreams[0];
+    }
+
+    const channels = services.filter(getPreferredStream).map((service) => {
+        const stream = getPreferredStream(service);
         const programInfos = {
             description: "No Title Available",
             timeStart: "xx:xx",
@@ -72,7 +89,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
             timeStart: programInfos.timeStart,
             timeEnd: programInfos.timeEnd,
             imageUrl: service.logoUrl,
-            src: service.dashStreams[0].manifestUrl,
+            src: stream.manifestUrl,
         }
     });
 
@@ -81,7 +98,7 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
 
     const handleChannelClick = (channelNumber: number, channelId: string) => {
         const service = services.find((service) => service.lcns[0].service?.serviceID === channelId);
-        if (service && service.dashStreams[0]) {
+        if (service && getPreferredStream(service)) {
             activeChannel = channels.find(channel => channel.id === channelId);
             setDashError(false);
             setTunedChannel(channelId);
@@ -107,34 +124,64 @@ export default function Tv({ viewRef, handleRef, tabsRef }: TvProps) {
         setShowChannelList(prev => !prev);
     }
 
+    const renderPanel = () => {
+        if (loading) {
+            return <TvPanelMessage title={"Loading channels..."} description={"Fetching the DVB-I service list"} width={playerWidth} />;
+        }
+
+        if (error) {
+            return <TvPanelMessage title={"Error loading channels"} description={"Please check the DVB-I service list URL"} width={playerWidth} backgroundColor={"red"} />;
+        }
+
+        if (dashError) {
+            return (
+                <DashPlayer
+                    src={''}
+                    statusTitle={"Error playing channel"}
+                    statusDescription={"Please select a different channel"}
+                    statusBackgroundColor={"red"}
+                    channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
+                    channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
+                    channelNumber={activeChannel ? activeChannel.number : 0}
+                    width={playerWidth}
+                    minWidth={MIN_PLAYER_WIDTH}
+                    maxWidth={MAX_PLAYER_WIDTH}
+                    onResize={setPlayerWidth}
+                    channelImageSrc={activeChannel?.imageUrl || undefined}
+                    viewRef={viewRef}
+                    tuneUpDown={handleTuneUpDown}
+                    toggleChannelList={toggleChannelList}
+                    onPlaybackError={handleError}
+                />
+            );
+        }
+
+        return (
+            <DashPlayer
+                src={activeChannel ? activeChannel.src : ''}
+                channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
+                channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
+                channelNumber={activeChannel ? activeChannel.number : 0}
+                width={playerWidth}
+                minWidth={MIN_PLAYER_WIDTH}
+                maxWidth={MAX_PLAYER_WIDTH}
+                onResize={setPlayerWidth}
+                channelImageSrc={activeChannel?.imageUrl || undefined}
+                viewRef={viewRef}
+                tuneUpDown={handleTuneUpDown}
+                toggleChannelList={toggleChannelList}
+                onPlaybackError={handleError}
+            />
+        );
+    }
 
     return (
         <Container flexDirection={"row"} alignContent={"center"}>
             <Container height={"auto"} width={"auto"}>
-                {dashError ?
-                    <Card display={"flex"} flexDirection={"column"} justifyContent={"center"} alignItems={"center"} height={600} width={800} backgroundColor={"red"} >
-                        <Text fontSize={30} fontWeight={"medium"}>Error playing channel</Text>
-                        <Text fontSize={28} fontWeight={"normal"}>Please select a different channel</Text>
-                    </Card> :
-                    <DashPlayer
-                        src={activeChannel ? activeChannel.src : ''}
-                        channelTitle={activeChannel ? activeChannel.name : 'Unknown Title'}
-                        channelDescription={activeChannel ? activeChannel.description : 'No Description Available'}
-                        channelNumber={activeChannel ? activeChannel.number : 0}
-                        width={900}
-                        channelImageSrc={activeChannel?.imageUrl || undefined}
-                        viewRef={viewRef}
-                        handleRef={handleRef}
-                        tabsRef={tabsRef}
-                        listRef={list}
-                        tuneUpDown={handleTuneUpDown}
-                        toggleChannelList={toggleChannelList}
-                        onPlaybackError={handleError}
-                    />
-                }
+                {renderPanel()}
             </Container>
-            <Container alignSelf={"center"} marginLeft={50} ref={list}>
-                {showChannelList &&
+            <Container alignSelf={"center"} marginLeft={50}>
+                {showChannelList && !loading && !error &&
                     <ChannelList channels={channels} regions={["All Regions"]} time={currentTime} handleItemClick={handleChannelClick} selectedChannel={tunedChannel!} />
                 }
             </Container>

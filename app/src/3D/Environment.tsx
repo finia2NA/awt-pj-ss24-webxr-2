@@ -29,7 +29,6 @@ interface texturedProps {
  * @param material - The material to apply to the meshes.
  */
 function applyMaterialToMeshes(scene: Object3D, material: Material) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   scene.traverse((child: any) => {
     if (child.isMesh) {
       child.material = material;

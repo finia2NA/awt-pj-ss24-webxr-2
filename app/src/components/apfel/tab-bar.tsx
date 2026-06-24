@@ -79,7 +79,6 @@ export const TabBar: (props: TabBarProperties & RefAttributes<ComponentInternals
           onHoverChange={(hovered) => {
             if (hovered) {
               // Set a timeout to expand the tab bar after 300ms
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               timeoutRef.current = setTimeout(() => setIsExpanded(true), 300) as any
             } else {
               // Clear the timeout and collapse the tab bar

@@ -22,6 +22,9 @@ import KeyboardUI from "./components/KeyboardUI";
 import useKeyboardStore from './hooks/useKeyboardStore.ts';
 import useSettingsStore, { BiTheme, MovementMode, SettingsState } from "./hooks/useSettingsStore.ts";
 
+const getNumberProperty = (value: unknown, fallback = 0) =>
+  typeof value === "number" ? value : fallback;
+
 
 /**
  * The main application component.
@@ -69,15 +72,15 @@ export default function App() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX") || 0;
-      let y = view.current.getComputedProperty("transformTranslateY") || 0;
-      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
+      let x = getNumberProperty(view.current.getComputedProperty("transformTranslateX"));
+      let y = getNumberProperty(view.current.getComputedProperty("transformTranslateY"));
+      let z = getNumberProperty(view.current.getComputedProperty("transformTranslateZ"));
 
       let pos = new Vector3(x, y, z);
 
-      let rotX = view.current.getComputedProperty("transformRotateX") || 0;
-      let rotY = view.current.getComputedProperty("transformRotateY") || 0;
-      let rotZ = view.current.getComputedProperty("transformRotateZ") || 0;
+      let rotX = getNumberProperty(view.current.getComputedProperty("transformRotateX"));
+      let rotY = getNumberProperty(view.current.getComputedProperty("transformRotateY"));
+      let rotZ = getNumberProperty(view.current.getComputedProperty("transformRotateZ"));
 
       let rot = new Vector3(rotX, rotY, rotZ);
 
@@ -132,7 +135,7 @@ export default function App() {
       });
     } else if (movementMode === MovementMode.CONTROLLER_BASED && groupRef.current) {
       groupRef.current.position.copy(e.point.add(moveDistanceOffset.current));
-      groupRef.current.setRotationFromQuaternion(e.pointer.intersection.pointerQuaternion);
+      groupRef.current.setRotationFromQuaternion((e.pointer as any).intersection.pointerQuaternion);
     }
   };
 
@@ -183,8 +186,27 @@ export default function App() {
         flexDirection: "column"
       }}
     >
-      <button onClick={() => store.enterAR()}>Enter AR</button>
-      <button onClick={() => store.enterVR()}>Enter VR</button>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: 8,
+          background: "rgba(255, 255, 255, 0.86)",
+          color: "#222",
+          fontFamily: "system-ui, sans-serif",
+          fontSize: 14,
+          lineHeight: 1.35,
+          zIndex: 1
+        }}
+      >
+        <button onClick={() => store.enterAR()}>Enter AR</button>
+        <button onClick={() => store.enterVR()}>Enter VR</button>
+        <span>
+          Note: because publicly available DVB-I data is imperfect and many streams are geoblocked,
+          several channels may not play. Please try a few; channels 53 and 54 are recommended.
+        </span>
+      </div>
       {/* localClippingEnabled is required for images to be able to be cut off, 
       e.g. when being partially visible while scrolling*/}
       <Canvas gl={{ localClippingEnabled: true }}> 
@@ -215,7 +237,7 @@ export default function App() {
                 <Container flexDirection={"column"} height={"auto"} alignItems={"center"}>
                   <Container height={"auto"}>
                     {route === "HOME" && <Home />}
-                    {route === "TV" && <Tv viewRef={view} handleRef={bar} tabsRef={tabs} />}
+                    {route === "TV" && <Tv viewRef={view} />}
                     {route === "GUIDE" && <GuideView viewRef={view} handleRef={handle} tabsRef={tabs} />}
                     {route === "SETTINGS" && <SettingsView />}
                   </Container>

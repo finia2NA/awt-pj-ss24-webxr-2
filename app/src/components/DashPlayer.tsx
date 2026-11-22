@@ -328,13 +328,13 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
             }
         } else if (videoElement) {
             videoElement.muted = isMuted;
-            isPlaying ? videoElement.play().catch(onError) : videoElement.pause();
+            if (isPlaying) { videoElement.play().catch(onError) } else { videoElement.pause() }
         }
     }, [isMuted]);
 
     useEffect(() => {
         if (playerRef.current) {
-            isPlaying ? playerRef.current.play() : playerRef.current.pause(); // Play or pause the video based on the isPlaying state
+            if (isPlaying) { playerRef.current.play() } else { playerRef.current.pause() } // Play or pause the video based on the isPlaying state
             // Update the video mute state based on the isMuted state
             // just to make sure because this can be a side effect
             if (isMuted) {
@@ -344,7 +344,7 @@ const InsideVideo = ({ src, isMuted, isPlaying, volume, setIsMuted, onError = ()
                 playerRef.current.setVolume(volume); // Set the volume of the video if it is not muted
             }
         } else if (videoElement) {
-            isPlaying ? videoElement.play().catch(onError) : videoElement.pause();
+            if (isPlaying) { videoElement.play().catch(onError) } else { videoElement.pause() }
             videoElement.muted = isMuted;
             if (!isMuted) {
                 videoElement.volume = volume;

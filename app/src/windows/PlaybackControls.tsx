@@ -85,11 +85,11 @@ const PlaybackControls = ({
         <GlyphButton type={ButtonType.ChannelList} onClick={toggleChannelList} />
         {captionsAvailable && <GlyphButton type={ButtonType.Captions} onClick={() => {console.log("Toggling captions is not yet implemented")}} />}
         <GlyphButton type={isMuted ? ButtonType.VolumeMuted : ButtonType.Volume1} onClick={toggleMute} />
-        <GlyphButton type={ButtonType.Volume0} onClick={() => {if (!isMuted) { volumeDown ? volumeDown() : console.log("Disabled") }}} disabled={isMuted}/>
+        <GlyphButton type={ButtonType.Volume0} onClick={() => {if (!isMuted) { if (volumeDown) { volumeDown() } else { console.log("Disabled") } }}} disabled={isMuted}/>
         <Text fontSize={20} fontWeight={"medium"}>
           {volumeLabel}
         </Text>
-        <GlyphButton type={ButtonType.Volume2} onClick={() => {if (!isMuted) { volumeUp ? volumeUp() : console.log("Disabled") }}} disabled={isMuted} />
+        <GlyphButton type={ButtonType.Volume2} onClick={() => {if (!isMuted) { if (volumeUp) { volumeUp() } else { console.log("Disabled") } }}} disabled={isMuted} />
       </Container>
     </Card>
   );

@@ -65,25 +65,19 @@ const useHeartedChannelsStore = create<HeartedChannelsState>()(
     }),
     {
       name: 'hearted-channels-storage', // Name of the item in the storage (must be unique)
-      storage: createJSONStorage(() => localStorage),
-      // Custom serialize/deserialize functions for state, since the default ones don't work with Sets
-      serialize: (state) => JSON.stringify({
-        ...state,
-        state: {
-          ...state.state,
-          heartedChannels: Array.from(state.state.heartedChannels),
+      // Sets need custom JSON conversion; zustand v5 applies these to the whole
+      // persisted { state, version } payload.
+      storage: createJSONStorage(() => localStorage, {
+        replacer: (_key, value) => (value instanceof Set
+          ? { __type: 'Set', values: Array.from(value) }
+          : value),
+        reviver: (_key, value) => {
+          const tagged = value as { __type?: string; values?: string[] } | null;
+          return tagged && tagged.__type === 'Set'
+            ? new Set(tagged.values ?? [])
+            : value;
         },
       }),
-      deserialize: (str) => {
-        const parsed = JSON.parse(str);
-        return {
-          ...parsed,
-          state: {
-            ...parsed.state,
-            heartedChannels: new Set(parsed.state.heartedChannels),
-          },
-        };
-      },
     }
   )
 );

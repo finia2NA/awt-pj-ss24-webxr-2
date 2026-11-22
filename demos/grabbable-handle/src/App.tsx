@@ -11,6 +11,7 @@ import {
 } from "@coconut-xr/natuerlich/react";
 import { isXIntersection } from "@coconut-xr/xinteraction";
 import { Vector3 } from "three";
+import { numericProperty } from "./numericProperty";
 import { ThreeEvent } from "@react-three/fiber";
 import { Container, Root, ComponentInternals } from "@react-three/uikit";
 
@@ -40,9 +41,9 @@ export default function Index() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-      let x = view.current.getComputedProperty("transformTranslateX") || 0;
-      let y = view.current.getComputedProperty("transformTranslateY") || 0;
-      let z = view.current.getComputedProperty("transformTranslateZ") || 0;
+      let x = numericProperty(view.current.getComputedProperty("transformTranslateX"), 0);
+      let y = numericProperty(view.current.getComputedProperty("transformTranslateY"), 0);
+      let z = numericProperty(view.current.getComputedProperty("transformTranslateZ"), 0);
 
       let pos = new Vector3(x, y, z);
 
@@ -95,9 +96,9 @@ export default function Index() {
       e.stopPropagation();
       (e.target as HTMLElement).setPointerCapture(e.pointerId);
 
-        let x = view.current.getComputedProperty("transformScaleX") || 1;
-        let y = view.current.getComputedProperty("transformScaleY") || 1;
-        let z = view.current.getComputedProperty("transformScaleZ") || 1;
+        let x = numericProperty(view.current.getComputedProperty("transformScaleX"), 1);
+        let y = numericProperty(view.current.getComputedProperty("transformScaleY"), 1);
+        let z = numericProperty(view.current.getComputedProperty("transformScaleZ"), 1);
 
         let scale = new Vector3(x, y, z);
 
@@ -121,7 +122,10 @@ export default function Index() {
       return;
     }
 
-    const ratio = view.current.size.v[0] / view.current.size.v[1];
+    const size = view.current.size.value;
+    const handleSize = handle.current.size.value;
+    if (!size || !handleSize || size[1] === 0) return;
+    const ratio = size[0] / size[1];
 
     let delta = downState.current.point.clone().sub(e.point)
 
@@ -130,7 +134,7 @@ export default function Index() {
     newScale.y = newScale.x / 2 * ratio;
 
     // enforce min/max size
-    const newSizeX = newScale.x * view.current.size.v[0];
+    const newSizeX = newScale.x * size[0];
     if ((newSizeX < 100) || (newSizeX > 500)) {
       return;
     }
@@ -140,7 +144,7 @@ export default function Index() {
       ...{ transformScaleX: newScale.x, transformScaleY: newScale.y, transformScaleZ: newScale.z }
     });
 
-    let deltaY = (handle.current.size.v[1] - (handle.current.size.v[1] * 1/newScale.y)) / 2;
+    let deltaY = (handleSize[1] - (handleSize[1] * 1/newScale.y)) / 2;
     // ^-NOTE: (old width/height - new width/height) / 2 (because it grows/shrinks from both directions)
 
     // preserve size of handle and resize

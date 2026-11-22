@@ -1,0 +1,17 @@
+<ServiceList>
+<Name>Offline DVB-I test list</Name><ProviderName>Test provider</ProviderName>
+<ContentGuideSourceList>
+<ContentGuideSource CGSID="guide"><ProviderName>Test guide</ProviderName><ProgramInfoEndpoint><URI>https://fixture.invalid/guide</URI></ProgramInfoEndpoint><ScheduleInfoEndpoint><URI>https://fixture.invalid/guide</URI></ScheduleInfoEndpoint></ContentGuideSource>
+<ContentGuideSource CGSID="unused"><ProviderName>Unused</ProviderName></ContentGuideSource>
+</ContentGuideSourceList>
+<RegionList>
+<Region regionID="Düsseldorf"><RegionName>Düsseldorf</RegionName><PostcodeRange from="40210" to="40629"/></Region>
+<Region regionID="Köln"><RegionName>Köln</RegionName><PostcodeRange from="50667" to="51149"/></Region>
+</RegionList>
+<LCNTableList>
+<LCNTable><LCN channelNumber="1" serviceRef="test:ard"/><LCN channelNumber="43" serviceRef="tag:zdf.de,2020:zdfneo"/></LCNTable>
+<LCNTable><TargetRegion>Düsseldorf</TargetRegion><LCN channelNumber="1" serviceRef="test:ard"/><LCN channelNumber="43" serviceRef="tag:zdf.de,2020:zdfneo"/></LCNTable>
+</LCNTableList>
+<Service><UniqueIdentifier>test:ard</UniqueIdentifier><ServiceName>Das Erste HD</ServiceName><ProviderName>ARD</ProviderName><ContentGuideServiceRef>ard</ContentGuideServiceRef><ContentGuideSourceRef>guide</ContentGuideSourceRef></Service>
+<Service><UniqueIdentifier>tag:zdf.de,2020:zdfneo</UniqueIdentifier><ServiceName>ZDF Neo</ServiceName><ProviderName>ZDF</ProviderName></Service>
+</ServiceList>

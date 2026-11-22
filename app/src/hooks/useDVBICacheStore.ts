@@ -3,7 +3,7 @@
  */
 
 /* eslint-disable no-unused-vars */
-import create from 'zustand';
+import { create } from 'zustand';
 
 /**
  * Interface defining the key for the Service List cache.
